@@ -22,7 +22,7 @@ class SequenceDataset(th.utils.data.Dataset):
         # Get the sequence
         in_seq = row.iloc[:self.k_in]
         in_seq_tensor = th.stack([th.load(os.path.join(self.tensor_dir, f"tensor_{frame}.pt")) for frame in in_seq])
-        out_seq = row.iloc[self.k_in+1:]
+        out_seq = row.iloc[self.k_in:]
         out_seq_tensor = th.stack([th.load(os.path.join(self.tensor_dir, f"tensor_{frame}.pt")) for frame in out_seq])
 
         return in_seq_tensor, out_seq_tensor
