@@ -91,7 +91,7 @@ custom_model_config = {
     'stride': 1, # given to ConvLSTMCell
     'layer_norm' : False, # given to ConvLSTMCell
     'pre_seq_length': 10,
-    'aft_seq_length ': 10,
+    'aft_seq_length': 10,
     'reverse_scheduled_sampling': 0
 }
 
