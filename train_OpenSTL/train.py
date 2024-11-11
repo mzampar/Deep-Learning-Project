@@ -1,12 +1,13 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+import time
+
 import torch as th
 from torch.utils.data import Dataset
 from torch import nn
 
 from ConvLSTM_model import ConvLSTM_Model
-
-import pandas as pd
-import matplotlib.pyplot as plt
-import os
 
 class SequenceDataset(th.utils.data.Dataset):
     def __init__(self, input_data, tensor_dir, k_in=10, k_out=10):
@@ -44,11 +45,6 @@ seq_df = pd.DataFrame({'seq_len': seq_len, 'seq_rain': seq_rain})
 # split the sequences in train and test set (80/20)
 train_seq = seq_df.sample(frac=0.8, random_state=1)
 test_seq = seq_df.drop(train_seq.index)
-
-print(train_seq['seq_len'].mean(), test_seq['seq_len'].mean())
-print(train_seq['seq_len'].std(), test_seq['seq_len'].std())
-print(train_seq['seq_rain'].mean(), test_seq['seq_rain'].mean())
-print(train_seq['seq_rain'].std(), test_seq['seq_rain'].std())
 
 # get the sequences of the train and test set
 train_seq_idx = train_seq.index
@@ -106,6 +102,10 @@ num_epochs = 10  # Set the number of epochs
 train_losses = []
 test_losses = []
 
+print("Starting training loop...")
+
+start_time = time.time()
+
 for epoch in range(num_epochs):
     # Training phase
     model.train()
@@ -149,9 +149,13 @@ for epoch in range(num_epochs):
     test_losses.append(epoch_test_loss)
     print(f"Epoch [{epoch+1}/{num_epochs}] - Average Test Loss: {epoch_test_loss:.4f}")
 
-print("Training complete!")
+end_time = time.time()
+
+print(f"Training completed in {end_time - start_time}!")
 
 th.save(model.state_dict(), "../models/model.pth")
+
+print("Model saved!")
 
 # Plot the training and test losses
 plt.plot(train_losses, label='Train Loss')
