@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import os
 import time
 
+import config
+
 import torch as th
 from torch.utils.data import Dataset
 from torch import nn
@@ -21,9 +23,9 @@ class SequenceDataset(th.utils.data.Dataset):
         row = self.input_data.iloc[index]
         # Get the sequence
         in_seq = row.iloc[:self.k_in]
-        in_seq_tensor = th.stack([th.load(os.path.join(self.tensor_dir, f"tensor_{frame}.pt")) for frame in in_seq])
-        out_seq = row.iloc[self.k_in:]
-        out_seq_tensor = th.stack([th.load(os.path.join(self.tensor_dir, f"tensor_{frame}.pt")) for frame in out_seq])
+        in_seq_tensor = th.stack([th.load(os.path.join(self.tensor_dir, f"tensor_{frame}.pt"), weights_only=True) for frame in in_seq])
+        out_seq = row.iloc[self.k_in:-1]
+        out_seq_tensor = th.stack([th.load(os.path.join(self.tensor_dir, f"tensor_{frame}.pt"), weights_only=True) for frame in out_seq])
 
         return in_seq_tensor, out_seq_tensor
 
@@ -64,17 +66,35 @@ train_data.shape, test_data.shape
 train_dataset = SequenceDataset(train_data, '../../fast/tensor/')
 test_dataset = SequenceDataset(test_data, '../../fast/tensor/')
 
-
+# reverse scheduled sampling
+r_sampling_step_1 = 25000
+r_sampling_step_2 = 50000
+r_exp_alpha = 5000
+# scheduled sampling
+scheduled_sampling = 1
+sampling_stop_iter = 50000
+sampling_start_value = 1.0
+sampling_changing_rate = 0.00002
+# model
+num_hidden = '128,128,128,128'
+filter_size = 5
+stride = 1
+patch_size = 2
+layer_norm = 0
 num_layers = 4
-num_hidden = [32, 64, 128, 128] 
+num_hidden = [128, 128, 128, 128] 
 
 custom_model_config = {
     'in_shape': [1, 3, 256, 256], # T, C, H, W
     'patch_size': 1,
     'filter_size': 1, # given to ConvLSTMCell
     'stride': 1, # given to ConvLSTMCell
-    'layer_norm' : False # given to ConvLSTMCell
+    'layer_norm' : False, # given to ConvLSTMCell
+    'pre_seq_length': 10,
+    'aft_seq_length ': 10,
+    'reverse_scheduled_sampling': 0
 }
+
 
 # Instantiate the model
 input_dim = 3  # Assuming x_train shape is (batch_size, sequence_length, channels, height, width)
@@ -113,10 +133,11 @@ for epoch in range(num_epochs):
     for batch_idx, (inputs, targets) in enumerate(dataloader):
         # Move data to device (GPU if available)
         inputs, targets = inputs.to(device), targets.to(device)
+        mask_true = th.ones_like(inputs)
         # Zero the parameter gradients
         optimizer.zero_grad()
         # Forward pass
-        outputs = model(inputs)
+        outputs = model(inputs, mask_true)
         # Compute loss
         loss = criterion(outputs, targets)
         # Backward pass and optimize
