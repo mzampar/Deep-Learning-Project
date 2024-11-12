@@ -55,8 +55,8 @@ dataset = pd.read_csv('../data/id_seq_dataset_10.csv')
 train_data = dataset[dataset['seq_id'].isin(train_seq_idx)]
 test_data = dataset[dataset['seq_id'].isin(test_seq_idx)]
 
-train_dataset = SequenceDataset(train_data, '../../fast/tensor/')
-test_dataset = SequenceDataset(test_data, '../../fast/tensor/')
+train_dataset = SequenceDataset(train_data, '../../fast/tensor/', k_in=5, k_out=5)
+test_dataset = SequenceDataset(test_data, '../../fast/tensor/', k_in=5, k_out=5)
 
 # reverse scheduled sampling
 r_sampling_step_1 = 25000
@@ -87,9 +87,17 @@ custom_model_config = {
     'reverse_scheduled_sampling': 0
 }
 
+if th.cuda.is_available():
+    print("CUDA is available!")
+else:
+    print("CUDA is not available.")
+
+device = th.device("cuda" if th.cuda.is_available() else "cpu")
+
 # Instantiate the model
 input_dim = 3  # Assuming x_train shape is (batch_size, sequence_length, channels, height, width)
 model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config)
+model.to(device)
 
 batch_size = 10
 dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -99,13 +107,6 @@ test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, 
 criterion = nn.MSELoss()
 optimizer = th.optim.Adam(model.parameters())
 scheduler = StepLR(optimizer, step_size=5, gamma=0.1)
-
-if th.cuda.is_available():
-    print("CUDA is available!")
-else:
-    print("CUDA is not available.")
-
-device = th.device("cuda" if th.cuda.is_available() else "cpu")
 
 # Training loop
 num_epochs = 10  # Set the number of epochs
