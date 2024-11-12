@@ -45,6 +45,7 @@ class ConvLSTM_Model(nn.Module):
         batch = frames.shape[0]
         height = frames.shape[3]
         width = frames.shape[4]
+        length = frames.shape[1]
 
         next_frames = []
         h_t = []
@@ -59,7 +60,7 @@ class ConvLSTM_Model(nn.Module):
             # part of schedule sampling (commented at the end of file)
 
         # Loop through the entire sequence (pre_seq_length + aft_seq_length)
-        for t in range(self.configs.pre_seq_length + self.configs.aft_seq_length - 1):
+        for t in range(length):
             # Directly use the actual frame (no scheduled sampling)
             if t < self.configs.pre_seq_length:
                 net = frames[:, t]  # Use input frame for pre-sequence
