@@ -38,7 +38,7 @@ class ConvLSTM_Model(nn.Module):
         self.conv_last = nn.Conv2d(num_hidden[num_layers - 1], self.frame_channel,
                                    kernel_size=1, stride=1, padding=0, bias=False)
 
-    def forward(self, frames_tensor, mask_true, return_loss=True, **kwargs):
+    def forward(self, frames_tensor, mask_true, **kwargs):
         # frames_tensor: [batch, length, channel, height, width]
         device = frames_tensor.device
 
@@ -50,8 +50,7 @@ class ConvLSTM_Model(nn.Module):
         next_frames = []
         h_t_prev = []
         c_t_prev = []
-        h_t = []
-        c_t = []
+
 
         for i in range(self.num_layers):
             zeros = torch.zeros([batch, self.num_hidden[i], height, width]).to(device)
@@ -71,10 +70,17 @@ class ConvLSTM_Model(nn.Module):
             else:
                 net = x_gen
 
-            h_t[0], c_t[0] = self.cell_list[0](net, h_t[0], c_t[0])
+            h_t = []
+            c_t = []
+
+            a, b = self.cell_list[0](net, h_t_prev[0], c_t_prev[0])
+            h_t.append(a)
+            c_t.append(b)
 
             for i in range(1, self.num_layers):
-                h_t[i], c_t[i] = self.cell_list[i](h_t[i - 1], h_t_prev[i], c_t_prev[i])
+                a, b = self.cell_list[i](h_t[i - 1], h_t_prev[i], c_t_prev[i])
+                h_t.append(a)
+                c_t.append(b)
 
             h_t_prev = h_t
             c_t_prev = c_t
