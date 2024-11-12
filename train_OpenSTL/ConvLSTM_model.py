@@ -59,7 +59,6 @@ class ConvLSTM_Model(nn.Module):
 
             # part of schedule sampling (commented at the end of file)
 
-        # Loop through the entire sequence (pre_seq_length + aft_seq_length)
         for t in range(length):
 
             net = frames[:, t]  # Use actual frame for aft-sequence as well
