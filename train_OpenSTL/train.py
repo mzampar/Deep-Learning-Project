@@ -64,6 +64,7 @@ train_data = None
 test_data = None
 dataset = None
 
+batch_size = 5
 # reverse scheduled sampling
 r_sampling_step_1 = 25000
 r_sampling_step_2 = 50000
@@ -92,7 +93,8 @@ custom_model_config = {
     'pre_seq_length': 3,
     'aft_seq_length': 2,
     'target_seq_length': 5,
-    'reverse_scheduled_sampling': 0
+    'reverse_scheduled_sampling': 0,
+    'batch_size': batch_size
 }
 
 if th.cuda.is_available():
@@ -106,10 +108,8 @@ th.cuda.empty_cache()
 # Instantiate the model
 input_dim = 3  # Assuming x_train shape is (batch_size, sequence_length, channels, height, width)
 model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config)
-print(model)
 model.to(device)
 
-batch_size = 2
 dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 

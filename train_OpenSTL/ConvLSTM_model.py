@@ -32,7 +32,7 @@ class ConvLSTM_Model(nn.Module):
             in_channel = self.frame_channel if i == 0 else num_hidden[i - 1]
             cell_list.append(
                 ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'],
-                                       configs['stride'], configs['layer_norm'])
+                                       configs['stride'], configs['layer_norm'], configs['batch_size'])
             )
         self.cell_list = nn.ModuleList(cell_list)
         self.conv_last = nn.Conv2d(num_hidden[num_layers - 1], self.frame_channel,
@@ -51,7 +51,6 @@ class ConvLSTM_Model(nn.Module):
         h_t_prev = []
         c_t_prev = []
 
-
         for i in range(self.num_layers):
             zeros = torch.zeros([batch, self.num_hidden[i], height, width]).to(device)
             h_t_prev.append(zeros)
@@ -60,7 +59,7 @@ class ConvLSTM_Model(nn.Module):
         # reverse schedule sampling: (todo)
         # here we manage the inputs: frames_tensor and mask_true
 
-        for t in range(self.configs['pre_seq_length'] + self.configs['aft_seq_length'] + self.configs['target_seq_length'] - 1):
+        for t in range(self.configs['pre_seq_length'] + self.configs['aft_seq_length'] + self.configs['target_seq_length']):
             # reverse schedule sampling
             if t < self.configs['pre_seq_length']:
                 net = frames_tensor[:, t]
