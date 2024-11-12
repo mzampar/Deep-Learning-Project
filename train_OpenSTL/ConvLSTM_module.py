@@ -10,6 +10,12 @@ class ConvLSTMCell(nn.Module):
         self.num_hidden = num_hidden
         self.padding = filter_size // 2
         self._forget_bias = 1.0
+        self.context_input = nn.Parameter(torch.randn(in_channel, num_hidden, height, width))
+        self.context_hidden = nn.Parameter(torch.randn(in_channel, num_hidden, height, width))
+        self.context_output = nn.Parameter(torch.randn(in_channel, num_hidden, height, width))
+        self.context_forget = nn.Parameter(torch.randn(in_channel, num_hidden, height, width))
+        # we could also add the bias
+
         if layer_norm:
             self.conv_x = nn.Sequential(
                 nn.Conv2d(in_channel, num_hidden * 4, kernel_size=filter_size,
@@ -21,6 +27,7 @@ class ConvLSTMCell(nn.Module):
                           stride=stride, padding=self.padding, bias=False),
                 nn.LayerNorm([num_hidden * 4, height, width])
             )
+            # conv_o is not used in the forward pass
             self.conv_o = nn.Sequential(
                 nn.Conv2d(num_hidden * 2, num_hidden, kernel_size=filter_size,
                           stride=stride, padding=self.padding, bias=False),
@@ -35,6 +42,7 @@ class ConvLSTMCell(nn.Module):
                 nn.Conv2d(num_hidden, num_hidden * 4, kernel_size=filter_size,
                           stride=stride, padding=self.padding, bias=False),
             )
+            # conv_o is not used in the forward pass
             self.conv_o = nn.Sequential(
                 nn.Conv2d(num_hidden * 2, num_hidden, kernel_size=filter_size,
                           stride=stride, padding=self.padding, bias=False),
@@ -42,17 +50,18 @@ class ConvLSTMCell(nn.Module):
         self.conv_last = nn.Conv2d(num_hidden * 2, num_hidden, kernel_size=1,
                                    stride=1, padding=0, bias=False)
 
-    def forward(self, x_t, h_t, c_t):
-        x_concat = self.conv_x(x_t)
+    def forward(self, x_t_new, h_t, c_t):
+        x_concat = self.conv_x(x_t_new)
         h_concat = self.conv_h(h_t)
+
         i_x, f_x, g_x, o_x = torch.split(x_concat, self.num_hidden, dim=1)
         i_h, f_h, g_h, o_h = torch.split(h_concat, self.num_hidden, dim=1)
 
-        i_t = torch.sigmoid(i_x + i_h)
-        f_t = torch.sigmoid(f_x + f_h)
+        i_t = torch.sigmoid(i_x + i_h + self.context_input * c_t) 
+        f_t = torch.sigmoid(f_x + f_h + self.context_forget * c_t)
         g_t = torch.tanh(g_x + g_h)
 
         c_new = f_t * c_t + i_t * g_t
-        o_t = torch.sigmoid(o_x + o_h)
+        o_t = torch.sigmoid(o_x + o_h + self.context_output * c_new)
         h_new = o_t * torch.tanh(c_new)
         return h_new, c_new

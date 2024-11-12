@@ -58,6 +58,12 @@ test_data = dataset[dataset['seq_id'].isin(test_seq_idx)]
 train_dataset = SequenceDataset(train_data, '../../fast/tensor/', k_in=5, k_out=5)
 test_dataset = SequenceDataset(test_data, '../../fast/tensor/', k_in=5, k_out=5)
 
+id_data = None
+seq_df = None
+train_data = None
+test_data = None
+dataset = None
+
 # reverse scheduled sampling
 r_sampling_step_1 = 25000
 r_sampling_step_2 = 50000
@@ -68,13 +74,13 @@ sampling_stop_iter = 50000
 sampling_start_value = 1.0
 sampling_changing_rate = 0.00002
 # model
-num_hidden = '128,128,128,128'
+num_hidden = '32,64'
 filter_size = 5
 stride = 1
 patch_size = 2
 layer_norm = 0
-num_layers = 4
-num_hidden = [128, 128, 128, 128] 
+num_layers = 2
+num_hidden = [32, 64] 
 
 custom_model_config = {
     'in_shape': [5, 3, 256, 256], # T, C, H, W
@@ -82,8 +88,10 @@ custom_model_config = {
     'filter_size': 1, # given to ConvLSTMCell
     'stride': 1, # given to ConvLSTMCell
     'layer_norm' : False, # given to ConvLSTMCell
-    'pre_seq_length': 5,
-    'aft_seq_length': 5,
+    # the sum of pre_seq_length and aft_seq_length has to be = len(inputs)
+    'pre_seq_length': 3,
+    'aft_seq_length': 2,
+    'target_seq_length': 5,
     'reverse_scheduled_sampling': 0
 }
 
@@ -98,9 +106,10 @@ th.cuda.empty_cache()
 # Instantiate the model
 input_dim = 3  # Assuming x_train shape is (batch_size, sequence_length, channels, height, width)
 model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config)
+print(model)
 model.to(device)
 
-batch_size = 1
+batch_size = 2
 dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
@@ -127,10 +136,12 @@ for epoch in range(num_epochs):
     for batch_idx, (inputs, targets) in enumerate(dataloader):
         # Move data to device (GPU if available)
         inputs, targets = inputs.to(device), targets.to(device)
+        # reduce smoothly the weight of the mask to make the model able to use its own predictions also and not only the inputs when analysing the given sequence 
+        mask_true = th.ones(inputs.shape).to(device)
         # Zero the parameter gradients
         optimizer.zero_grad()
         # Forward pass
-        outputs = model(inputs)
+        outputs = model(inputs, mask_true)
         # Compute loss
         loss = criterion(outputs, targets)
         # Backward pass and optimize

@@ -38,45 +38,60 @@ class ConvLSTM_Model(nn.Module):
         self.conv_last = nn.Conv2d(num_hidden[num_layers - 1], self.frame_channel,
                                    kernel_size=1, stride=1, padding=0, bias=False)
 
-    def forward(self, frames, **kwargs):
-        # frames: [batch, length, channel, height, width]
-        device = frames.device
+    def forward(self, frames_tensor, mask_true, return_loss=True, **kwargs):
+        # frames_tensor: [batch, length, channel, height, width]
+        device = frames_tensor.device
 
-        batch = frames.shape[0]
-        height = frames.shape[3]
-        width = frames.shape[4]
-        length = frames.shape[1]
+        batch = frames_tensor.shape[0]
+        height = frames_tensor.shape[3]
+        width = frames_tensor.shape[4]
+        length = frames_tensor.shape[1]
 
         next_frames = []
+        h_t_prev = []
+        c_t_prev = []
         h_t = []
         c_t = []
 
-        # Initialize hidden and cell states
         for i in range(self.num_layers):
             zeros = torch.zeros([batch, self.num_hidden[i], height, width]).to(device)
-            h_t.append(zeros)
-            c_t.append(zeros)
+            h_t_prev.append(zeros)
+            c_t_prev.append(zeros)
 
-            # part of schedule sampling (commented at the end of file)
+        # reverse schedule sampling: (todo)
+        # here we manage the inputs: frames_tensor and mask_true
 
-        for t in range(length):
+        for t in range(self.configs['pre_seq_length'] + self.configs['aft_seq_length'] + self.configs['target_seq_length'] - 1):
+            # reverse schedule sampling
+            if t < self.configs['pre_seq_length']:
+                net = frames_tensor[:, t]
+            elif t < self.configs['pre_seq_length'] + self.configs['aft_seq_length']:
+                net = mask_true[:, t - self.configs['pre_seq_length']] * frames_tensor[:, t] + \
+                        (1 - mask_true[:, t - self.configs['pre_seq_length']]) * x_gen
+            else:
+                net = x_gen
 
-            net = frames[:, t]  # Use actual frame for aft-sequence as well
-
-            # Apply ConvLSTM cell
             h_t[0], c_t[0] = self.cell_list[0](net, h_t[0], c_t[0])
 
-            # Process through additional layers
             for i in range(1, self.num_layers):
-                h_t[i], c_t[i] = self.cell_list[i](h_t[i - 1], h_t[i], c_t[i])
+                h_t[i], c_t[i] = self.cell_list[i](h_t[i - 1], h_t_prev[i], c_t_prev[i])
 
-            # Generate the output frame
+            h_t_prev = h_t
+            c_t_prev = c_t
+
             x_gen = self.conv_last(h_t[self.num_layers - 1])
-            next_frames.append(x_gen)
+            if (t > self.configs['pre_seq_length'] + self.configs['aft_seq_length'] - 1):
+                next_frames.append(x_gen)
 
-        next_frames = torch.stack(next_frames, dim=1)
+        """
+        if return_loss:
+            loss = self.MSE_criterion(next_frames[self.configs[:'pre_seq_length']], frames_tensor)
+        else:
+            loss = None
+        """
 
-        return next_frames
+        return torch.stack(next_frames, dim=0)
+
     
 
         """
@@ -84,14 +99,14 @@ class ConvLSTM_Model(nn.Module):
             # reverse schedule sampling
             if self.configs['reverse_scheduled_sampling'] == 1:
                 if t == 0:
-                    net = frames[:, t]
+                    net = frames_tensor[:, t]
                 else:
-                    net = mask_true[:, t - 1] * frames[:, t] + (1 - mask_true[:, t - 1]) * x_gen
+                    net = mask_true[:, t - 1] * frames_tensor[:, t] + (1 - mask_true[:, t - 1]) * x_gen
             else:
                 if t < self.configs['pre_seq_length']:
-                    net = frames[:, t]
+                    net = frames_tensor[:, t]
                 else:
-                    net = mask_true[:, t - self.configs['pre_seq_length']] * frames[:, t] + \
+                    net = mask_true[:, t - self.configs['pre_seq_length']] * frames_tensor[:, t] + \
                           (1 - mask_true[:, t - self.configs['pre_seq_length']]) * x_gen
 
             h_t[0], c_t[0] = self.cell_list[0](net, h_t[0], c_t[0])
