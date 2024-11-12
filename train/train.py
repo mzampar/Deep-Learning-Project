@@ -10,6 +10,24 @@ from torch.optim.lr_scheduler import StepLR
 
 from ConvLSTM_model import ConvLSTM_Model
 
+import torch.nn.functional as F
+from pytorch_msssim import ssim
+
+class HybridLoss(nn.Module):
+    def __init__(self, alpha=0.5):
+        """
+        Initialize hybrid loss with a weighting factor alpha for SSIM.
+        :param alpha: Weight for SSIM loss; (1 - alpha) is the weight for MSE loss.
+        """
+        super(HybridLoss, self).__init__()
+        self.alpha = alpha
+        self.mse_loss = nn.MSELoss()
+
+    def forward(self, pred, target):
+        mse = self.mse_loss(pred, target)
+        ssim_loss = 1 - ssim(pred, target, data_range=1.0, size_average=True)  # SSIM returns similarity, so use (1 - SSIM)
+        return (1 - self.alpha) * mse + self.alpha * ssim_loss
+
 class SequenceDataset(th.utils.data.Dataset):
     def __init__(self, input_data, tensor_dir, k_in=10, k_out=10):
         self.input_data = input_data
@@ -78,6 +96,7 @@ filter_size = 5
 stride = 1
 patch_size = 2
 layer_norm = 0
+
 num_layers = 2
 num_hidden = [32, 64] 
 
@@ -112,7 +131,8 @@ dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuf
 test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 # Define loss and optimizer
-criterion = nn.MSELoss()
+#criterion = nn.MSELoss()
+criterion = HybridLoss(alpha=0.5)
 optimizer = th.optim.Adam(model.parameters())
 scheduler = StepLR(optimizer, step_size=5, gamma=0.1)
 
