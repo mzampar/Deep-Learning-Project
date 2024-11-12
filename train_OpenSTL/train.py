@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 import os
 import time
 
-import config
-
 import torch as th
 from torch.utils.data import Dataset
 from torch import nn

@@ -56,11 +56,10 @@ class ConvLSTM_Model(nn.Module):
             h_t_prev.append(zeros)
             c_t_prev.append(zeros)
 
-        # reverse schedule sampling: (todo)
+        # schedule sampling:
         # here we manage the inputs: frames_tensor and mask_true
 
         for t in range(self.configs['pre_seq_length'] + self.configs['aft_seq_length'] + self.configs['target_seq_length']):
-            # reverse schedule sampling
             if t < self.configs['pre_seq_length']:
                 net = frames_tensor[:, t]
             elif t < self.configs['pre_seq_length'] + self.configs['aft_seq_length']:
@@ -88,32 +87,6 @@ class ConvLSTM_Model(nn.Module):
             if (t > self.configs['pre_seq_length'] + self.configs['aft_seq_length'] - 1):
                 next_frames.append(x_gen)
 
-        """
-        if return_loss:
-            loss = self.MSE_criterion(next_frames[self.configs[:'pre_seq_length']], frames_tensor)
-        else:
-            loss = None
-        """
+        # we could also return the loss btw the predicted frames and the true frames
 
-        return torch.stack(next_frames, dim=0)
-
-    
-
-        """
-        for t in range(self.configs['pre_seq_length'] + self.configs['aft_seq_length'] - 1):
-            # reverse schedule sampling
-            if self.configs['reverse_scheduled_sampling'] == 1:
-                if t == 0:
-                    net = frames_tensor[:, t]
-                else:
-                    net = mask_true[:, t - 1] * frames_tensor[:, t] + (1 - mask_true[:, t - 1]) * x_gen
-            else:
-                if t < self.configs['pre_seq_length']:
-                    net = frames_tensor[:, t]
-                else:
-                    net = mask_true[:, t - self.configs['pre_seq_length']] * frames_tensor[:, t] + \
-                          (1 - mask_true[:, t - self.configs['pre_seq_length']]) * x_gen
-
-            h_t[0], c_t[0] = self.cell_list[0](net, h_t[0], c_t[0])
-
-        """
+        return torch.stack(next_frames, dim=1)
