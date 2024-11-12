@@ -93,6 +93,7 @@ else:
     print("CUDA is not available.")
 
 device = th.device("cuda" if th.cuda.is_available() else "cpu")
+th.cuda.empty_cache()
 
 # Instantiate the model
 input_dim = 3  # Assuming x_train shape is (batch_size, sequence_length, channels, height, width)

@@ -50,11 +50,39 @@ class ConvLSTM_Model(nn.Module):
         h_t = []
         c_t = []
 
+        # Initialize hidden and cell states
         for i in range(self.num_layers):
             zeros = torch.zeros([batch, self.num_hidden[i], height, width]).to(device)
             h_t.append(zeros)
             c_t.append(zeros)
 
+            # part of schedule sampling (commented at the end of file)
+
+        # Loop through the entire sequence (pre_seq_length + aft_seq_length)
+        for t in range(self.configs.pre_seq_length + self.configs.aft_seq_length - 1):
+            # Directly use the actual frame (no scheduled sampling)
+            if t < self.configs.pre_seq_length:
+                net = frames[:, t]  # Use input frame for pre-sequence
+            else:
+                net = frames[:, t]  # Use actual frame for aft-sequence as well
+
+            # Apply ConvLSTM cell
+            h_t[0], c_t[0] = self.cell_list[0](net, h_t[0], c_t[0])
+
+            # Process through additional layers
+            for i in range(1, self.num_layers):
+                h_t[i], c_t[i] = self.cell_list[i](h_t[i - 1], h_t[i], c_t[i])
+
+            # Generate the output frame
+            x_gen = self.conv_last(h_t[self.num_layers - 1])
+            next_frames.append(x_gen)
+
+        next_frames = torch.stack(next_frames, dim=1)
+
+        return next_frames
+    
+
+        """
         for t in range(self.configs['pre_seq_length'] + self.configs['aft_seq_length'] - 1):
             # reverse schedule sampling
             if self.configs['reverse_scheduled_sampling'] == 1:
@@ -71,15 +99,4 @@ class ConvLSTM_Model(nn.Module):
 
             h_t[0], c_t[0] = self.cell_list[0](net, h_t[0], c_t[0])
 
-            for i in range(1, self.num_layers):
-                h_t[i], c_t[i] = self.cell_list[i](h_t[i - 1], h_t[i], c_t[i])
-
-            x_gen = self.conv_last(h_t[self.num_layers - 1])
-            next_frames.append(x_gen)
-
-        if kwargs.get('return_loss', True):
-            loss = self.MSE_criterion(next_frames, frames[:, 1:])
-        else:
-            loss = None
-
-        return next_frames, loss
+        """
