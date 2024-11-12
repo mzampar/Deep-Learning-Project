@@ -78,7 +78,7 @@ class ConvLSTM_Model(nn.Module):
             next_frames.append(x_gen)
 
         if kwargs.get('return_loss', True):
-            loss = self.MSE_criterion(next_frames, frames_tensor[:, 1:])
+            loss = self.MSE_criterion(next_frames, frames[:, 1:])
         else:
             loss = None
 

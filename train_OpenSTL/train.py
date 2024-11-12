@@ -8,6 +8,7 @@ import config
 import torch as th
 from torch.utils.data import Dataset
 from torch import nn
+from torch.optim.lr_scheduler import StepLR
 
 from ConvLSTM_model import ConvLSTM_Model
 
@@ -33,9 +34,7 @@ class SequenceDataset(th.utils.data.Dataset):
         return self.input_data.shape[0]
 
 
-
-
-id_data = pd.read_csv('../data/id_df_final.csv')
+id_data = pd.read_csv('../data/id_df_final_10.csv')
 
 seq_len = id_data.groupby('sequence').size()
 seq_len = seq_len.to_dict()
@@ -51,18 +50,11 @@ test_seq = seq_df.drop(train_seq.index)
 # get the sequences of the train and test set
 train_seq_idx = train_seq.index
 test_seq_idx = test_seq.index
-
 train_data = id_data[id_data['sequence'].isin(train_seq_idx)]
-train_data.shape
-
-
-dataset = pd.read_csv('../data/id_seq_dataset.csv')
+dataset = pd.read_csv('../data/id_seq_dataset_10.csv')
 train_data = dataset[dataset['seq_id'].isin(train_seq_idx)]
 test_data = dataset[dataset['seq_id'].isin(test_seq_idx)]
-train_data.shape, test_data.shape
 
-
-    
 train_dataset = SequenceDataset(train_data, '../../fast/tensor/')
 test_dataset = SequenceDataset(test_data, '../../fast/tensor/')
 
@@ -85,28 +77,28 @@ num_layers = 4
 num_hidden = [128, 128, 128, 128] 
 
 custom_model_config = {
-    'in_shape': [1, 3, 256, 256], # T, C, H, W
+    'in_shape': [5, 3, 256, 256], # T, C, H, W
     'patch_size': 1,
     'filter_size': 1, # given to ConvLSTMCell
     'stride': 1, # given to ConvLSTMCell
     'layer_norm' : False, # given to ConvLSTMCell
-    'pre_seq_length': 10,
-    'aft_seq_length': 10,
+    'pre_seq_length': 5,
+    'aft_seq_length': 5,
     'reverse_scheduled_sampling': 0
 }
-
 
 # Instantiate the model
 input_dim = 3  # Assuming x_train shape is (batch_size, sequence_length, channels, height, width)
 model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config)
 
-batch_size = 64
+batch_size = 10
 dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 # Define loss and optimizer
 criterion = nn.MSELoss()
 optimizer = th.optim.Adam(model.parameters())
+scheduler = StepLR(optimizer, step_size=5, gamma=0.1)
 
 if th.cuda.is_available():
     print("CUDA is available!")
@@ -150,6 +142,7 @@ for epoch in range(num_epochs):
         if batch_idx % 10 == 0:
             print(f"Epoch [{epoch+1}/{num_epochs}], Batch [{batch_idx+1}], Loss: {loss.item():.4f}")
 
+    scheduler.step()
     # Calculate and store the average training loss for this epoch
     epoch_train_loss = running_loss / len(dataloader)
     train_losses.append(epoch_train_loss)
