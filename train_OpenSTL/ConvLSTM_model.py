@@ -38,7 +38,7 @@ class ConvLSTM_Model(nn.Module):
         self.conv_last = nn.Conv2d(num_hidden[num_layers - 1], self.frame_channel,
                                    kernel_size=1, stride=1, padding=0, bias=False)
 
-    def forward(self, frames, mask_true, **kwargs):
+    def forward(self, frames, **kwargs):
         # frames: [batch, length, channel, height, width]
         device = frames.device
 
@@ -61,11 +61,8 @@ class ConvLSTM_Model(nn.Module):
 
         # Loop through the entire sequence (pre_seq_length + aft_seq_length)
         for t in range(length):
-            # Directly use the actual frame (no scheduled sampling)
-            if t < self.configs.pre_seq_length:
-                net = frames[:, t]  # Use input frame for pre-sequence
-            else:
-                net = frames[:, t]  # Use actual frame for aft-sequence as well
+
+            net = frames[:, t]  # Use actual frame for aft-sequence as well
 
             # Apply ConvLSTM cell
             h_t[0], c_t[0] = self.cell_list[0](net, h_t[0], c_t[0])

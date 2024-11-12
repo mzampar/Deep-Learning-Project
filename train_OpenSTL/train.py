@@ -100,7 +100,7 @@ input_dim = 3  # Assuming x_train shape is (batch_size, sequence_length, channel
 model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config)
 model.to(device)
 
-batch_size = 10
+batch_size = 1
 dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
@@ -127,11 +127,10 @@ for epoch in range(num_epochs):
     for batch_idx, (inputs, targets) in enumerate(dataloader):
         # Move data to device (GPU if available)
         inputs, targets = inputs.to(device), targets.to(device)
-        mask_true = th.ones_like(inputs)
         # Zero the parameter gradients
         optimizer.zero_grad()
         # Forward pass
-        outputs = model(inputs, mask_true)
+        outputs = model(inputs)
         # Compute loss
         loss = criterion(outputs, targets)
         # Backward pass and optimize
@@ -157,6 +156,10 @@ for epoch in range(num_epochs):
         for batch_idx, (inputs, targets) in enumerate(test_dataloader):
             inputs, targets = inputs.to(device), targets.to(device)
             outputs = model(inputs)
+            print("Outputs shapes:")
+            print(outputs.shape)
+            print("Targets shapes:")
+            print(targets.shape)
             loss = criterion(outputs, targets)
             test_loss += loss.item()
 
