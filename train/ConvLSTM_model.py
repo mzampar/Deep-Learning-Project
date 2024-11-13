@@ -32,7 +32,7 @@ class ConvLSTM_Model(nn.Module):
             in_channel = self.frame_channel if i == 0 else num_hidden[i - 1]
             cell_list.append(
                 ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'],
-                                       configs['stride'], configs['layer_norm'], configs['batch_size'])
+                                       configs['stride'], configs['layer_norm'])
             )
         self.cell_list = nn.ModuleList(cell_list)
         self.conv_last = nn.Conv2d(num_hidden[num_layers - 1], self.frame_channel,

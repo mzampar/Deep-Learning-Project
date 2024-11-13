@@ -10,10 +10,10 @@ class ConvLSTMCell(nn.Module):
         self.num_hidden = num_hidden
         self.padding = filter_size // 2
         self._forget_bias = 1.0
-        self.context_input = nn.Parameter(torch.randn (num_hidden, height, width))
-        self.context_hidden = nn.Parameter(torch.randn(num_hidden, height, width))
-        self.context_output = nn.Parameter(torch.randn(num_hidden, height, width))
-        self.context_forget = nn.Parameter(torch.randn(num_hidden, height, width))
+        self.context_input = nn.Parameter(torch.randn (1, num_hidden, height, width))
+        # self.context_hidden = nn.Parameter(torch.randn(num_hidden, height, width)) (not used)
+        self.context_output = nn.Parameter(torch.randn(1, num_hidden, height, width))
+        self.context_forget = nn.Parameter(torch.randn(1, num_hidden, height, width))
         # we could also add the bias
 
         if layer_norm:
