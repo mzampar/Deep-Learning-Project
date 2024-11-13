@@ -80,25 +80,15 @@ train_data = None
 test_data = None
 dataset = None
 
-batch_size = 5
-# reverse scheduled sampling
-r_sampling_step_1 = 25000
-r_sampling_step_2 = 50000
-r_exp_alpha = 5000
-# scheduled sampling
-scheduled_sampling = 1
-sampling_stop_iter = 50000
-sampling_start_value = 1.0
-sampling_changing_rate = 0.00002
+batch_size = 64
 # model
-num_hidden = '32,64'
 filter_size = 5
 stride = 1
 patch_size = 2
 layer_norm = 0
 
-num_layers = 2
-num_hidden = [32, 64] 
+num_hidden = [64]
+num_layers = len(num_hidden)
 
 custom_model_config = {
     'in_shape': [5, 3, 256, 256], # T, C, H, W
@@ -125,7 +115,11 @@ th.cuda.empty_cache()
 # Instantiate the model
 input_dim = 3  # Assuming x_train shape is (batch_size, sequence_length, channels, height, width)
 model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config)
+model = nn.DataParallel(model, device_ids=[0, 1])
 model.to(device)
+
+print(th.cuda.memory_allocated(0))  # Memory allocated on GPU 0
+print(th.cuda.memory_allocated(1)) 
 
 dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)

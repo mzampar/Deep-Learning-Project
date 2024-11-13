@@ -4,16 +4,16 @@ import torch.nn as nn
 
 class ConvLSTMCell(nn.Module):
 
-    def __init__(self, in_channel, num_hidden, height, width, filter_size, stride, layer_norm, batch_size):
+    def __init__(self, in_channel, num_hidden, height, width, filter_size, stride, layer_norm):
         super(ConvLSTMCell, self).__init__()
 
         self.num_hidden = num_hidden
         self.padding = filter_size // 2
         self._forget_bias = 1.0
-        self.context_input = nn.Parameter(torch.randn(batch_size, num_hidden, height, width))
-        self.context_hidden = nn.Parameter(torch.randn(batch_size, num_hidden, height, width))
-        self.context_output = nn.Parameter(torch.randn(batch_size, num_hidden, height, width))
-        self.context_forget = nn.Parameter(torch.randn(batch_size, num_hidden, height, width))
+        self.context_input = nn.Parameter(torch.randn (num_hidden, height, width))
+        self.context_hidden = nn.Parameter(torch.randn(num_hidden, height, width))
+        self.context_output = nn.Parameter(torch.randn(num_hidden, height, width))
+        self.context_forget = nn.Parameter(torch.randn(num_hidden, height, width))
         # we could also add the bias
 
         if layer_norm:
