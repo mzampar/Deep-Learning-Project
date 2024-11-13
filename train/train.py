@@ -25,7 +25,7 @@ class HybridLoss(nn.Module):
 
     def forward(self, pred, target):
         mse = self.mse_loss(pred, target)
-        ssim_loss = 1 - ssim(pred, target, data_range=1.0, size_average=True)  # SSIM returns similarity, so use (1 - SSIM)
+        ssim_loss = 1 - ssim(pred, target, data_range=1.0, size_average=True)
         return (1 - self.alpha) * mse + self.alpha * ssim_loss
 
 class SequenceDataset(th.utils.data.Dataset):
@@ -113,7 +113,7 @@ device = th.device("cuda" if th.cuda.is_available() else "cpu")
 th.cuda.empty_cache()
 
 # Instantiate the model
-input_dim = 3  # Assuming x_train shape is (batch_size, sequence_length, channels, height, width)
+# Assuming x_train shape is (batch_size, sequence_length, channels, height, width)
 model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config)
 model = nn.DataParallel(model, device_ids=[0, 1])
 model.to(device)

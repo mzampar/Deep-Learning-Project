@@ -10,13 +10,16 @@ class ConvLSTMCell(nn.Module):
         self.num_hidden = num_hidden
         self.padding = filter_size // 2
         self._forget_bias = 1.0
+        # Weights for the context, named in the paper as W_ci, W_cf, W_co, W_ch
         self.context_input = nn.Parameter(torch.randn (1, num_hidden, height, width))
         # self.context_hidden = nn.Parameter(torch.randn(num_hidden, height, width)) (not used)
         self.context_output = nn.Parameter(torch.randn(1, num_hidden, height, width))
         self.context_forget = nn.Parameter(torch.randn(1, num_hidden, height, width))
         # we could also add the bias
 
+        # Convolutions for the input and hidden states
         if layer_norm:
+            # num_hidden * 4 because we have 4 gates
             self.conv_x = nn.Sequential(
                 nn.Conv2d(in_channel, num_hidden * 4, kernel_size=filter_size,
                           stride=stride, padding=self.padding, bias=False),
@@ -57,6 +60,7 @@ class ConvLSTMCell(nn.Module):
         i_x, f_x, g_x, o_x = torch.split(x_concat, self.num_hidden, dim=1)
         i_h, f_h, g_h, o_h = torch.split(h_concat, self.num_hidden, dim=1)
 
+        # computing the four gates as in the paper
         i_t = torch.sigmoid(i_x + i_h + self.context_input * c_t) 
         f_t = torch.sigmoid(f_x + f_h + self.context_forget * c_t)
         g_t = torch.tanh(g_x + g_h)
