@@ -11,7 +11,7 @@ from torch.optim.lr_scheduler import StepLR
 from ConvLSTM_model import ConvLSTM_Model
 
 import torch.nn.functional as F
-#from pytorch_msssim import ssim
+from pytorch_msssim import ssim
 
 class HybridLoss(nn.Module):
     def __init__(self, alpha=0.5):
@@ -78,8 +78,6 @@ test_data = test_data.drop(columns=['seq_id', 'rain_category'])
 train_data = train_data.astype(int)
 test_data = test_data.astype(int)
 
-print(train_data.iloc[1])
-
 train_dataset = SequenceDataset(train_data, '../../fast/tensor/', k_in=5, k_out=5)
 test_dataset = SequenceDataset(test_data, '../../fast/tensor/', k_in=5, k_out=5)
 
@@ -132,8 +130,8 @@ test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, 
 # Define loss and optimizer
 #criterion = nn.MSELoss()
 criterion = HybridLoss(alpha=0.25)
-optimizer = th.optim.Adam(model.parameters())
-scheduler = StepLR(optimizer, step_size=5, gamma=0.1)
+optimizer = th.optim.Adam(model.parameters(), lr=1)
+scheduler = StepLR(optimizer, step_size=1, gamma=0.1)
 
 # Training loop
 num_epochs = 10  # Set the number of epochs
@@ -183,11 +181,8 @@ for epoch in range(num_epochs):
     with th.no_grad():  # No gradients needed for testing
         for batch_idx, (inputs, targets) in enumerate(test_dataloader):
             inputs, targets = inputs.to(device), targets.to(device)
-            outputs = model(inputs)
-            print("Outputs shapes:")
-            print(outputs.shape)
-            print("Targets shapes:")
-            print(targets.shape)
+            mask_true = th.ones(inputs.shape).to(device)
+            outputs = model(inputs, mask_true)
             loss = criterion(outputs, targets)
             test_loss += loss.item()
 
