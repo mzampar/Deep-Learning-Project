@@ -115,11 +115,7 @@ th.cuda.empty_cache()
 # Instantiate the model
 # Assuming x_train shape is (batch_size, sequence_length, channels, height, width)
 model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config)
-model = nn.DataParallel(model, device_ids=[0, 1])
 model.to(device)
-
-print(th.cuda.memory_allocated(0))  # Memory allocated on GPU 0
-print(th.cuda.memory_allocated(1)) 
 
 dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
