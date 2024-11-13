@@ -78,8 +78,8 @@ test_data = test_data.drop(columns=['seq_id', 'rain_category'])
 train_data = train_data.astype(int)
 test_data = test_data.astype(int)
 
-train_dataset = SequenceDataset(train_data, '../../fast/tensor/', k_in=5, k_out=5)
-test_dataset = SequenceDataset(test_data, '../../fast/tensor/', k_in=5, k_out=5)
+train_dataset = SequenceDataset(train_data, '../../fast/gray_tensor/', k_in=5, k_out=5)
+test_dataset = SequenceDataset(test_data, '../../fast/gray_tensor/', k_in=5, k_out=5)
 
 id_data = None
 seq_df = None
@@ -87,18 +87,18 @@ train_data = None
 test_data = None
 dataset = None
 
-batch_size = 16
+batch_size = 64
 # model
 filter_size = 5
 stride = 1
 patch_size = 2
 layer_norm = 0
 
-num_hidden = [64, 32]
+num_hidden = [64, 64, 64, 64]
 num_layers = len(num_hidden)
 
 custom_model_config = {
-    'in_shape': [5, 3, 256, 256], # T, C, H, W
+    'in_shape': [5, 3, 128, 128], # T, C, H, W
     'patch_size': 1,
     'filter_size': 1, # given to ConvLSTMCell
     'stride': 1, # given to ConvLSTMCell
