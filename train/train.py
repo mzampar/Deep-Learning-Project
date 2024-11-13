@@ -11,7 +11,7 @@ from torch.optim.lr_scheduler import StepLR
 from ConvLSTM_model import ConvLSTM_Model
 
 import torch.nn.functional as F
-from pytorch_msssim import ssim
+#from pytorch_msssim import ssim
 
 class HybridLoss(nn.Module):
     def __init__(self, alpha=0.5):
@@ -70,6 +70,15 @@ train_data = id_data[id_data['sequence'].isin(train_seq_idx)]
 dataset = pd.read_csv('../data/id_seq_dataset_10.csv')
 train_data = dataset[dataset['seq_id'].isin(train_seq_idx)]
 test_data = dataset[dataset['seq_id'].isin(test_seq_idx)]
+
+# exclude the sequence and rain column
+train_data = train_data.drop(columns=['seq_id', 'rain_category'])
+test_data = test_data.drop(columns=['seq_id', 'rain_category'])
+# convert the df to int
+train_data = train_data.astype(int)
+test_data = test_data.astype(int)
+
+print(train_data.iloc[1])
 
 train_dataset = SequenceDataset(train_data, '../../fast/tensor/', k_in=5, k_out=5)
 test_dataset = SequenceDataset(test_data, '../../fast/tensor/', k_in=5, k_out=5)
