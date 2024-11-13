@@ -80,14 +80,14 @@ train_data = None
 test_data = None
 dataset = None
 
-batch_size = 64
+batch_size = 16
 # model
 filter_size = 5
 stride = 1
 patch_size = 2
 layer_norm = 0
 
-num_hidden = [64]
+num_hidden = [64, 32]
 num_layers = len(num_hidden)
 
 custom_model_config = {
@@ -126,7 +126,7 @@ test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, 
 
 # Define loss and optimizer
 #criterion = nn.MSELoss()
-criterion = HybridLoss(alpha=0.5)
+criterion = HybridLoss(alpha=0.25)
 optimizer = th.optim.Adam(model.parameters())
 scheduler = StepLR(optimizer, step_size=5, gamma=0.1)
 
