@@ -122,6 +122,7 @@ th.cuda.empty_cache()
 # Instantiate the model
 # Assuming x_train shape is (batch_size, sequence_length, channels, height, width)
 model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config)
+model = nn.DataParallel(model)
 model.to(device)
 
 dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -195,7 +196,7 @@ end_time = time.time()
 
 print(f"Training completed in {end_time - start_time}!")
 
-th.save(model.state_dict(), "../models/model.pth")
+th.save(model.module.state_dict(), "../models/model.pth")
 
 print("Model saved!")
 
