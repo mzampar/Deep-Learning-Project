@@ -95,10 +95,11 @@ class ConvLSTM_Model(nn.Module):
             c_t_prev = c_t
             # the last layer generates the output frame
             x_gen = self.conv_last(h_t[self.num_layers - 1])
-            if (t > self.configs['pre_seq_length'] + self.configs['aft_seq_length'] - 1):
+            # -2 because we start from 0 and the k_in-th output frame is the first generated frame
+            if (t > self.configs['pre_seq_length'] + self.configs['aft_seq_length'] - 2):
                 # keep track of the generated frames
                 next_frames.append(x_gen)
 
         # we could also return the loss btw the predicted frames and the true frames
-
-        return torch.stack(next_frames, dim=1)
+        # we discard the last frame beacuse it would be the k_out+1-th frame
+        return torch.stack(next_frames[:-1], dim=1)

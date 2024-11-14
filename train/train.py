@@ -94,11 +94,11 @@ stride = 1
 patch_size = 2
 layer_norm = 0
 
-num_hidden = [64, 64, 64, 64]
+num_hidden = [64, 32, 32, 64]
 num_layers = len(num_hidden)
 
 custom_model_config = {
-    'in_shape': [5, 3, 128, 128], # T, C, H, W
+    'in_shape': [5, 1, 128, 128], # T, C, H, W
     'patch_size': 1,
     'filter_size': 1, # given to ConvLSTMCell
     'stride': 1, # given to ConvLSTMCell
