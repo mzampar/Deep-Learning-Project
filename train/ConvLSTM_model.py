@@ -39,14 +39,14 @@ class ConvLSTM_Model(nn.Module):
         self.conv_last = nn.Conv2d(num_hidden[num_layers - 1], self.frame_channel,
                                    kernel_size=1, stride=1, padding=0, bias=False)
 
-    def forward(self, frames_tensor, mask_true, **kwargs):
+    def forward(self, frames_tensor, mask_true):
         """
         We are probably following a different approach from the paper.
         We are processing one frame at a time, passing it vertically trough the layers, to get an output frame.
         During prediction, this output frame is then used as input for the next frame.
         During trianing we could use sheduled sampling to make the model able to use its own predictions also and not only the inputs when analysing the given sequence.
         When processing vertically a frame, we keep track of the hidden and cell states of each layer, that will be used when processing the next frame.
-        I think this is more efficient because we only have to keep track of the hidden and cell states of the last frame processed.
+        I think this is more efficient because we only have to keep track of the hidden and cell states of the last (in time) frame processed.
         """
 
         # frames_tensor: [batch, length, channel, height, width]
@@ -72,12 +72,12 @@ class ConvLSTM_Model(nn.Module):
         # if t < pre_seq_length, we use the true frames; 
         # if t < pre_seq_length + aft_seq_length, we use mix the true frames and the generated frames; 
         # if t >= pre_seq_length + aft_seq_length, we use the generated frames
-        for t in range(self.configs['pre_seq_length'] + self.configs['aft_seq_length'] + self.configs['target_seq_length']):
-            if t < self.configs['pre_seq_length']:
+        for t in range(2*length):
+            if t < length//2:
                 net = frames_tensor[:, t]
-            elif t < self.configs['pre_seq_length'] + self.configs['aft_seq_length']:
-                net = mask_true[:, t - self.configs['pre_seq_length']] * frames_tensor[:, t] + \
-                        (1 - mask_true[:, t - self.configs['pre_seq_length']]) * x_gen
+            elif t < length:
+                net = mask_true[:, t - length//2] * frames_tensor[:, t] + \
+                        (1 - mask_true[:, t - length//2]) * x_gen
             else:
                 net = x_gen
             # keeping track of the hidden and cell states of each layer
@@ -96,7 +96,7 @@ class ConvLSTM_Model(nn.Module):
             # the last layer generates the output frame
             x_gen = self.conv_last(h_t[self.num_layers - 1])
             # -2 because we start from 0 and the k_in-th output frame is the first generated frame
-            if (t > self.configs['pre_seq_length'] + self.configs['aft_seq_length'] - 2):
+            if (t > length - 2):
                 # keep track of the generated frames
                 next_frames.append(x_gen)
 
