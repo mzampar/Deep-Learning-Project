@@ -39,7 +39,7 @@ class ConvLSTM_Model(nn.Module):
         self.conv_last = nn.Conv2d(num_hidden[num_layers - 1], self.frame_channel,
                                    kernel_size=1, stride=1, padding=0, bias=False)
 
-    def forward(self, frames_tensor, mask_true):
+    def forward(self, frames_tensor, mask_true, ):
         """
         We are probably following a different approach from the paper.
         We are processing one frame at a time, passing it vertically trough the layers, to get an output frame.
@@ -70,14 +70,16 @@ class ConvLSTM_Model(nn.Module):
         # schedule sampling:
         # here we manage the inputs: frames_tensor and mask_true
         # if t < pre_seq_length, we use the true frames; 
-        # if t < pre_seq_length + aft_seq_length, we use mix the true frames and the generated frames; 
+        # if t < pre_seq_length + aft_seq_length, we mix the true frames and the generated frames; 
         # if t >= pre_seq_length + aft_seq_length, we use the generated frames
+
+        x_gen = frames_tensor[:, 0]
+
         for t in range(2*length):
             if t < length//2:
                 net = frames_tensor[:, t]
             elif t < length:
-                net = mask_true[:, t - length//2] * frames_tensor[:, t] + \
-                        (1 - mask_true[:, t - length//2]) * x_gen
+                net = mask_true[:, t] * frames_tensor[:, t] + (1 - mask_true[:, t]) * x_gen
             else:
                 net = x_gen
             # keeping track of the hidden and cell states of each layer
