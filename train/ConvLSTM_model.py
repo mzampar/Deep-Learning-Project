@@ -14,7 +14,7 @@ class ConvLSTM_Model(nn.Module):
 
     """
 
-    def __init__(self, num_layers, num_hidden, configs, **kwargs):
+    def __init__(self, num_layers, num_hidden, configs, schedule_sampling = False, **kwargs):
         super(ConvLSTM_Model, self).__init__()
         T, C, H, W = configs['in_shape']
 
@@ -22,6 +22,7 @@ class ConvLSTM_Model(nn.Module):
         self.frame_channel = configs['patch_size'] * configs['patch_size'] * C
         self.num_layers = num_layers
         self.num_hidden = num_hidden
+        self.schedule_sampling = schedule_sampling
         cell_list = []
 
         height = H // configs['patch_size']
@@ -39,7 +40,7 @@ class ConvLSTM_Model(nn.Module):
         self.conv_last = nn.Conv2d(num_hidden[num_layers - 1], self.frame_channel,
                                    kernel_size=1, stride=1, padding=0, bias=False)
 
-    def forward(self, frames_tensor, mask_true, ):
+    def forward(self, frames_tensor, mask_true, schedule_sampling=False):
         """
         We are probably following a different approach from the paper.
         We are processing one frame at a time, passing it vertically trough the layers, to get an output frame.
@@ -76,12 +77,19 @@ class ConvLSTM_Model(nn.Module):
         x_gen = frames_tensor[:, 0]
 
         for t in range(2*length):
-            if t < length//2:
-                net = frames_tensor[:, t]
-            elif t < length:
-                net = mask_true[:, t] * frames_tensor[:, t] + (1 - mask_true[:, t]) * x_gen
+            if not schedule_sampling:
+                if t < length:
+                    net = frames_tensor[:, t]
+                else:
+                    net = x_gen
             else:
-                net = x_gen
+                if t < length//2:
+                    net = frames_tensor[:, t]
+                elif t < length:
+                    net = mask_true[:, t] * frames_tensor[:, t] + (1 - mask_true[:, t]) * x_gen
+                else:
+                    net = x_gen
+
             # keeping track of the hidden and cell states of each layer
             h_t = []
             c_t = []
