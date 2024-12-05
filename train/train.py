@@ -3,7 +3,7 @@ from torch.utils.data import Dataset
 from torch import nn
 
 from ConvLSTM_model import ConvLSTM_Model
-from SequenceDataset import SequenceDataset
+from utils import SequenceDataset, SSIM_MSE_Loss
 
 import pandas as pd
 import os
@@ -52,7 +52,7 @@ stride = 1
 patch_size = 2
 layer_norm = 0
 
-num_hidden = [32, 16, 16, 32]
+num_hidden = [64, 32, 32, 64]
 num_layers = len(num_hidden)
 
 custom_model_config = {
@@ -76,17 +76,18 @@ th.cuda.empty_cache()
 # Instantiate the model
 # Assuming x_train shape is (batch_size, sequence_length, channels, height, width)
 model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config, schedule_sampling=False)
-model = nn.DataParallel(model)
+#model = nn.DataParallel(model)
 model.to(device)
 # Define loss and optimizer
 criterion = nn.MSELoss()
+criterion = SSIM_MSE_Loss(alpha=0.5)
 optimizer = th.optim.Adam(model.parameters())
 
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
 train_losses_out = []
 test_losses_out = []
 
-for seq_len in range(1, 11):
+for seq_len in range(2, 11):
     th.cuda.empty_cache()
     print(f"Training with sequence length {seq_len}")
     
@@ -96,12 +97,25 @@ for seq_len in range(1, 11):
     test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=16, shuffle=False)
 
     # Training loop
-    num_epochs = 10  # Set the number of epochs
+    num_epochs = 1  # Set the number of epochs
     # Lists to keep track of the losses for each epoch
     train_losses = []
     test_losses = []
 
-    for epoch in range(num_epochs):
+    mask_true = th.ones(custom_model_config['in_shape'])
+
+    # Number of elements to set to zero
+    num_zeros = custom_model_config['in_shape'][1]*custom_model_config['in_shape'][2]//(100*seq_len)
+    # Flatten the tensor to 1D
+    flat_mask = mask_true.view(-1)
+    # Randomly choose indices to set to zero
+    zero_indices = th.randperm(flat_mask.numel())[:num_zeros]
+    # Set those indices to zero
+    flat_mask[zero_indices] = 0
+    # Reshape back to the original shape
+    mask_true = flat_mask.view(custom_model_config['in_shape'])
+
+    for epoch in range(num_epochs*seq_len//2):
         # Training phase
         model.train()
         running_loss = 0.0
@@ -111,7 +125,7 @@ for seq_len in range(1, 11):
             # Zero the parameter gradients
             optimizer.zero_grad()
             # Forward pass
-            outputs = model(inputs, th.ones_like(inputs), schedule_sampling=False)
+            outputs = model(inputs, mask_true = mask_true, schedule_sampling=True)
             # Compute loss
             loss = criterion(outputs, targets)
             # Backward pass and optimize
@@ -122,17 +136,10 @@ for seq_len in range(1, 11):
             
             # Print training info every 10 batches
             if batch_idx % 10 == 0:
-                total_norm = 0.0
-                for param in model.parameters():
-                    if param.grad is not None:
-                        param_norm = param.grad.data.norm(2)
-                        total_norm += param_norm.item() ** 2
-                total_norm = total_norm ** 0.5
                 print(f"Epoch [{epoch+1}/{num_epochs}], Batch [{batch_idx+1}], Loss: {loss.item():.4f}")
 
             del outputs, loss, inputs, targets
             th.cuda.empty_cache()
-
         # Calculate and store the average training loss for this epoch
         epoch_train_loss = running_loss / len(dataloader)
         train_losses.append(epoch_train_loss)
@@ -158,5 +165,6 @@ for seq_len in range(1, 11):
     test_losses_out.append(test_losses)
 
 print("Training complete!")
+
 
 th.save(model.state_dict(), "../models/model.pth")
