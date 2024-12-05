@@ -103,6 +103,7 @@ for seq_len in range(2, 11):
     test_losses = []
 
     mask_true = th.ones(custom_model_config['in_shape'])
+    mask_true = mask_true.to(device)
 
     # Number of elements to set to zero
     num_zeros = custom_model_config['in_shape'][1]*custom_model_config['in_shape'][2]//(100*seq_len)

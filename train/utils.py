@@ -14,7 +14,11 @@ class SSIM_MSE_Loss(nn.Module):
 
     def forward(self, pred, target):
         # Compute SSIM
-        ssim_loss = 1 - ssim(pred, target, data_range=1.0)
+        pred_channel = pred[:, :, 0, :, :]
+        target_channel = target[:, :, 0, :, :]
+        pred_channel = pred_channel.view(-1, 1, pred_channel.size(-2), pred_channel.size(-1))
+        target_channel = target_channel.view(-1, 1, target_channel.size(-2), target_channel.size(-1))
+        ssim_loss = 1 - ssim(pred_channel, target_channel, data_range=1.0)
         # Compute MSE
         mse_loss = self.mse_loss(pred, target)
         # Weighted combination
