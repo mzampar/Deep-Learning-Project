@@ -10,11 +10,15 @@ class ConvLSTMCell(nn.Module):
         self.num_hidden = num_hidden
         self.padding = filter_size // 2
         self._forget_bias = 1.0
-        # Weights for the context, named in the paper as W_ci, W_cf, W_co, W_ch
-        self.context_input = nn.Parameter(torch.randn (1, num_hidden, height, width))
-        # self.context_hidden = nn.Parameter(torch.randn(num_hidden, height, width)) (not used)
-        self.context_output = nn.Parameter(torch.randn(1, num_hidden, height, width))
-        self.context_forget = nn.Parameter(torch.randn(1, num_hidden, height, width))
+        # Initialize weights for the context
+        self.context_input = nn.Parameter(torch.empty(1, num_hidden, height, width))
+        self.context_output = nn.Parameter(torch.empty(1, num_hidden, height, width))
+        self.context_forget = nn.Parameter(torch.empty(1, num_hidden, height, width))
+
+        # Apply Xavier initialization to context parameters
+        nn.init.xavier_uniform_(self.context_input)
+        nn.init.xavier_uniform_(self.context_output)
+        nn.init.xavier_uniform_(self.context_forget)
         # we could also add the bias
 
         # Convolutions for the input and hidden states

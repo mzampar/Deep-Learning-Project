@@ -16,7 +16,7 @@ class ConvLSTM_Model(nn.Module):
 
     def __init__(self, num_layers, num_hidden, configs, schedule_sampling = False, **kwargs):
         super(ConvLSTM_Model, self).__init__()
-        T, C, H, W = configs['in_shape']
+        C, H, W = configs['in_shape']
 
         self.configs = configs
         self.frame_channel = configs['patch_size'] * configs['patch_size'] * C
