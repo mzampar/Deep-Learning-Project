@@ -96,7 +96,7 @@ for seq_len in range(1, 11):
     test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=16, shuffle=False)
 
     # Training loop
-    num_epochs = 1  # Set the number of epochs
+    num_epochs = 10  # Set the number of epochs
     # Lists to keep track of the losses for each epoch
     train_losses = []
     test_losses = []
@@ -119,12 +119,19 @@ for seq_len in range(1, 11):
             optimizer.step()
             # Accumulate loss
             running_loss += loss.item()
-            del outputs, loss, inputs, targets
-            th.cuda.empty_cache()
             
             # Print training info every 10 batches
             if batch_idx % 10 == 0:
+                total_norm = 0.0
+                for param in model.parameters():
+                    if param.grad is not None:
+                        param_norm = param.grad.data.norm(2)
+                        total_norm += param_norm.item() ** 2
+                total_norm = total_norm ** 0.5
                 print(f"Epoch [{epoch+1}/{num_epochs}], Batch [{batch_idx+1}], Loss: {loss.item():.4f}")
+
+            del outputs, loss, inputs, targets
+            th.cuda.empty_cache()
 
         # Calculate and store the average training loss for this epoch
         epoch_train_loss = running_loss / len(dataloader)
