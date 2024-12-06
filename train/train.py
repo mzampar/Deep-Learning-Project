@@ -46,22 +46,18 @@ test_seq = None
 train_seq_idx = None
 test_seq_idx = None
 
-# model
-filter_size = 5
-stride = 1
-patch_size = 2
-layer_norm = 0
-
-num_hidden = [32, 64, 64, 32]
+num_hidden = [16,8,8,16]
 num_layers = len(num_hidden)
+batch_size = 64
+schedule_sampling = False
+print(f"Training with {num_hidden} architecture, batch size = {batch_size}, with scheduled_sampling = {schedule_sampling}.")
 
 custom_model_config = {
     'in_shape': [1, 128, 128], # T, C, H, W
     'patch_size': 1,
-    'filter_size': 1, # given to ConvLSTMCell
-    'stride': 1, # given to ConvLSTMCell
+    'filter_size': 3, # given to ConvLSTMCell
+    'stride': 2, # given to ConvLSTMCell
     'layer_norm' : False, # given to ConvLSTMCell
-    # the sum of pre_seq_length and aft_seq_length has to be = len(inputs)
     'reverse_scheduled_sampling': 0
 }
 
@@ -75,59 +71,54 @@ th.cuda.empty_cache()
 
 # Instantiate the model
 # Assuming x_train shape is (batch_size, sequence_length, channels, height, width)
-model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config, schedule_sampling=False)
+model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config)
 #model = nn.DataParallel(model)
 model.to(device)
 # Define loss and optimizer
 criterion = nn.MSELoss()
-criterion = SSIM_MSE_Loss(alpha=0.5)
+alpha = 1.0
+criterion = SSIM_MSE_Loss(alpha=1.0)
+print("Loss function: SSIM_MSE_Loss.")
 optimizer = th.optim.Adam(model.parameters())
 
-# Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
-train_losses_out = []
-test_losses_out = []
-
-for seq_len in range(2, 11):
-    th.cuda.empty_cache()
-    print(f"Training with sequence length {seq_len}")
-    
-    train_dataset = SequenceDataset(train_data, '../../scratch/grey_tensor/', seq_len, seq_len)
-    test_dataset = SequenceDataset(test_data, '../../scratch/grey_tensor/', seq_len, seq_len)
-    dataloader = th.utils.data.DataLoader(train_dataset, batch_size=16, shuffle=True)
-    test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=16, shuffle=False)
-
-    # Training loop
-    num_epochs = 1  # Set the number of epochs
-    # Lists to keep track of the losses for each epoch
-    train_losses = []
-    test_losses = []
-
+if schedule_sampling:
     mask_true = th.ones(custom_model_config['in_shape'])
     mask_true = mask_true.to(device)
-    # Number of elements to set to zero
-    num_zeros = seq_len * 1000
+else:
+    mask_true = None
 
-    for epoch in range(num_epochs*seq_len//2):
+# Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
+for seq_len in range(2, 11):
+    alpha -= 0.05
+    criterion = SSIM_MSE_Loss(alpha=alpha)
+    th.cuda.empty_cache()
+    print(f"Training with sequence length {seq_len}, with alpha = {alpha}.")
+
+    train_dataset = SequenceDataset(train_data, '../../scratch/grey_tensor/', seq_len, seq_len)
+    test_dataset = SequenceDataset(test_data, '../../scratch/grey_tensor/', seq_len, seq_len)
+    dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+
+    num_epochs = 1
+    # Number of elements to set to zero in the mask
+    num_zeros = seq_len * 100
+
+    for epoch in range(num_epochs):
         # Training phase
         model.train()
         running_loss = 0.0
         for batch_idx, (inputs, targets) in enumerate(dataloader):
-            """
-            # Flatten the tensor to 1D
-            flat_mask = mask_true.view(-1)
-            # Randomly choose indices to set to zero
-            zero_indices = th.randperm(flat_mask.numel())[:num_zeros]
-            # Set those indices to zero
-            flat_mask[zero_indices] = 0
-            # Reshape back to the original shape
-            mask_true = flat_mask.view(custom_model_config['in_shape'])
-            """
-            # Move data to device (GPU if available)
+            if schedule_sampling:
+                flat_mask = mask_true.view(-1)
+                # Randomly choose indices to set to zero
+                zero_indices = th.randperm(flat_mask.numel())[:num_zeros]
+                flat_mask[zero_indices] = 0
+                mask_true = flat_mask.view(custom_model_config['in_shape'])
             inputs, targets = inputs.to(device), targets.to(device)
             # Zero the parameter gradients
             optimizer.zero_grad()
             # Forward pass
-            outputs = model(inputs, mask_true = mask_true, schedule_sampling=False)
+            outputs = model(inputs, mask_true = mask_true, schedule_sampling=schedule_sampling)
             # Compute loss
             loss = criterion(outputs, targets)
             # Backward pass and optimize
@@ -135,7 +126,7 @@ for seq_len in range(2, 11):
             optimizer.step()
             # Accumulate loss
             running_loss += loss.item()
-            
+
             # Print training info every 10 batches
             if batch_idx % 10 == 0:
                 print(f"Epoch [{epoch+1}/{num_epochs}], Batch [{batch_idx+1}], Loss: {loss.item():.4f}")
@@ -144,7 +135,6 @@ for seq_len in range(2, 11):
             th.cuda.empty_cache()
         # Calculate and store the average training loss for this epoch
         epoch_train_loss = running_loss / len(dataloader)
-        train_losses.append(epoch_train_loss)
         print(f"Epoch [{epoch+1}/{num_epochs}] - Average Train Loss: {epoch_train_loss:.4f}")
 
         # Validation (test) phase
@@ -159,14 +149,9 @@ for seq_len in range(2, 11):
 
         # Calculate and store the average test loss for this epoch
         epoch_test_loss = test_loss / len(test_dataloader)  # Using len(test_dataloader) for batch average
-        test_losses.append(epoch_test_loss)
         print(f"Epoch [{epoch+1}/{num_epochs}] - Average Test Loss: {epoch_test_loss:.4f}")
-    
-    # Store the losses for this sequence length
-    train_losses_out.append(train_losses)
-    test_losses_out.append(test_losses)
 
 print("Training complete!")
 
 
-th.save(model.state_dict(), "../models/model.pth")
+th.save(model.state_dict(), "../models/model_16_8_8_16.pth)

@@ -14,30 +14,48 @@ class ConvLSTM_Model(nn.Module):
 
     """
 
-    def __init__(self, num_layers, num_hidden, configs, schedule_sampling = False, **kwargs):
+    def __init__(self, num_layers, num_hidden, configs, **kwargs):
         super(ConvLSTM_Model, self).__init__()
         C, H, W = configs['in_shape']
 
         self.configs = configs
         self.frame_channel = configs['patch_size'] * configs['patch_size'] * C
-        self.num_layers = num_layers
+        # we assume to work with an even number of ConvLSTM layers, 
+        # 2 are used for the encoder (Convolution) and 2 for the decoder (Transposed convolution)
+        self.num_layers = num_layers 
         self.num_hidden = num_hidden
-        self.schedule_sampling = schedule_sampling
         cell_list = []
 
         height = H // configs['patch_size']
         width = W // configs['patch_size']
 
-        for i in range(num_layers):
+        for i in range(num_layers//2 + num_layers%2):
+            height /= configs['stride']
+            width /= configs['stride']
+            height = int(height)
+            width = int(width)
         # vertical stack of ConvLSTM cells
             in_channel = self.frame_channel if i == 0 else num_hidden[i - 1]
             cell_list.append(
                 ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'],
-                                       configs['stride'], configs['layer_norm'])
+                                       configs['stride'], configs['layer_norm'], transpose=False)
             )
+
+        for i in range(num_layers//2 + num_layers%2, num_layers):
+            height *= configs['stride']
+            width *= configs['stride']
+            height = int(height)
+            width = int(width)
+            in_channel = num_hidden[i - 1]
+            cell_list.append(
+                ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'],
+                                       configs['stride'], configs['layer_norm'], transpose=True)
+            )
+
+
         self.cell_list = nn.ModuleList(cell_list)
         # the last layer has to output the frame_channel
-        self.conv_last = nn.Conv2d(num_hidden[num_layers - 1], self.frame_channel,
+        self.conv_last = nn.Conv2d(num_hidden[-1], self.frame_channel,
                                    kernel_size=1, stride=1, padding=0, bias=False)
 
     def forward(self, frames_tensor, mask_true, schedule_sampling=False):
@@ -45,7 +63,7 @@ class ConvLSTM_Model(nn.Module):
         We are probably following a different approach from the paper.
         We are processing one frame at a time, passing it vertically trough the layers, to get an output frame.
         During prediction, this output frame is then used as input for the next frame.
-        During trianing we could use sheduled sampling to make the model able to use its own predictions also and not only the inputs when analysing the given sequence.
+        During trianing we could use scheduled sampling to make the model able to use its own predictions also and not only the inputs when analysing the given sequence.
         When processing vertically a frame, we keep track of the hidden and cell states of each layer, that will be used when processing the next frame.
         I think this is more efficient because we only have to keep track of the hidden and cell states of the last (in time) frame processed.
         """
@@ -62,10 +80,20 @@ class ConvLSTM_Model(nn.Module):
         h_t_prev = []
         c_t_prev = []
 
-        for i in range(self.num_layers):
+        for i in range(self.num_layers//2 + self.num_layers%2):
             # the hidden and cell states of each layer for the first frame are initialized with zeros
-            zeros = torch.zeros([batch, self.num_hidden[i], height, width]).to(device)
+            zeros = torch.zeros([batch, self.num_hidden[i], height//(self.configs['stride']**(i+1)), width//(self.configs['stride']**(i+1))]).to(device)
             h_t_prev.append(zeros)
+            zeros = torch.zeros([batch, self.num_hidden[i], height//(self.configs['stride']**(i+1)), width//(self.configs['stride']**(i+1))]).to(device)
+            c_t_prev.append(zeros)
+        for j, i in enumerate(reversed(range(self.num_layers // 2 + self.num_layers % 2, self.num_layers))):
+            zeros = torch.zeros([batch, self.num_hidden[j+self.num_layers//2], 
+                                height // (self.configs['stride'] ** (i - self.num_layers // 2)), 
+                                width // (self.configs['stride'] ** (i - self.num_layers // 2))]).to(device)
+            h_t_prev.append(zeros)
+            zeros = torch.zeros([batch, self.num_hidden[j+self.num_layers//2], 
+                                height // (self.configs['stride'] ** (i - self.num_layers // 2)), 
+                                width // (self.configs['stride'] ** (i - self.num_layers // 2))]).to(device)
             c_t_prev.append(zeros)
 
         # schedule sampling:
