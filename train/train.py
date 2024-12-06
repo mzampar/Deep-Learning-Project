@@ -52,7 +52,7 @@ stride = 1
 patch_size = 2
 layer_norm = 0
 
-num_hidden = [64, 32, 32, 64]
+num_hidden = [32, 64, 64, 32]
 num_layers = len(num_hidden)
 
 custom_model_config = {
@@ -104,29 +104,30 @@ for seq_len in range(2, 11):
 
     mask_true = th.ones(custom_model_config['in_shape'])
     mask_true = mask_true.to(device)
-
     # Number of elements to set to zero
-    num_zeros = custom_model_config['in_shape'][1]*custom_model_config['in_shape'][2]//(100*seq_len)
-    # Flatten the tensor to 1D
-    flat_mask = mask_true.view(-1)
-    # Randomly choose indices to set to zero
-    zero_indices = th.randperm(flat_mask.numel())[:num_zeros]
-    # Set those indices to zero
-    flat_mask[zero_indices] = 0
-    # Reshape back to the original shape
-    mask_true = flat_mask.view(custom_model_config['in_shape'])
+    num_zeros = seq_len * 1000
 
     for epoch in range(num_epochs*seq_len//2):
         # Training phase
         model.train()
         running_loss = 0.0
         for batch_idx, (inputs, targets) in enumerate(dataloader):
+            """
+            # Flatten the tensor to 1D
+            flat_mask = mask_true.view(-1)
+            # Randomly choose indices to set to zero
+            zero_indices = th.randperm(flat_mask.numel())[:num_zeros]
+            # Set those indices to zero
+            flat_mask[zero_indices] = 0
+            # Reshape back to the original shape
+            mask_true = flat_mask.view(custom_model_config['in_shape'])
+            """
             # Move data to device (GPU if available)
             inputs, targets = inputs.to(device), targets.to(device)
             # Zero the parameter gradients
             optimizer.zero_grad()
             # Forward pass
-            outputs = model(inputs, mask_true = mask_true, schedule_sampling=True)
+            outputs = model(inputs, mask_true = mask_true, schedule_sampling=False)
             # Compute loss
             loss = criterion(outputs, targets)
             # Backward pass and optimize

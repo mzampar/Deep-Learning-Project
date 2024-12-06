@@ -83,9 +83,9 @@ class ConvLSTM_Model(nn.Module):
                 else:
                     net = x_gen
             else:
-                if t < length//2:
-                    net = frames_tensor[:, t]
-                elif t < length:
+                #if t < length//2:
+                #    net = frames_tensor[:, t]
+                if t < length:
                     net = mask_true * frames_tensor[:, t] + (1 - mask_true) * x_gen
                 else:
                     net = x_gen
