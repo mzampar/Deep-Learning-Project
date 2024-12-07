@@ -50,7 +50,6 @@ num_hidden = [16,8,8,16]
 num_layers = len(num_hidden)
 batch_size = 64
 schedule_sampling = False
-print(f"Training with {num_hidden} architecture, batch size = {batch_size}, with scheduled_sampling = {schedule_sampling}.")
 
 custom_model_config = {
     'in_shape': [1, 128, 128], # T, C, H, W
@@ -79,7 +78,17 @@ criterion = nn.MSELoss()
 alpha = 1.0
 criterion = SSIM_MSE_Loss(alpha=1.0)
 print("Loss function: SSIM_MSE_Loss.")
-optimizer = th.optim.Adam(model.parameters())
+
+# Add a learning rate scheduler
+schedule_yes = False
+if schedule_yes:
+    initial_lr = 0.1
+    optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
+    scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.1)
+else:
+    optimizer = th.optim.Adam(model.parameters())
+
+print(f"Training with {num_hidden} architecture, batch size = {batch_size}, with scheduled_sampling = {schedule_sampling}, with scheduler = {schedule_yes}.")
 
 if schedule_sampling:
     mask_true = th.ones(custom_model_config['in_shape'])
@@ -88,7 +97,7 @@ else:
     mask_true = None
 
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
-for seq_len in range(2, 11):
+for seq_len in range(2, 21):
     alpha -= 0.05
     criterion = SSIM_MSE_Loss(alpha=alpha)
     th.cuda.empty_cache()
@@ -133,6 +142,7 @@ for seq_len in range(2, 11):
 
             del outputs, loss, inputs, targets
             th.cuda.empty_cache()
+        # scheduler.step()
         # Calculate and store the average training loss for this epoch
         epoch_train_loss = running_loss / len(dataloader)
         print(f"Epoch [{epoch+1}/{num_epochs}] - Average Train Loss: {epoch_train_loss:.4f}")
@@ -154,4 +164,4 @@ for seq_len in range(2, 11):
 print("Training complete!")
 
 
-th.save(model.state_dict(), "../models/model_16_8_8_16.pth)
+th.save(model.state_dict(), "../models/model_16_8_8_16.pth")

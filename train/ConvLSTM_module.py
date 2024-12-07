@@ -33,54 +33,62 @@ class ConvLSTMCell(nn.Module):
                 # num_hidden * 4 because we have 4 gates
                 self.conv_x = nn.Sequential(
                     nn.ConvTranspose2d(in_channel, num_hidden * 4, kernel_size=filter_size,
-                                    stride=stride, padding=self.padding, bias=False),
-                    nn.LayerNorm([num_hidden * 4, height, width])
-                )
-                self.conv_h = nn.Sequential(
-                    nn.ConvTranspose2d(num_hidden, num_hidden * 4, kernel_size=filter_size,
-                                    stride=stride, padding=self.padding, bias=False),
-                    nn.LayerNorm([num_hidden * 4, height, width])
-                )
-                # conv_o is not used in the forward pass
-                self.conv_o = nn.Sequential(
-                    nn.ConvTranspose2d(num_hidden * 2, num_hidden, kernel_size=filter_size,
-                                    stride=stride, padding=self.padding, bias=False),
-                    nn.LayerNorm([num_hidden, height, width])
-                )
-            else:
-                self.conv_x = nn.Sequential(
-                    nn.Conv2d(in_channel, num_hidden * 4, kernel_size=filter_size,
-                            stride=stride, padding=self.padding, bias=False),
+                        stride=stride, padding=self.trans_padding, bias=False, output_padding=self.out_padding),
                     nn.LayerNorm([num_hidden * 4, height, width])
                 )
                 self.conv_h = nn.Sequential(
                     nn.Conv2d(num_hidden, num_hidden * 4, kernel_size=filter_size,
-                            stride=stride, padding=self.padding, bias=False),
+                        stride=1, padding=self.padding, bias=False),
                     nn.LayerNorm([num_hidden * 4, height, width])
                 )
                 # conv_o is not used in the forward pass
+                """
+                self.conv_o = nn.Sequential(
+                    nn.ConvTranspose2d(num_hidden * 2, num_hidden, kernel_size=filter_size,
+                        stride=stride, padding=self.trans_padding, bias=False, output_padding=self.out_padding),
+                    nn.LayerNorm([num_hidden * 2, height, width])
+                )
+                """
+            else:
+                self.conv_x = nn.Sequential(
+                    nn.Conv2d(in_channel, num_hidden * 4, kernel_size=filter_size,
+                        stride=stride, padding=self.padding, bias=False),
+                    nn.LayerNorm([num_hidden * 4, height, width])
+                )
+                self.conv_h = nn.Sequential(
+                    nn.Conv2d(num_hidden, num_hidden * 4, kernel_size=filter_size,
+                        stride=1, padding=self.padding, bias=False),
+                    nn.LayerNorm([num_hidden * 4, height, width])
+                )
+                """
+                # conv_o is not used in the forward pass
                 self.conv_o = nn.Sequential(
                     nn.Conv2d(num_hidden * 2, num_hidden, kernel_size=filter_size,
-                            stride=stride, padding=self.padding, bias=False),
-                    nn.LayerNorm([num_hidden, height, width])
+                        stride=stride, padding=self.padding, bias=False),
+                    nn.LayerNorm([num_hidden * 2, height, width])
                 )
+                """
         else:
             if transpose:
                 self.conv_x = nn.ConvTranspose2d(in_channel, num_hidden * 4, kernel_size=filter_size,
-                                    stride=stride, padding=self.trans_padding, bias=False, output_padding=self.out_padding)
+                                stride=stride, padding=self.trans_padding, bias=False, output_padding=self.out_padding)
                 self.conv_h = nn.Conv2d(num_hidden, num_hidden * 4, kernel_size=filter_size,
-                                        stride=1, padding=self.padding, bias=False)
+                                stride=1, padding=self.padding, bias=False)
                 # conv_o is not used in the forward pass
+                """
                 self.conv_o = nn.ConvTranspose2d(num_hidden * 2, num_hidden, kernel_size=filter_size,
-                                    stride=stride, padding=self.trans_padding, bias=False, output_padding=self.out_padding)
+                                stride=stride, padding=self.trans_padding, bias=False, output_padding=self.out_padding)
+                """
             else:
                 self.conv_x = nn.Conv2d(in_channel, num_hidden * 4, kernel_size=filter_size,
-                                        stride=stride, padding=self.padding, bias=False)
+                                stride=stride, padding=self.padding, bias=False)
                 self.conv_h = nn.Conv2d(num_hidden, num_hidden * 4, kernel_size=filter_size,
-                                        stride=1, padding=self.padding, bias=False)
+                                stride=1, padding=self.padding, bias=False)
                 # conv_o is not used in the forward pass
+                """
                 self.conv_o = nn.Conv2d(num_hidden * 2, num_hidden, kernel_size=filter_size,
-                                        stride=stride, padding=self.padding, bias=False)
+                                stride=stride, padding=self.padding, bias=False)
+                """
 
 
     def forward(self, x_t_new, h_t, c_t):
