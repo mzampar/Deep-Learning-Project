@@ -21,24 +21,26 @@ num_epochs = 1
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--job_id', type=str, required=True, help='SLURM job ID')
-parser.add_argument('--schedule', type=bool ,required=False, help='scheduler')
-parser.add_argument('--ssim', type=bool, required=False, help='ssim')
+parser.add_argument('--schedule', type=int, choices=[0, 1], required=False, help='scheduler')
+parser.add_argument('--ssim', type=int, choices=[0, 1], required=False, help='ssim')
 parser.add_argument('--stride', type=int, required=False, help='stride')
 parser.add_argument('--filter_size', type=int, required=False, help='filter_size')
 parser.add_argument('--patch_size', type=int, required=False, help='patch_size')
-parser.add_argument('--num_hidden', type=list, required=False, help='num_hidden')
+parser.add_argument('--num_hidden', type=str, required=False, help='num_hidden')
 parser.add_argument('--batch_size', type=int, required=False, help='batch_size')
 parser.add_argument('--num_epochs', type=int, required=False, help='num_epochs')
-parser.add_argument('--layer_norm', type=bool, required=False, help='layer_norm')
-parser.add_argument('--schedule_sampling', type=bool, required=False, help='schedule_sampling')
+parser.add_argument('--layer_norm', type=int, choices=[0, 1], required=False, help='layer_norm')
+parser.add_argument('--schedule_sampling', type=int, choices=[0, 1], required=False, help='schedule_sampling')
 args = parser.parse_args()
 
 if args.job_id is not None:
     job_id = args.job_id
 if args.schedule is not None:
     schedule_yes = args.schedule
+    schedule_yes = bool(schedule_yes)
 if args.ssim is not None:
     ssim = args.ssim
+    ssim = bool(ssim)
 if args.stride is not None:
     stride = args.stride
 if args.filter_size is not None:
@@ -54,8 +56,10 @@ if args.num_epochs is not None:
     num_epochs = args.num_epochs
 if args.layer_norm is not None:
     layer_norm = args.layer_norm
+    layer_norm = bool(layer_norm)
 if args.schedule_sampling is not None:
     schedule_sampling = args.schedule_sampling
+    schedule_sampling = bool(schedule_sampling)
 
 print(f"Training with:\n{num_hidden} architecture, \n layer norm = {layer_norm}, \n ssim loss = {ssim}, \n batch size = {batch_size}, \n scheduled_sampling = {schedule_sampling}, \n scheduler = {schedule_yes}.")
 
