@@ -28,7 +28,7 @@ parser.add_argument('--filter_size', type=int, required=False, help='filter_size
 parser.add_argument('--patch_size', type=int, required=False, help='patch_size')
 parser.add_argument('--num_hidden', type=list, required=False, help='num_hidden')
 parser.add_argument('--batch_size', type=int, required=False, help='batch_size')
-parser.add_argument('--num_epochs', type=bool, required=False, help='num_epochs')
+parser.add_argument('--num_epochs', type=int, required=False, help='num_epochs')
 parser.add_argument('--layer_norm', type=bool, required=False, help='layer_norm')
 parser.add_argument('--schedule_sampling', type=bool, required=False, help='schedule_sampling')
 args = parser.parse_args()
@@ -77,10 +77,10 @@ seq_df = pd.DataFrame({'seq_len': seq_len, 'seq_rain': seq_rain})
 # split the sequences in train and test set (80/20)
 train_seq = seq_df.sample(frac=0.8, random_state=1)
 test_seq = seq_df.drop(train_seq.index)
-print(train_seq['seq_len'].mean(), test_seq['seq_len'].mean())
-print(train_seq['seq_len'].std(), test_seq['seq_len'].std())
-print(train_seq['seq_rain'].mean(), test_seq['seq_rain'].mean())
-print(train_seq['seq_rain'].std(), test_seq['seq_rain'].std())
+print(f"Average train sequence lenght: {train_seq['seq_len'].mean()}.")
+print(f"Average test sequence lenght:, {test_seq['seq_len'].mean()}.")
+print(f"Average test rain:, {train_seq['seq_rain'].mean()}.")
+print(f"Average train rain:, {test_seq['seq_rain'].mean()}.")
 # get the sequences of the train and test set
 train_seq_idx = train_seq.index
 test_seq_idx = test_seq.index
@@ -210,4 +210,4 @@ for seq_len in range(2,10):
 print("Training complete!")
 
 model_name = f"../models/model_{num_hidden[0]}_{num_hidden[1]}_{num_hidden[2]}_{num_hidden[3]}_{job_id}.pth"
-th.save(model.state_dict(), "../models/model_16_8_8_16.pth")
+th.save(model.state_dict(), model_name)
