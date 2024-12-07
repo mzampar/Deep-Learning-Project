@@ -61,7 +61,8 @@ if args.schedule_sampling is not None:
     schedule_sampling = args.schedule_sampling
     schedule_sampling = bool(schedule_sampling)
 
-print(f"Training with:\n{num_hidden} architecture, \n layer norm = {layer_norm}, \n ssim loss = {ssim}, \n batch size = {batch_size}, \n scheduled_sampling = {schedule_sampling}, \n scheduler = {schedule_yes}.")
+print(f"Training with:\n    {num_hidden} architecture, \n   layer norm = {layer_norm}, \n   ssim loss = {ssim}, \n  batch size = {batch_size}, \n   scheduled_sampling = {schedule_sampling}, \n    scheduler = {schedule_yes}.")
+print("")
 
 custom_model_config = {
     'in_shape': [1, 128, 128], # T, C, H, W
@@ -85,6 +86,7 @@ print(f"Average train sequence lenght: {train_seq['seq_len'].mean()}.")
 print(f"Average test sequence lenght:, {test_seq['seq_len'].mean()}.")
 print(f"Average test rain:, {train_seq['seq_rain'].mean()}.")
 print(f"Average train rain:, {test_seq['seq_rain'].mean()}.")
+print("")
 # get the sequences of the train and test set
 train_seq_idx = train_seq.index
 test_seq_idx = test_seq.index
@@ -139,6 +141,7 @@ else:
 
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
 for seq_len in range(2,10):
+    print("")
     th.cuda.empty_cache()
     if ssim:
         alpha -= 0.05
@@ -195,7 +198,7 @@ for seq_len in range(2,10):
             scheduler.step()
         # Calculate and store the average training loss for this epoch
         epoch_train_loss = running_loss / len(dataloader)
-        print(f"Epoch [{epoch+1}/{num_epochs}] - Average Train Loss: {epoch_train_loss:.4f}")
+        print(f"Epoch [{epoch+1}/{num_epochs*seq_len}] - Average Train Loss: {epoch_train_loss:.4f}")
 
         # Validation (test) phase
         model.eval()
@@ -211,6 +214,7 @@ for seq_len in range(2,10):
         epoch_test_loss = test_loss / len(test_dataloader)  # Using len(test_dataloader) for batch average
         print(f"Epoch [{epoch+1}/{num_epochs}] - Average Test Loss: {epoch_test_loss:.4f}")
 
+print("")
 print("Training complete!")
 
 model_name = f"../models/model_{num_hidden[0]}_{num_hidden[1]}_{num_hidden[2]}_{num_hidden[3]}_{job_id}.pth"
