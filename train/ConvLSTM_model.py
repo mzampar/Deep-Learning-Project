@@ -52,11 +52,14 @@ class ConvLSTM_Model(nn.Module):
                                        configs['stride'], configs['layer_norm'], transpose=True)
             )
 
-
         self.cell_list = nn.ModuleList(cell_list)
         # the last layer has to output the frame_channel
-        self.conv_last = nn.Conv2d(num_hidden[-1], self.frame_channel,
-                                   kernel_size=1, stride=1, padding=0, bias=False)
+        self.conv_last = nn.Sequential(
+            nn.Conv2d(num_hidden[-1], self.frame_channel, kernel_size=1, stride=1, padding=0, bias=False),
+            # to ensure that the output is in the range [0, 1]
+            nn.Sigmoid()
+        )
+
 
     def forward(self, frames_tensor, mask_true, schedule_sampling=False):
         """

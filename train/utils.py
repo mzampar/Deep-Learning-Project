@@ -5,6 +5,7 @@ import os
 import torch as th
 import torch.nn as nn
 from torchmetrics.functional import structural_similarity_index_measure as ssim
+import torch.nn.functional as F
 
 class SSIM_MSE_Loss(nn.Module):
     def __init__(self, alpha=0.5):
