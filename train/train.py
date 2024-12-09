@@ -18,6 +18,7 @@ schedule_yes = False
 ssim = False
 schedule_sampling = False
 num_epochs = 1
+criterion = nn.MSELoss()
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--job_id', type=str, required=True, help='SLURM job ID')
@@ -29,6 +30,7 @@ parser.add_argument('--patch_size', type=int, required=False, help='patch_size')
 parser.add_argument('--num_hidden', type=str, required=False, help='num_hidden')
 parser.add_argument('--batch_size', type=int, required=False, help='batch_size')
 parser.add_argument('--num_epochs', type=int, required=False, help='num_epochs')
+parser.add_argument('--loss', type=int, choices=[0,1,2], required=False, help='loss: 0 = MSE, 1 = BCE, 2 = SSIM+MSE')
 parser.add_argument('--layer_norm', type=int, choices=[0, 1], required=False, help='layer_norm')
 parser.add_argument('--schedule_sampling', type=int, choices=[0, 1], required=False, help='schedule_sampling')
 args = parser.parse_args()
@@ -60,8 +62,15 @@ if args.layer_norm is not None:
 if args.schedule_sampling is not None:
     schedule_sampling = args.schedule_sampling
     schedule_sampling = bool(schedule_sampling)
+if args.loss is not None:
+    if args.loss == 0:
+        criterion = nn.MSELoss()
+    elif args.loss == 1:
+        criterion = nn.BCELoss()
+    elif args.loss == 2:
+        criterion = SSIM_MSE_Loss()
 
-print(f"Training with:\n    {num_hidden} architecture, \n   layer norm = {layer_norm}, \n   ssim loss = {ssim}, \n  batch size = {batch_size}, \n   scheduled_sampling = {schedule_sampling}, \n    scheduler = {schedule_yes}.")
+print(f"Training with:\n    {num_hidden} architecture,\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes}.")
 print("")
 
 custom_model_config = {
