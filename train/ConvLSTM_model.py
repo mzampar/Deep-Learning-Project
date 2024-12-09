@@ -8,7 +8,7 @@ class ConvLSTM_Model(nn.Module):
     """ConvLSTM Model
 
     Implementation of `Convolutional LSTM Network: A Machine Learning Approach
-    for Precipitation Nowcasting <https://arxiv.org/abs/1506.04214>`_.
+    for Precipitation Nowcasting <https://arxiv.org/abs/1506.04214>`.
 
     Code readapted from https://github.com/chengtan9907/OpenSTL/blob/OpenSTL-Lightning/openstl/models/convlstm_model.py
 
@@ -24,6 +24,7 @@ class ConvLSTM_Model(nn.Module):
         # 2 are used for the encoder (Convolution) and 2 for the decoder (Transposed convolution)
         self.num_layers = num_layers 
         self.num_hidden = num_hidden
+        self.bias = configs['bias']
         cell_list = []
 
         height = H // configs['patch_size']
@@ -49,13 +50,13 @@ class ConvLSTM_Model(nn.Module):
             in_channel = num_hidden[i - 1]
             cell_list.append(
                 ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'],
-                                       configs['stride'], configs['layer_norm'], transpose=True)
+                                       configs['stride'], configs['layer_norm'], transpose=configs['transpose'], bias=self.bias)
             )
 
         self.cell_list = nn.ModuleList(cell_list)
         # the last layer has to output the frame_channel
         self.conv_last = nn.Sequential(
-            nn.Conv2d(num_hidden[-1], self.frame_channel, kernel_size=1, stride=1, padding=0, bias=False),
+            nn.Conv2d(num_hidden[-1], self.frame_channel, kernel_size=3, stride=1, padding=1, bias=False),
             # to ensure that the output is in the range [0, 1]
             nn.Sigmoid()
         )

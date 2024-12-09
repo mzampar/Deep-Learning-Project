@@ -20,6 +20,8 @@ num_epochs = 1
 criterion = nn.MSELoss()
 initial_lr = 0.1
 gamma = 0.5
+bias = True
+transpose = True
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--job_id', type=str, required=True, help='SLURM job ID')
@@ -27,6 +29,8 @@ parser.add_argument('--schedule', type=int, choices=[0, 1], required=False, help
 parser.add_argument('--stride', type=int, required=False, help='stride')
 parser.add_argument('--filter_size', type=int, required=False, help='filter_size')
 parser.add_argument('--patch_size', type=int, required=False, help='patch_size')
+parser.add_argument('--bias', type=int, choices=[0, 1], required=False, help='bias')
+parser.add_argument('--transpose', type=int, choices=[0, 1], required=False, help='bias')
 parser.add_argument('--num_hidden', type=str, required=False, help='num_hidden')
 parser.add_argument('--batch_size', type=int, required=False, help='batch_size')
 parser.add_argument('--num_epochs', type=int, required=False, help='num_epochs')
@@ -42,6 +46,12 @@ if args.job_id is not None:
 if args.schedule is not None:
     schedule_yes = args.schedule
     schedule_yes = bool(schedule_yes)
+if args.bias is not None:
+    bias = args.bias
+    bias = bool(bias)
+if args.transpose is not None:
+    transpose = args.transpose
+    transpose = bool(transpose)
 if args.stride is not None:
     stride = args.stride
 if args.filter_size is not None:
@@ -82,7 +92,9 @@ custom_model_config = {
     'patch_size': patch_size,
     'filter_size': filter_size, # given to ConvLSTMCell
     'stride': stride, # given to ConvLSTMCell
-    'layer_norm' : layer_norm # given to ConvLSTMCell
+    'layer_norm' : layer_norm, # given to ConvLSTMCell
+    'transpose': transpose, # given to ConvLSTMCell
+    'bias': bias
 }
 
 # define a dataset
@@ -195,7 +207,7 @@ for seq_len in range(1,10):
 
             # Print training info every 10 batches
             if batch_idx % 10 == 0:
-                print(f"Epoch [{epoch+1}/{num_epochs}], Batch [{batch_idx+1}], Loss: {loss.item():.4f}")
+                print(f"Epoch [{epoch+1}/{num_epochs}], Batch [{batch_idx+1}], Loss: {loss.item():.6f}")
 
             del outputs, loss, inputs, targets
             th.cuda.empty_cache()
