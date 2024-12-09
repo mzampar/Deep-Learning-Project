@@ -126,11 +126,13 @@ alpha = 1.0
 # Add a learning rate scheduler
 schedule_yes = False
 if schedule_yes:
-    initial_lr = 1.0
+    initial_lr = 0.1
     optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
     scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.5)
+    print(f"Using learning rate scheduler with initial_lr = {initial_lr}.")
 else:
     optimizer = th.optim.Adam(model.parameters())
+
 
 if schedule_sampling:
     mask_true = th.ones(custom_model_config['in_shape'])
@@ -151,7 +153,6 @@ for seq_len in range(2,10):
 
     # after each sequence length, we reset the optimizer and the scheduler
     if schedule_yes:
-        initial_lr = 0.01
         optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
         scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.1)
 
