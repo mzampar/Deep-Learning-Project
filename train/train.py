@@ -18,6 +18,7 @@ schedule_yes = False
 schedule_sampling = False
 num_epochs = 1
 criterion = nn.MSELoss()
+initial_lr = 0.1
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--job_id', type=str, required=True, help='SLURM job ID')
@@ -31,6 +32,7 @@ parser.add_argument('--num_epochs', type=int, required=False, help='num_epochs')
 parser.add_argument('--loss', type=int, choices=[0,1,2], required=False, help='loss: 0 = MSE, 1 = BCE, 2 = SSIM+MSE')
 parser.add_argument('--layer_norm', type=int, choices=[0, 1], required=False, help='layer_norm')
 parser.add_argument('--schedule_sampling', type=int, choices=[0, 1], required=False, help='schedule_sampling')
+parser.add_argument('--initial_lr', type=float, required=False, help='initial_lr')
 args = parser.parse_args()
 
 if args.job_id is not None:
@@ -65,6 +67,8 @@ if args.loss is not None:
         criterion = nn.BCELoss()
     elif args.loss == 2:
         criterion = SSIM_MSE_Loss()
+if args.initial_lr is not None:
+    initial_lr = args.initial_lr
 
 print(f"Training with:\n    {num_hidden} architecture,\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes}.")
 print("")
@@ -124,11 +128,9 @@ model.to(device)
 # Define loss and optimizer
 alpha = 1.0
 # Add a learning rate scheduler
-schedule_yes = False
 if schedule_yes:
-    initial_lr = 0.1
     optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
-    scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.5)
+    scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.1)
     print(f"Using learning rate scheduler with initial_lr = {initial_lr}.")
 else:
     optimizer = th.optim.Adam(model.parameters())
@@ -164,7 +166,7 @@ for seq_len in range(1,10):
     # Number of elements to set to zero in the mask
     num_zeros = seq_len * 200
 
-    for epoch in range(num_epochs*seq_len):
+    for epoch in range(num_epochs*seq_len//2):
         # Training phase
         model.train()
         running_loss = 0.0
