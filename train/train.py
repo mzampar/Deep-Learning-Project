@@ -58,6 +58,7 @@ if args.schedule_sampling is not None:
     schedule_sampling = args.schedule_sampling
     schedule_sampling = bool(schedule_sampling)
 if args.loss is not None:
+    loss = args.loss
     if args.loss == 0:
         criterion = nn.MSELoss()
     elif args.loss == 1:
@@ -125,9 +126,9 @@ alpha = 1.0
 # Add a learning rate scheduler
 schedule_yes = False
 if schedule_yes:
-    initial_lr = 0.1
+    initial_lr = 1.0
     optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
-    scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.1)
+    scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.5)
 else:
     optimizer = th.optim.Adam(model.parameters())
 
