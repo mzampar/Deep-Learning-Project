@@ -19,6 +19,7 @@ schedule_sampling = False
 num_epochs = 1
 criterion = nn.MSELoss()
 initial_lr = 0.1
+gamma = 0.5
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--job_id', type=str, required=True, help='SLURM job ID')
@@ -33,6 +34,7 @@ parser.add_argument('--loss', type=int, choices=[0,1,2], required=False, help='l
 parser.add_argument('--layer_norm', type=int, choices=[0, 1], required=False, help='layer_norm')
 parser.add_argument('--schedule_sampling', type=int, choices=[0, 1], required=False, help='schedule_sampling')
 parser.add_argument('--initial_lr', type=float, required=False, help='initial_lr')
+parser.add_argument('--gamma', type=float, required=False, help='gamma')
 args = parser.parse_args()
 
 if args.job_id is not None:
@@ -69,6 +71,8 @@ if args.loss is not None:
         criterion = SSIM_MSE_Loss()
 if args.initial_lr is not None:
     initial_lr = args.initial_lr
+if args.gamma is not None:
+    gamma = args.gamma
 
 print(f"Training with:\n    {num_hidden} architecture,\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes}.")
 print("")
@@ -130,8 +134,8 @@ alpha = 1.0
 # Add a learning rate scheduler
 if schedule_yes:
     optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
-    scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.1)
-    print(f"Using learning rate scheduler with initial_lr = {initial_lr}.")
+    scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
+    print(f"Using learning rate scheduler with initial_lr = {initial_lr} and gamma = {gamma}.")
 else:
     optimizer = th.optim.Adam(model.parameters())
 
@@ -156,7 +160,7 @@ for seq_len in range(1,10):
     # after each sequence length, we reset the optimizer and the scheduler
     if schedule_yes:
         optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
-        scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.1)
+        scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
 
     train_dataset = SequenceDataset(train_data, '../../scratch/grey_tensor/', seq_len, seq_len)
     test_dataset = SequenceDataset(test_data, '../../scratch/grey_tensor/', seq_len, seq_len)
@@ -166,7 +170,7 @@ for seq_len in range(1,10):
     # Number of elements to set to zero in the mask
     num_zeros = seq_len * 200
 
-    for epoch in range(num_epochs*seq_len//2):
+    for epoch in range(num_epochs*seq_len//2+1):
         # Training phase
         model.train()
         running_loss = 0.0
