@@ -139,7 +139,6 @@ if schedule_yes:
 else:
     optimizer = th.optim.Adam(model.parameters())
 
-
 if schedule_sampling:
     mask_true = th.ones(custom_model_config['in_shape'])
     mask_true = mask_true.to(device)
