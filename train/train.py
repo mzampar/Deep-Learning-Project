@@ -15,7 +15,6 @@ num_layers = len(num_hidden)
 batch_size = 64
 layer_norm = True
 schedule_yes = False
-ssim = False
 schedule_sampling = False
 num_epochs = 1
 criterion = nn.MSELoss()
@@ -23,7 +22,6 @@ criterion = nn.MSELoss()
 parser = argparse.ArgumentParser()
 parser.add_argument('--job_id', type=str, required=True, help='SLURM job ID')
 parser.add_argument('--schedule', type=int, choices=[0, 1], required=False, help='scheduler')
-parser.add_argument('--ssim', type=int, choices=[0, 1], required=False, help='ssim')
 parser.add_argument('--stride', type=int, required=False, help='stride')
 parser.add_argument('--filter_size', type=int, required=False, help='filter_size')
 parser.add_argument('--patch_size', type=int, required=False, help='patch_size')
@@ -40,9 +38,6 @@ if args.job_id is not None:
 if args.schedule is not None:
     schedule_yes = args.schedule
     schedule_yes = bool(schedule_yes)
-if args.ssim is not None:
-    ssim = args.ssim
-    ssim = bool(ssim)
 if args.stride is not None:
     stride = args.stride
 if args.filter_size is not None:
@@ -126,13 +121,7 @@ model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config)
 #model = nn.DataParallel(model)
 model.to(device)
 # Define loss and optimizer
-ssim = False
-if ssim:
-    alpha = 1.0
-    criterion = SSIM_MSE_Loss(alpha=1.0)
-else:
-    criterion = nn.MSELoss()
-
+alpha = 1.0
 # Add a learning rate scheduler
 schedule_yes = False
 if schedule_yes:
@@ -152,7 +141,7 @@ else:
 for seq_len in range(2,10):
     print("")
     th.cuda.empty_cache()
-    if ssim:
+    if loss==2:
         alpha -= 0.05
         criterion = SSIM_MSE_Loss(alpha=alpha)
         print(f"Training with sequence length {seq_len}, with alpha = {alpha}.")
