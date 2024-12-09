@@ -23,10 +23,10 @@ class ConvLSTMCell(nn.Module):
         nn.init.xavier_uniform_(self.context_input)
         nn.init.xavier_uniform_(self.context_output)
         nn.init.xavier_uniform_(self.context_forget)
-        # we could also add the bias
+        # We could also add the bias
 
         # Convolutions for the input and hidden states
-        # height after transpose: output_height = (height−1)*stride − 2*padding + kernel_size + output_padding
+        # Height after transpose: output_height = (height−1)*stride − 2*padding + kernel_size + output_padding
 
         if layer_norm:
             if transpose:
@@ -60,8 +60,8 @@ class ConvLSTMCell(nn.Module):
                         stride=1, padding=self.padding, bias=bias),
                     nn.LayerNorm([num_hidden * 4, height, width])
                 )
-                """
                 # conv_o is not used in the forward pass
+                """
                 self.conv_o = nn.Sequential(
                     nn.Conv2d(num_hidden * 2, num_hidden, kernel_size=filter_size,
                         stride=stride, padding=self.padding, bias=False),

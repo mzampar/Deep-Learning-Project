@@ -6,7 +6,7 @@ from utils import SequenceDataset, SSIM_MSE_Loss
 import pandas as pd
 import argparse
 
-# these are the default values
+# Default values
 stride = 2
 filter_size = 3
 patch_size = 1
@@ -84,27 +84,27 @@ if args.initial_lr is not None:
 if args.gamma is not None:
     gamma = args.gamma
 
-print(f"Training with:\n    {num_hidden} architecture,\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes},\n    bias = {bias},\n    transpose = {transpose},\n    initial_lr = {initial_lr},\n    gamma = {gamma}.")
+print(f"Training with:\n    {num_hidden} architecture,\n    stride = {stride},\n    filter_size = {filter_size}\n,    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes},\n    bias = {bias},\n    transpose = {transpose},\n    initial_lr = {initial_lr},\n    gamma = {gamma}.")
 print("")
 
 custom_model_config = {
-    'in_shape': [1, 128, 128], # T, C, H, W
+    'in_shape': [1, 128, 128], # C, H, W
     'patch_size': patch_size,
-    'filter_size': filter_size, # given to ConvLSTMCell
-    'stride': stride, # given to ConvLSTMCell
-    'layer_norm' : layer_norm, # given to ConvLSTMCell
-    'transpose': transpose, # given to ConvLSTMCell
+    'filter_size': filter_size, 
+    'stride': stride, 
+    'layer_norm' : layer_norm, 
+    'transpose': transpose,
     'bias': bias
 }
 
-# define a dataset
+# Define the dataset
 id_data = pd.read_csv('../data/id_df_final.csv')
 seq_len = id_data.groupby('sequence').size()
 seq_len = seq_len.to_dict()
 seq_rain = id_data.groupby('sequence')['rain_category'].mean()
 seq_rain = seq_rain.to_dict()
 seq_df = pd.DataFrame({'seq_len': seq_len, 'seq_rain': seq_rain})
-# split the sequences in train and test set (80/20)
+# Split the sequences in train and test set (80/20)
 train_seq = seq_df.sample(frac=0.8, random_state=1)
 test_seq = seq_df.drop(train_seq.index)
 print(f"Average train sequence lenght: {train_seq['seq_len'].mean()}.")
@@ -112,13 +112,11 @@ print(f"Average test sequence lenght:, {test_seq['seq_len'].mean()}.")
 print(f"Average test rain:, {train_seq['seq_rain'].mean()}.")
 print(f"Average train rain:, {test_seq['seq_rain'].mean()}.")
 print("")
-# get the sequences of the train and test set
+# Get the sequences of the train and test set
 train_seq_idx = train_seq.index
 test_seq_idx = test_seq.index
 train_data = id_data[id_data['sequence'].isin(train_seq_idx)]
-train_data.shape
 test_data = id_data[id_data['sequence'].isin(test_seq_idx)]
-test_data.shape
 
 id_data = None
 seq_len = None
@@ -137,9 +135,9 @@ device = th.device("cuda" if th.cuda.is_available() else "cpu")
 th.cuda.empty_cache()
 
 # Instantiate the model
-# Assuming x_train shape is (batch_size, sequence_length, channels, height, width)
+# x_train shape is (batch_size, sequence_length, channels, height, width)
 model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config)
-#model = nn.DataParallel(model)
+# model = nn.DataParallel(model)
 model.to(device)
 # Define loss and optimizer
 alpha = 1.0
@@ -168,7 +166,7 @@ for seq_len in range(1,10):
     else:
         print(f"Training with sequence length {seq_len}.")
 
-    # after each sequence length, we reset the optimizer and the scheduler
+    # After each sequence length, we reset the optimizer and the scheduler
     if schedule_yes:
         optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
         scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
@@ -202,33 +200,31 @@ for seq_len in range(1,10):
             # Backward pass and optimize
             loss.backward()
             optimizer.step()
-            # Accumulate loss
             running_loss += loss.item()
 
-            # Print training info every 10 batches
             if batch_idx % 10 == 0:
                 print(f"Epoch [{epoch+1}/{num_epochs}], Batch [{batch_idx+1}], Loss: {loss.item():.6f}")
 
             del outputs, loss, inputs, targets
             th.cuda.empty_cache()
+
         if schedule_yes:
             scheduler.step()
-        # Calculate and store the average training loss for this epoch
+
         epoch_train_loss = running_loss / len(dataloader)
         print(f"Epoch [{epoch+1}/{num_epochs*seq_len}] - Average Train Loss: {epoch_train_loss:.4f}")
 
-        # Validation (test) phase
+        # Validation phase
         model.eval()
         test_loss = 0.0
-        with th.no_grad():  # No gradients needed for testing
+        with th.no_grad():
             for batch_idx, (inputs, targets) in enumerate(test_dataloader):
                 inputs, targets = inputs.to(device), targets.to(device)
                 outputs = model(inputs, th.ones_like(inputs), schedule_sampling=False)
                 loss = criterion(outputs, targets)
                 test_loss += loss.item()
 
-        # Calculate and store the average test loss for this epoch
-        epoch_test_loss = test_loss / len(test_dataloader)  # Using len(test_dataloader) for batch average
+        epoch_test_loss = test_loss / len(test_dataloader)
         print(f"Epoch [{epoch+1}/{num_epochs}] - Average Test Loss: {epoch_test_loss:.4f}")
 
 print("")

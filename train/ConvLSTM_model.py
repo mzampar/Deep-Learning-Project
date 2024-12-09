@@ -20,7 +20,7 @@ class ConvLSTM_Model(nn.Module):
 
         self.configs = configs
         self.frame_channel = configs['patch_size'] * configs['patch_size'] * C
-        # we assume to work with an even number of ConvLSTM layers, 
+        # Assuming to work with an even number of ConvLSTM layers, 
         # 2 are used for the encoder (Convolution) and 2 for the decoder (Transposed convolution)
         self.num_layers = num_layers 
         self.num_hidden = num_hidden
@@ -35,7 +35,7 @@ class ConvLSTM_Model(nn.Module):
             width /= configs['stride']
             height = int(height)
             width = int(width)
-        # vertical stack of ConvLSTM cells
+        # Vertical stack of ConvLSTM cells
             in_channel = self.frame_channel if i == 0 else num_hidden[i - 1]
             cell_list.append(
                 ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'],
@@ -54,10 +54,10 @@ class ConvLSTM_Model(nn.Module):
             )
 
         self.cell_list = nn.ModuleList(cell_list)
-        # the last layer has to output the frame_channel
+        # The last layer has to output the frame_channel
         self.conv_last = nn.Sequential(
             nn.Conv2d(num_hidden[-1], self.frame_channel, kernel_size=3, stride=1, padding=1, bias=False),
-            # to ensure that the output is in the range [0, 1]
+            # To ensure that the output is in the range [0, 1]
             nn.Sigmoid()
         )
 
@@ -67,7 +67,7 @@ class ConvLSTM_Model(nn.Module):
         We are probably following a different approach from the paper.
         We are processing one frame at a time, passing it vertically trough the layers, to get an output frame.
         During prediction, this output frame is then used as input for the next frame.
-        During trianing we could use scheduled sampling to make the model able to use its own predictions also and not only the inputs when analysing the given sequence.
+        During training we use scheduled sampling to make the model able to use its own predictions also, not only the inputs, when analysing the given sequence.
         When processing vertically a frame, we keep track of the hidden and cell states of each layer, that will be used when processing the next frame.
         I think this is more efficient because we only have to keep track of the hidden and cell states of the last (in time) frame processed.
         """
@@ -85,7 +85,7 @@ class ConvLSTM_Model(nn.Module):
         c_t_prev = []
 
         for i in range(self.num_layers//2 + self.num_layers%2):
-            # the hidden and cell states of each layer for the first frame are initialized with zeros
+            # The hidden and cell states of each layer for the first frame are initialized with zeros
             zeros = torch.zeros([batch, self.num_hidden[i], height//(self.configs['stride']**(i+1)), width//(self.configs['stride']**(i+1))]).to(device)
             h_t_prev.append(zeros)
             zeros = torch.zeros([batch, self.num_hidden[i], height//(self.configs['stride']**(i+1)), width//(self.configs['stride']**(i+1))]).to(device)
@@ -100,8 +100,8 @@ class ConvLSTM_Model(nn.Module):
                                 width // (self.configs['stride'] ** (i - self.num_layers // 2))]).to(device)
             c_t_prev.append(zeros)
 
-        # schedule sampling:
-        # here we manage the inputs: frames_tensor and mask_true
+        # Schedule sampling:
+        # Here we manage the inputs: frames_tensor and mask_true
         # if t < pre_seq_length, we use the true frames; 
         # if t < pre_seq_length + aft_seq_length, we mix the true frames and the generated frames; 
         # if t >= pre_seq_length + aft_seq_length, we use the generated frames
@@ -115,14 +115,14 @@ class ConvLSTM_Model(nn.Module):
                 else:
                     net = x_gen
             else:
-                #if t < length//2:
+                # if t < length//2:
                 #    net = frames_tensor[:, t]
                 if t < length:
                     net = mask_true * frames_tensor[:, t] + (1 - mask_true) * x_gen
                 else:
                     net = x_gen
 
-            # keeping track of the hidden and cell states of each layer
+            # Keeping track of the hidden and cell states of each layer
             h_t = []
             c_t = []
             a, b = self.cell_list[0](net, h_t_prev[0], c_t_prev[0])
@@ -132,16 +132,15 @@ class ConvLSTM_Model(nn.Module):
                 a, b = self.cell_list[i](h_t[i - 1], h_t_prev[i], c_t_prev[i])
                 h_t.append(a)
                 c_t.append(b)
-            # update the hidden and cell states of each layer
+            # Update the hidden and cell states of each layer
             h_t_prev = h_t
             c_t_prev = c_t
-            # the last layer generates the output frame
+            # The last layer generates the output frame
             x_gen = self.conv_last(h_t[self.num_layers - 1])
             # -2 because we start from 0 and the k_in-th output frame is the first generated frame
             if (t > length - 2):
-                # keep track of the generated frames
+                # Keep track of the generated frames
                 next_frames.append(x_gen)
 
-        # we could also return the loss btw the predicted frames and the true frames
-        # we discard the last frame beacuse it would be the k_out+1-th frame
+        # We discard the last frame beacuse it would be the k_out+1-th frame
         return torch.stack(next_frames[:-1], dim=1)
