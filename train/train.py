@@ -88,7 +88,7 @@ if args.initial_lr is not None:
 if args.gamma is not None:
     gamma = args.gamma
 
-print(f"Training with:\n    {num_hidden} architecture,\n    stride = {stride},\n    filter_size = {filter_size},\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes},\n    bias = {bias},\n    transpose = {transpose},\n    initial_lr = {initial_lr},\n    gamma = {gamma}.")
+print(f"Training with:\n    {num_hidden} architecture,\n    stride = {stride},\n    filter_size = {filter_size},\n    leaky_slope = {leaky_slope},\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes},\n    bias = {bias},\n    transpose = {transpose},\n    initial_lr = {initial_lr},\n    gamma = {gamma}.")
 print("")
 
 custom_model_config = {
