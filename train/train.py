@@ -147,7 +147,7 @@ if schedule_yes:
     scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
     print(f"Using learning rate scheduler with initial_lr = {initial_lr} and gamma = {gamma}.")
 else:
-    optimizer = th.optim.Adam(model.parameters())
+    optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
 
 if schedule_sampling:
     mask_true = th.ones(custom_model_config['in_shape'])
