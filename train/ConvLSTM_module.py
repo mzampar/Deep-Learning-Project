@@ -2,9 +2,38 @@ import torch
 import torch.nn as nn
 
 
+def create_conv_block(in_channels, out_channels, kernel_size, stride, padding, bias, 
+                      transpose=False, leaky_slope=None, layer_norm=False, height=None, width=None, 
+                      trans_padding=None, out_padding=None):
+    """
+    Helper function to create convolutional blocks with optional LayerNorm or LeakyReLU.
+    """
+    layers = []
+    
+    if transpose:
+        conv = nn.ConvTranspose2d(
+            in_channels, out_channels, kernel_size=kernel_size,
+            stride=stride, padding=trans_padding, bias=bias, output_padding=out_padding
+        )
+    else:
+        conv = nn.Conv2d(
+            in_channels, out_channels, kernel_size=kernel_size,
+            stride=stride, padding=padding, bias=bias
+        )
+    
+    layers.append(conv)
+    
+    if layer_norm and height and width:
+        layers.append(nn.LayerNorm([out_channels, height, width]))
+    
+    if leaky_slope is not None:
+        layers.append(nn.LeakyReLU(leaky_slope))
+    
+    return nn.Sequential(*layers)
+
 class ConvLSTMCell(nn.Module):
 
-    def __init__(self, in_channel, num_hidden, height, width, filter_size, stride, layer_norm, transpose=False, bias=False):
+    def __init__(self, in_channel, num_hidden, height, width, filter_size, stride, layer_norm, transpose=False, bias=False, leaky_slope=None):
         super(ConvLSTMCell, self).__init__()
         self.num_hidden = num_hidden
         if (filter_size - stride) % 2 == 0:
@@ -28,67 +57,31 @@ class ConvLSTMCell(nn.Module):
         # Convolutions for the input and hidden states
         # Height after transpose: output_height = (height−1)*stride − 2*padding + kernel_size + output_padding
 
-        if layer_norm:
-            if transpose:
-                # num_hidden * 4 because we have 4 gates
-                self.conv_x = nn.Sequential(
-                    nn.ConvTranspose2d(in_channel, num_hidden * 4, kernel_size=filter_size,
-                        stride=stride, padding=self.trans_padding, bias=bias, output_padding=self.out_padding),
-                    nn.LayerNorm([num_hidden * 4, height, width])
-                )
-                self.conv_h = nn.Sequential(
-                    nn.Conv2d(num_hidden, num_hidden * 4, kernel_size=filter_size,
-                        stride=1, padding=self.padding, bias=bias),
-                    nn.LayerNorm([num_hidden * 4, height, width])
-                )
-                # conv_o is not used in the forward pass
-                """
-                self.conv_o = nn.Sequential(
-                    nn.ConvTranspose2d(num_hidden * 2, num_hidden, kernel_size=filter_size,
-                        stride=stride, padding=self.trans_padding, bias=False, output_padding=self.out_padding),
-                    nn.LayerNorm([num_hidden * 2, height, width])
-                )
-                """
-            else:
-                self.conv_x = nn.Sequential(
-                    nn.Conv2d(in_channel, num_hidden * 4, kernel_size=filter_size,
-                        stride=stride, padding=self.padding, bias=bias),
-                    nn.LayerNorm([num_hidden * 4, height, width])
-                )
-                self.conv_h = nn.Sequential(
-                    nn.Conv2d(num_hidden, num_hidden * 4, kernel_size=filter_size,
-                        stride=1, padding=self.padding, bias=bias),
-                    nn.LayerNorm([num_hidden * 4, height, width])
-                )
-                # conv_o is not used in the forward pass
-                """
-                self.conv_o = nn.Sequential(
-                    nn.Conv2d(num_hidden * 2, num_hidden, kernel_size=filter_size,
-                        stride=stride, padding=self.padding, bias=False),
-                    nn.LayerNorm([num_hidden * 2, height, width])
-                )
-                """
+        # Main constructor logic
+        if transpose:
+            self.conv_x = create_conv_block(
+                in_channel, num_hidden * 4, kernel_size=filter_size, stride=stride,
+                padding=self.trans_padding, bias=bias, transpose=True, 
+                leaky_slope=leaky_slope, layer_norm=layer_norm, height=height, width=width,
+                trans_padding=self.trans_padding, out_padding=self.out_padding
+            )
+            self.conv_h = create_conv_block(
+                num_hidden, num_hidden * 4, kernel_size=filter_size, stride=1, 
+                padding=self.padding, bias=bias, transpose=False, 
+                leaky_slope=leaky_slope, layer_norm=layer_norm, height=height, width=width
+            )
         else:
-            if transpose:
-                self.conv_x = nn.ConvTranspose2d(in_channel, num_hidden * 4, kernel_size=filter_size,
-                                stride=stride, padding=self.trans_padding, bias=bias, output_padding=self.out_padding)
-                self.conv_h = nn.Conv2d(num_hidden, num_hidden * 4, kernel_size=filter_size,
-                                stride=1, padding=self.padding, bias=bias)
-                # conv_o is not used in the forward pass
-                """
-                self.conv_o = nn.ConvTranspose2d(num_hidden * 2, num_hidden, kernel_size=filter_size,
-                                stride=stride, padding=self.trans_padding, bias=False, output_padding=self.out_padding)
-                """
-            else:
-                self.conv_x = nn.Conv2d(in_channel, num_hidden * 4, kernel_size=filter_size,
-                                stride=stride, padding=self.padding, bias=bias)
-                self.conv_h = nn.Conv2d(num_hidden, num_hidden * 4, kernel_size=filter_size,
-                                stride=1, padding=self.padding, bias=bias)
-                # conv_o is not used in the forward pass
-                """
-                self.conv_o = nn.Conv2d(num_hidden * 2, num_hidden, kernel_size=filter_size,
-                                stride=stride, padding=self.padding, bias=False)
-                """
+            self.conv_x = create_conv_block(
+                in_channel, num_hidden * 4, kernel_size=filter_size, stride=stride,
+                padding=self.padding, bias=bias, transpose=False, 
+                leaky_slope=leaky_slope, layer_norm=layer_norm, height=height, width=width
+            )
+            self.conv_h = create_conv_block(
+                num_hidden, num_hidden * 4, kernel_size=filter_size, stride=1, 
+                padding=self.padding, bias=bias, transpose=False, 
+                leaky_slope=leaky_slope, layer_norm=layer_norm, height=height, width=width
+            )
+
 
 
     def forward(self, x_t_new, h_t, c_t):

@@ -22,6 +22,7 @@ initial_lr = 0.1
 gamma = 0.5
 bias = True
 transpose = True
+leaky_slope = None
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--job_id', type=str, required=True, help='SLURM job ID')
@@ -30,6 +31,7 @@ parser.add_argument('--stride', type=int, required=False, help='stride')
 parser.add_argument('--filter_size', type=int, required=False, help='filter_size')
 parser.add_argument('--patch_size', type=int, required=False, help='patch_size')
 parser.add_argument('--bias', type=int, choices=[0, 1], required=False, help='bias')
+parser.add_argument('--leaky_slope', type=float, required=False, help='leaky_slope')
 parser.add_argument('--transpose', type=int, choices=[0, 1], required=False, help='bias')
 parser.add_argument('--num_hidden', type=str, required=False, help='num_hidden')
 parser.add_argument('--batch_size', type=int, required=False, help='batch_size')
@@ -46,6 +48,8 @@ if args.job_id is not None:
 if args.schedule is not None:
     schedule_yes = args.schedule
     schedule_yes = bool(schedule_yes)
+if args.leaky_slope is not None:
+    leaky_slope = args.leaky_slope
 if args.bias is not None:
     bias = args.bias
     bias = bool(bias)
@@ -94,7 +98,8 @@ custom_model_config = {
     'stride': stride, 
     'layer_norm' : layer_norm, 
     'transpose': transpose,
-    'bias': bias
+    'bias': bias, 
+    'leaky_slope': leaky_slope
 }
 
 # Define the dataset

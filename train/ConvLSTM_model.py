@@ -24,7 +24,6 @@ class ConvLSTM_Model(nn.Module):
         # 2 are used for the encoder (Convolution) and 2 for the decoder (Transposed convolution)
         self.num_layers = num_layers 
         self.num_hidden = num_hidden
-        self.bias = configs['bias']
         cell_list = []
 
         height = H // configs['patch_size']
@@ -39,7 +38,7 @@ class ConvLSTM_Model(nn.Module):
             in_channel = self.frame_channel if i == 0 else num_hidden[i - 1]
             cell_list.append(
                 ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'],
-                                       configs['stride'], configs['layer_norm'], transpose=False)
+                                       configs['stride'], configs['layer_norm'], transpose=False, bias=configs['bias'], leaky_slope=configs['leaky_slope'])
             )
 
         for i in range(num_layers//2 + num_layers%2, num_layers):
@@ -50,7 +49,7 @@ class ConvLSTM_Model(nn.Module):
             in_channel = num_hidden[i - 1]
             cell_list.append(
                 ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'],
-                                       configs['stride'], configs['layer_norm'], transpose=configs['transpose'], bias=self.bias)
+                                       configs['stride'], configs['layer_norm'], transpose=configs['transpose'], bias=configs['bias'], leaky_slope=configs['leaky_slope'])
             )
 
         self.cell_list = nn.ModuleList(cell_list)
@@ -102,9 +101,9 @@ class ConvLSTM_Model(nn.Module):
 
         # Schedule sampling:
         # Here we manage the inputs: frames_tensor and mask_true
-        # if t < pre_seq_length, we use the true frames; 
-        # if t < pre_seq_length + aft_seq_length, we mix the true frames and the generated frames; 
-        # if t >= pre_seq_length + aft_seq_length, we use the generated frames
+        # if t < length//2, we use the true frames; 
+        # if t < length, we mix the true frames and the generated frames; 
+        # if t >= length, we use the generated frames
 
         x_gen = frames_tensor[:, 0]
 
@@ -115,8 +114,8 @@ class ConvLSTM_Model(nn.Module):
                 else:
                     net = x_gen
             else:
-                # if t < length//2:
-                #    net = frames_tensor[:, t]
+                if t < length//2:
+                    net = frames_tensor[:, t]
                 if t < length:
                     net = mask_true * frames_tensor[:, t] + (1 - mask_true) * x_gen
                 else:
