@@ -38,7 +38,7 @@ class ConvLSTM_Model(nn.Module):
             in_channel = self.frame_channel if i == 0 else num_hidden[i - 1]
             cell_list.append(
                 ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'],
-                                       configs['stride'], configs['layer_norm'], transpose=False, bias=configs['bias'], leaky_slope=configs['leaky_slope'])
+                                       configs['stride'], configs['layer_norm'], transpose=False, bias=configs['bias'], leaky_slope=configs['leaky_slope'], max_pool=configs['max_pool'])
             )
 
         for i in range(num_layers//2 + num_layers%2, num_layers):
