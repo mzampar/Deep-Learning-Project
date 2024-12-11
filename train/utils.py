@@ -96,9 +96,9 @@ class MnistSequenceDataset(th.utils.data.Dataset):
         # Get the row using the index
         row = self.numpy_ds[:,index]
         # Get the sequence
-        in_seq = row.iloc[:self.k_in]
+        in_seq = row[:self.k_in]
         in_seq_tensor = th.stack([th.tensor(frame) for frame in in_seq])
-        out_seq = row.iloc[self.k_in:self.k_in+self.k_out]
+        out_seq = row[self.k_in:self.k_in+self.k_out]
         out_seq_tensor = th.stack([th.tensor(frame) for frame in out_seq])
 
         return in_seq_tensor, out_seq_tensor
