@@ -155,8 +155,8 @@ for seq_len in range(2,6):
 
     data = np.load('../../scratch/mnist_test_seq.npy')
     train_idx = int(data.shape[1] * 0.8)
-    train_dataset = MnistSequenceDataset(data[:,:train_idx], '../../scratch/grey_tensor/', seq_len, seq_len)
-    test_dataset = MnistSequenceDataset(data[:,train_idx:], '../../scratch/grey_tensor/', seq_len, seq_len)
+    train_dataset = MnistSequenceDataset(data[:,:train_idx], seq_len, seq_len)
+    test_dataset = MnistSequenceDataset(data[:,train_idx:], seq_len, seq_len)
     dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
