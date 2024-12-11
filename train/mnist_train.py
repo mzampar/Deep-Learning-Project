@@ -155,7 +155,7 @@ for seq_len in range(2,6):
         optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
         scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
 
-    data = np.load('../../scratch/mnist_test_seq.npy').astype(np.float32)
+    data = np.load('../../scratch/mnist_test_seq.npy').astype(np.float32)/255
     train_idx = int(data.shape[1] * 0.8)
     train_dataset = MnistSequenceDataset(data[:,:train_idx], seq_len, seq_len)
     test_dataset = MnistSequenceDataset(data[:,train_idx:], seq_len, seq_len)
