@@ -72,3 +72,36 @@ class SequenceDataset(th.utils.data.Dataset):
 
     def __len__(self):
         return len(self.id_seq_ds)
+
+
+class MnistSequenceDataset(th.utils.data.Dataset):
+    # shape is (20, 10000, 64, 64)
+    def __init__(self, numpy_ds, k_in=10, k_out=10):
+        self.k_in = k_in # Number of frames to be considered
+        self.k_out = k_out
+        # reshape the numpy_ds to have each possible sequences of lenght k_in + k_out
+        all_sequences = []
+        for i in range(numpy_ds.shape[1]):
+            for j in range(numpy_ds.shape[0] - k_in - k_out):
+                in_frames = numpy_ds[j:j + k_in, i]
+                out_frames = numpy_ds[j + k_in:j + k_in + k_out, i]
+                sequence = np.concatenate((in_frames, out_frames), axis=0)
+                all_sequences.append(sequence)
+        all_sequences = np.stack(all_sequences, axis=1)
+
+        print(all_sequences.shape)
+        self.numpy_ds = all_sequences
+
+    def __getitem__(self, index):
+        # Get the row using the index
+        row = self.numpy_ds[:,index]
+        # Get the sequence
+        in_seq = row.iloc[:self.k_in]
+        in_seq_tensor = th.stack([th.tensor(frame) for frame in in_seq])
+        out_seq = row.iloc[self.k_in:self.k_in+self.k_out]
+        out_seq_tensor = th.stack([th.tensor(frame) for frame in out_seq])
+
+        return in_seq_tensor, out_seq_tensor
+
+    def __len__(self):
+        return len(self.numpy_ds.shape[1])
