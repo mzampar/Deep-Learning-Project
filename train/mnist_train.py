@@ -6,6 +6,7 @@ from utils import SSIM_MSE_Loss, MnistSequenceDataset
 import pandas as pd
 import numpy as np
 import argparse
+from numpy import random
 
 # Default values
 stride = 2
@@ -21,10 +22,11 @@ num_epochs = 1
 criterion = nn.MSELoss()
 initial_lr = 0.1
 gamma = 0.5
-bias = True
+bias = False
 transpose = True
 leaky_slope = None
 max_pool = False
+loss = 0
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--job_id', type=str, required=True, help='SLURM job ID')
@@ -153,7 +155,7 @@ for seq_len in range(2,6):
         optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
         scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
 
-    data = np.load('../../scratch/mnist_test_seq.npy')
+    data = np.load('../../scratch/mnist_test_seq.npy').astype(np.float32)
     train_idx = int(data.shape[1] * 0.8)
     train_dataset = MnistSequenceDataset(data[:,:train_idx], seq_len, seq_len)
     test_dataset = MnistSequenceDataset(data[:,train_idx:], seq_len, seq_len)

@@ -89,7 +89,6 @@ class MnistSequenceDataset(th.utils.data.Dataset):
                 all_sequences.append(sequence)
         all_sequences = np.stack(all_sequences, axis=1)
 
-        print(all_sequences.shape)
         self.numpy_ds = all_sequences
 
     def __getitem__(self, index):
@@ -100,6 +99,8 @@ class MnistSequenceDataset(th.utils.data.Dataset):
         in_seq_tensor = th.stack([th.tensor(frame) for frame in in_seq])
         out_seq = row[self.k_in:self.k_in+self.k_out]
         out_seq_tensor = th.stack([th.tensor(frame) for frame in out_seq])
+        in_seq_tensor = in_seq_tensor.unsqueeze(1)
+        out_seq_tensor = out_seq_tensor.unsqueeze(1)
 
         return in_seq_tensor, out_seq_tensor
 
