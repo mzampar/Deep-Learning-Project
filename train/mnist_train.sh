@@ -11,4 +11,4 @@
 #SBATCH -A dssc
 
 
-srun python -u mnist_train.py --job_id $SLURM_JOB_ID --num_hidden "32,16,16,32" --stride 2 --filter_size 3 --leaky_slope 0.2 --batch_size 32 --bias 1 --transpose 1 --num_epochs 1 --layer_norm 1 --schedule_sampling 0 --schedule 0 --loss 1 --initial_lr 1.0 --gamma 0.5
+srun python -u mnist_train.py --job_id $SLURM_JOB_ID --num_hidden "8,4,4,8" --stride 2 --filter_size 3 --leaky_slope 0.2 --batch_size 128 --bias 1 --transpose 1 --num_epochs 5 --layer_norm 1 --schedule_sampling 0 --schedule 0 --loss 1 --initial_lr 1.0 --gamma 0.5

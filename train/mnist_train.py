@@ -138,7 +138,7 @@ else:
     mask_true = None
 
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
-for seq_len in range(1,10):
+for seq_len in range(2,6):
     print("")
     th.cuda.empty_cache()
     if loss==2:
@@ -163,7 +163,7 @@ for seq_len in range(1,10):
     # Number of elements to set to zero in the mask
     num_zeros = seq_len * 200
 
-    for epoch in range(num_epochs):
+    for epoch in range(num_epochs*5//seq_len):
         # Training phase
         model.train()
         running_loss = 0.0
