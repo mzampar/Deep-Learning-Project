@@ -4,6 +4,7 @@ from torch import nn
 from ConvLSTM_model import ConvLSTM_Model
 from utils import SSIM_MSE_Loss, MnistSequenceDataset
 import pandas as pd
+import numpy as np
 import argparse
 
 # Default values
@@ -108,36 +109,6 @@ custom_model_config = {
     'max_pool': max_pool
 }
 
-# Define the dataset
-id_data = pd.read_csv('../data/id_df_final.csv')
-seq_len = id_data.groupby('sequence').size()
-seq_len = seq_len.to_dict()
-seq_rain = id_data.groupby('sequence')['rain_category'].mean()
-seq_rain = seq_rain.to_dict()
-seq_df = pd.DataFrame({'seq_len': seq_len, 'seq_rain': seq_rain})
-# Split the sequences in train and test set (80/20)
-train_seq = seq_df.sample(frac=0.8, random_state=1)
-test_seq = seq_df.drop(train_seq.index)
-print(f"Average train sequence lenght: {train_seq['seq_len'].mean()}.")
-print(f"Average test sequence lenght:, {test_seq['seq_len'].mean()}.")
-print(f"Average test rain:, {train_seq['seq_rain'].mean()}.")
-print(f"Average train rain:, {test_seq['seq_rain'].mean()}.")
-print("")
-# Get the sequences of the train and test set
-train_seq_idx = train_seq.index
-test_seq_idx = test_seq.index
-train_data = id_data[id_data['sequence'].isin(train_seq_idx)]
-test_data = id_data[id_data['sequence'].isin(test_seq_idx)]
-
-id_data = None
-seq_len = None
-seq_rain = None
-seq_df = None
-train_seq = None
-test_seq = None
-train_seq_idx = None
-test_seq_idx = None
-
 if th.cuda.is_available():
     print("CUDA is available!")
 else:
@@ -182,8 +153,10 @@ for seq_len in range(1,10):
         optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
         scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
 
-    train_dataset = SequenceDataset(train_data, '../../scratch/grey_tensor/', seq_len, seq_len)
-    test_dataset = SequenceDataset(test_data, '../../scratch/grey_tensor/', seq_len, seq_len)
+    data = np.load('../../scratch/mnist_test_seq.npy')
+    train_idx = int(data.shape[1] * 0.8)
+    train_dataset = MnistSequenceDataset(data[:,:train_idx], '../../scratch/grey_tensor/', seq_len, seq_len)
+    test_dataset = MnistSequenceDataset(data[:,train_idx:], '../../scratch/grey_tensor/', seq_len, seq_len)
     dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
