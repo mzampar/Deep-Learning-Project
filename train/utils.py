@@ -104,4 +104,4 @@ class MnistSequenceDataset(th.utils.data.Dataset):
         return in_seq_tensor, out_seq_tensor
 
     def __len__(self):
-        return len(self.numpy_ds.shape[1])
+        return self.numpy_ds.shape[1]
