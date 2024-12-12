@@ -96,7 +96,7 @@ if args.initial_lr is not None:
 if args.gamma is not None:
     gamma = args.gamma
 
-print(f"Training with:\n    architecture = {num_hidden},\n    stride = {stride},\n    filter_size = {filter_size},\n    leaky_slope = {leaky_slope},\n    max_pool = {max_pool},\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes},\n    bias = {bias},\n    transpose = {transpose},\n    initial_lr = {initial_lr},\n    gamma = {gamma}.")
+print(f"Training with:\n    architecture = {num_hidden},\n    stride = {stride},\n    filter_size = {filter_size},\n    leaky_slope = {leaky_slope},\n    max_pool = {max_pool},\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    num_epochs = {num_epochs},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes},\n    bias = {bias},\n    transpose = {transpose},\n    initial_lr = {initial_lr},\n    gamma = {gamma}.")
 print("")
 
 custom_model_config = {
@@ -139,6 +139,9 @@ if schedule_sampling:
 else:
     mask_true = None
 
+data = np.load('../../scratch/mnist_test_seq.npy').astype(np.float32)/255
+train_idx = int(data.shape[1] * 0.8)
+
 start = time.time()
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
 for seq_len in range(2,6):
@@ -156,8 +159,6 @@ for seq_len in range(2,6):
         optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
         scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
 
-    data = np.load('../../scratch/mnist_test_seq.npy').astype(np.float32)/255
-    train_idx = int(data.shape[1] * 0.8)
     train_dataset = MnistSequenceDataset(data[:,:train_idx], seq_len, seq_len)
     test_dataset = MnistSequenceDataset(data[:,train_idx:], seq_len, seq_len)
     dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -165,7 +166,7 @@ for seq_len in range(2,6):
 
     # Number of elements to set to zero in the mask
     num_zeros = seq_len * 200
-    for epoch in range(num_epochs*5//seq_len):
+    for epoch in range(num_epochs):
         # Training phase
         model.train()
         running_loss = 0.0
