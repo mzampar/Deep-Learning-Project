@@ -6,7 +6,7 @@ from utils import SSIM_MSE_Loss, MnistSequenceDataset
 import pandas as pd
 import numpy as np
 import argparse
-from numpy import random
+import time
 
 # Default values
 stride = 2
@@ -139,6 +139,7 @@ if schedule_sampling:
 else:
     mask_true = None
 
+start = time.time()
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
 for seq_len in range(2,6):
     print("")
@@ -164,7 +165,6 @@ for seq_len in range(2,6):
 
     # Number of elements to set to zero in the mask
     num_zeros = seq_len * 200
-
     for epoch in range(num_epochs*5//seq_len):
         # Training phase
         model.train()
@@ -212,9 +212,11 @@ for seq_len in range(2,6):
 
         epoch_test_loss = test_loss / len(test_dataloader)
         print(f"Epoch [{epoch+1}/{num_epochs}] - Average Test Loss: {epoch_test_loss:.4f}")
+        print("Elapsed time: {:.2f} seconds".format(time.time() - start))
 
 print("")
 print("Training complete!")
+print("Totoal elapsed time: {:.2f} seconds".format(time.time() - start))
 
 model_name = f"../models/model_{num_hidden[0]}_{num_hidden[1]}_{num_hidden[2]}_{num_hidden[3]}_{job_id}.pth"
 th.save(model.state_dict(), model_name)

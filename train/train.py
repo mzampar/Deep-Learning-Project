@@ -5,6 +5,7 @@ from ConvLSTM_model import ConvLSTM_Model
 from utils import SequenceDataset, SSIM_MSE_Loss
 import pandas as pd
 import argparse
+import time
 
 # Default values
 stride = 2
@@ -167,7 +168,8 @@ else:
     mask_true = None
 
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
-for seq_len in range(1,10):
+start_time = time.time()
+for seq_len in range(2,8):
     print("")
     th.cuda.empty_cache()
     if loss==2:
@@ -237,9 +239,11 @@ for seq_len in range(1,10):
 
         epoch_test_loss = test_loss / len(test_dataloader)
         print(f"Epoch [{epoch+1}/{num_epochs}] - Average Test Loss: {epoch_test_loss:.4f}")
+        print("Elapsed time: {:.2f} minutes.".format((time.time() - start_time)/60))
 
 print("")
 print("Training complete!")
+print("Total elapsed time: {:.2f} minutes.".format((time.time() - start_time)/60))
 
 model_name = f"../models/model_{num_hidden[0]}_{num_hidden[1]}_{num_hidden[2]}_{num_hidden[3]}_{job_id}.pth"
 th.save(model.state_dict(), model_name)
