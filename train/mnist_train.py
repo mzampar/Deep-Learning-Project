@@ -144,7 +144,7 @@ train_idx = int(data.shape[1] * 0.8)
 
 start = time.time()
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
-for seq_len in range(2,6):
+for seq_len in range(2,10):
     print("")
     th.cuda.empty_cache()
     if loss==2:

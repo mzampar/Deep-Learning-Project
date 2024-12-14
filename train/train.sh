@@ -11,4 +11,4 @@
 #SBATCH -A dssc
 
 
-srun python -u train.py --job_id $SLURM_JOB_ID --num_hidden "32,16,16,32" --stride 2 --filter_size 3 --leaky_slope 0.2 --batch_size 32 --bias 1 --transpose 1 --num_epochs 1 --layer_norm 1 --schedule_sampling 0 --schedule 0 --loss 1 --initial_lr 1.0 --gamma 0.5
+srun python -u train.py --job_id $SLURM_JOB_ID --num_hidden "64,32,32,16" --stride 2 --filter_size 5 --leaky_slope 0.2 --max_pool 1 --batch_size 16 --bias 0 --transpose 1 --num_epochs 1 --layer_norm 1 --schedule_sampling 0 --schedule 0 --loss 1 --initial_lr 0.01 --gamma 0.5
