@@ -11,8 +11,8 @@ import time
 stride = 2
 filter_size = 3
 patch_size = 1
-num_hidden = [16,8,8,16]
-num_layers = len(num_hidden)
+num_hidden = [16,8,8,16] # Number of hidden units in each layer
+num_layers = len(num_hidden) # Number of conv cells
 batch_size = 64
 layer_norm = True
 schedule_yes = False
@@ -24,7 +24,7 @@ gamma = 0.5
 bias = True
 transpose = True
 leaky_slope = None
-max_pool = False
+max_pool = False 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--job_id', type=str, required=True, help='SLURM job ID')
@@ -97,16 +97,17 @@ if args.gamma is not None:
 print(f"Training with:\n    architecture = {num_hidden},\n    stride = {stride},\n    filter_size = {filter_size},\n    leaky_slope = {leaky_slope},\n    max_pool = {max_pool},\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes},\n    bias = {bias},\n    transpose = {transpose},\n    initial_lr = {initial_lr},\n    gamma = {gamma}.")
 print("")
 
+# Define the model configuration
 custom_model_config = {
-    'in_shape': [1, 128, 128], # C, H, W
-    'patch_size': patch_size,
-    'filter_size': filter_size, 
-    'stride': stride, 
-    'layer_norm' : layer_norm, 
-    'transpose': transpose,
-    'bias': bias, 
-    'leaky_slope': leaky_slope,
-    'max_pool': max_pool
+    'in_shape': [1, 128, 128], # channels, height, width of the input tensor 
+    'patch_size': patch_size, # patch size, to process different parts of the image
+    'filter_size': filter_size, # filter size of the convolution
+    'stride': stride, # stride of the convolution
+    'layer_norm' : layer_norm, # wheter to use LayerNorm or not
+    'transpose': transpose, # wheter to use transposed convolution or not
+    'bias': bias, # wheter to use bias or not
+    'leaky_slope': leaky_slope, # slope of the LeakyReLU, if None, LeakyReLU is not used
+    'max_pool': max_pool # wheter to use max pooling or not: PAY ATTENTION, max pooling is used only in the encoder and when is set to true, the stride is set to 1
 }
 
 # Define the dataset
@@ -184,6 +185,7 @@ for seq_len in range(2,10):
         optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
         scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
 
+    # Define a dataset of variable lenght
     train_dataset = SequenceDataset(train_data, '../../scratch/grey_tensor/', seq_len, seq_len)
     test_dataset = SequenceDataset(test_data, '../../scratch/grey_tensor/', seq_len, seq_len)
     dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)

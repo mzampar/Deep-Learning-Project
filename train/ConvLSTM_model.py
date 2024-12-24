@@ -16,31 +16,31 @@ class ConvLSTM_Model(nn.Module):
 
     def __init__(self, num_layers, num_hidden, configs, **kwargs):
         super(ConvLSTM_Model, self).__init__()
-        C, H, W = configs['in_shape']
 
+        C, H, W = configs['in_shape']
         self.configs = configs
         self.frame_channel = configs['patch_size'] * configs['patch_size'] * C
         # Assuming to work with an even number of ConvLSTM layers, 
         # 2 are used for the encoder (Convolution) and 2 for the decoder (Transposed convolution)
-        self.num_layers = num_layers 
-        self.num_hidden = num_hidden
+        self.num_layers = num_layers  # Number of layers
+        self.num_hidden = num_hidden # Number of hidden units per layer
         cell_list = []
 
         height = H // configs['patch_size']
         width = W // configs['patch_size']
 
+        # Vertical stack of ConvLSTM cells, the first half of the layers are used for the encoder and if stride is > 1 reduce the height and width
         for i in range(num_layers//2 + num_layers%2):
             height /= configs['stride']
             width /= configs['stride']
             height = int(height)
             width = int(width)
-        # Vertical stack of ConvLSTM cells
             in_channel = self.frame_channel if i == 0 else num_hidden[i - 1]
             cell_list.append(
                 ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'],
                                        configs['stride'], configs['layer_norm'], transpose=False, bias=configs['bias'], leaky_slope=configs['leaky_slope'], max_pool=configs['max_pool'])
             )
-
+        # The second half of the layers are used for the decoder and if stride is > 1 increase the height and width
         for i in range(num_layers//2 + num_layers%2, num_layers):
             height *= configs['stride']
             width *= configs['stride']
@@ -82,9 +82,9 @@ class ConvLSTM_Model(nn.Module):
         next_frames = []
         h_t_prev = []
         c_t_prev = []
-
+        
+        # The hidden and cell states of each layer for the first frame are initialized with zeros
         for i in range(self.num_layers//2 + self.num_layers%2):
-            # The hidden and cell states of each layer for the first frame are initialized with zeros
             zeros = torch.zeros([batch, self.num_hidden[i], height//(self.configs['stride']**(i+1)), width//(self.configs['stride']**(i+1))]).to(device)
             h_t_prev.append(zeros)
             zeros = torch.zeros([batch, self.num_hidden[i], height//(self.configs['stride']**(i+1)), width//(self.configs['stride']**(i+1))]).to(device)
