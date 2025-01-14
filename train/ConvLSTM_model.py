@@ -29,6 +29,8 @@ class ConvLSTM_Model(nn.Module):
         height = H // configs['patch_size']
         width = W // configs['patch_size']
 
+        # We assume filter size to be a list of length num_layers, as num_hidden
+
         # Vertical stack of ConvLSTM cells, the first half of the layers are used for the encoder and if stride is > 1 reduce the height and width
         for i in range(num_layers//2 + num_layers%2):
             height /= configs['stride']
@@ -37,7 +39,7 @@ class ConvLSTM_Model(nn.Module):
             width = int(width)
             in_channel = self.frame_channel if i == 0 else num_hidden[i - 1]
             cell_list.append(
-                ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'],
+                ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'][i],
                                        configs['stride'], configs['layer_norm'], transpose=False, bias=configs['bias'], leaky_slope=configs['leaky_slope'], max_pool=configs['max_pool'])
             )
         # The second half of the layers are used for the decoder and if stride is > 1 increase the height and width
@@ -48,7 +50,7 @@ class ConvLSTM_Model(nn.Module):
             width = int(width)
             in_channel = num_hidden[i - 1]
             cell_list.append(
-                ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'],
+                ConvLSTMCell(in_channel, num_hidden[i], height, width, configs['filter_size'][i],
                                        configs['stride'], configs['layer_norm'], transpose=configs['transpose'], bias=configs['bias'], leaky_slope=configs['leaky_slope'])
             )
 

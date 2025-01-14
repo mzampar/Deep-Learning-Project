@@ -29,14 +29,17 @@ max_pool = False
 parser = argparse.ArgumentParser()
 parser.add_argument('--job_id', type=str, required=True, help='SLURM job ID')
 parser.add_argument('--schedule', type=int, choices=[0, 1], required=False, help='scheduler')
-parser.add_argument('--stride', type=int, required=False, help='stride')
+
+# accept a list of integers
+parser.add_argument('--stride', type=int, nargs='+', required=False, help='stride')
+parser.add_argument('--num_hidden', type=int, nargs='+', required=False, help='num_hidden')
+
 parser.add_argument('--filter_size', type=int, required=False, help='filter_size')
 parser.add_argument('--patch_size', type=int, required=False, help='patch_size')
 parser.add_argument('--bias', type=int, choices=[0, 1], required=False, help='bias')
 parser.add_argument('--leaky_slope', type=float, required=False, help='leaky_slope')
 parser.add_argument('--max_pooling', type=int, choices=[0, 1], required=False, help='max_pooling')
 parser.add_argument('--transpose', type=int, choices=[0, 1], required=False, help='bias')
-parser.add_argument('--num_hidden', type=str, required=False, help='num_hidden')
 parser.add_argument('--batch_size', type=int, required=False, help='batch_size')
 parser.add_argument('--num_epochs', type=int, required=False, help='num_epochs')
 parser.add_argument('--loss', type=int, choices=[0,1,2], required=False, help='loss: 0 = MSE, 1 = BCE, 2 = SSIM+MSE')
@@ -44,6 +47,7 @@ parser.add_argument('--layer_norm', type=int, choices=[0, 1], required=False, he
 parser.add_argument('--schedule_sampling', type=int, choices=[0, 1], required=False, help='schedule_sampling')
 parser.add_argument('--initial_lr', type=float, required=False, help='initial_lr')
 parser.add_argument('--gamma', type=float, required=False, help='gamma')
+
 args = parser.parse_args()
 
 if args.job_id is not None:
@@ -69,7 +73,7 @@ if args.filter_size is not None:
 if args.patch_size is not None:
     patch_size = args.patch_size
 if args.num_hidden is not None:
-    num_hidden = list(map(int, args.num_hidden.split(',')))
+    num_hidden = args.num_hidden
 num_layers = len(num_hidden)
 if args.batch_size is not None:
     batch_size = args.batch_size
@@ -101,7 +105,7 @@ print("")
 custom_model_config = {
     'in_shape': [1, 128, 128], # channels, height, width of the input tensor 
     'patch_size': patch_size, # patch size, to process different parts of the image
-    'filter_size': filter_size, # filter size of the convolution
+    'filter_size': filter_size, # A list, filter size of each convolution, same lenght as num_hidden
     'stride': stride, # stride of the convolution
     'layer_norm' : layer_norm, # wheter to use LayerNorm or not
     'transpose': transpose, # wheter to use transposed convolution or not
