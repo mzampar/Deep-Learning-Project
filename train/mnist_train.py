@@ -73,7 +73,7 @@ if args.filter_size is not None:
 if args.patch_size is not None:
     patch_size = args.patch_size
 if args.num_hidden is not None:
-    num_hidden = list(map(int, args.num_hidden.split(',')))
+    num_hidden = args.num_hidden
 num_layers = len(num_hidden)
 if args.batch_size is not None:
     batch_size = args.batch_size
