@@ -90,7 +90,7 @@ if args.loss is not None:
     if args.loss == 0:
         criterion = nn.MSELoss()
     elif args.loss == 1:
-        criterion = nn.BCELoss()
+        criterion = nn.BCELoss(reduction='sum')
     elif args.loss == 2:
         criterion = SSIM_MSE_Loss()
 if args.initial_lr is not None:
