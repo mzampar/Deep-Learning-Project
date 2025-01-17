@@ -31,10 +31,10 @@ parser.add_argument('--job_id', type=str, required=True, help='SLURM job ID')
 parser.add_argument('--schedule', type=int, choices=[0, 1], required=False, help='scheduler')
 
 # accept a list of integers
-parser.add_argument('--stride', type=int, nargs='+', required=False, help='stride')
 parser.add_argument('--num_hidden', type=int, nargs='+', required=False, help='num_hidden')
+parser.add_argument('--filter_size', type=int, nargs='+', required=False, help='filter_size')
 
-parser.add_argument('--filter_size', type=int, required=False, help='filter_size')
+parser.add_argument('--stride', type=int, required=False, help='stride')
 parser.add_argument('--patch_size', type=int, required=False, help='patch_size')
 parser.add_argument('--bias', type=int, choices=[0, 1], required=False, help='bias')
 parser.add_argument('--leaky_slope', type=float, required=False, help='leaky_slope')
