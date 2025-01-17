@@ -203,17 +203,19 @@ for seq_len in range(2,10):
         model.train()
         running_loss = 0.0
         for batch_idx, (inputs, targets) in enumerate(dataloader):
+            """
             if schedule_sampling:
                 flat_mask = mask_true.view(-1)
                 # Randomly choose indices to set to zero
                 zero_indices = th.randperm(flat_mask.numel())[:num_zeros]
                 flat_mask[zero_indices] = 0
                 mask_true = flat_mask.view(custom_model_config['in_shape'])
+            """
             inputs, targets = inputs.to(device), targets.to(device)
             # Zero the parameter gradients
             optimizer.zero_grad()
             # Forward pass
-            outputs = model(inputs, mask_true = mask_true, schedule_sampling=schedule_sampling)
+            outputs = model(inputs, mask_true = None, schedule_sampling=schedule_sampling)
             # Compute loss
             loss = criterion(outputs, targets)
             # Backward pass and optimize
