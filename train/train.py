@@ -174,7 +174,8 @@ else:
 
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
 start_time = time.time()
-for seq_len in range(2,10):
+max_seq_len = 10
+for seq_len in range(2, max_seq_len):
     print("")
     th.cuda.empty_cache()
     if loss==2:
@@ -196,21 +197,20 @@ for seq_len in range(2,10):
     test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
     # Number of elements to set to zero in the mask
-    num_zeros = seq_len * 200
+    total_pixels = custom_model_config['in_shape'][1] * custom_model_config['in_shape'][2]
+    num_zeros = int(total_pixels * ( seq_len / max_seq_len ))
 
     for epoch in range(num_epochs):
         # Training phase
         model.train()
         running_loss = 0.0
         for batch_idx, (inputs, targets) in enumerate(dataloader):
-            """
             if schedule_sampling:
                 flat_mask = mask_true.view(-1)
                 # Randomly choose indices to set to zero
                 zero_indices = th.randperm(flat_mask.numel())[:num_zeros]
                 flat_mask[zero_indices] = 0
                 mask_true = flat_mask.view(custom_model_config['in_shape'])
-            """
             inputs, targets = inputs.to(device), targets.to(device)
             # Zero the parameter gradients
             optimizer.zero_grad()

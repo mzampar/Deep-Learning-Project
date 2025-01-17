@@ -146,7 +146,8 @@ train_idx = int(data.shape[1] * 0.8)
 
 start = time.time()
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
-for seq_len in range(2,10):
+max_seq_len = 10
+for seq_len in range(2, max_seq_len):
     print("")
     th.cuda.empty_cache()
     if loss==2:
@@ -167,7 +168,11 @@ for seq_len in range(2,10):
     test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
     # Number of elements to set to zero in the mask
-    num_zeros = seq_len * 200
+
+    # Number of elements to set to zero in the mask
+    total_pixels = custom_model_config['in_shape'][1] * custom_model_config['in_shape'][2]
+    num_zeros = int(total_pixels * ( seq_len / max_seq_len ))
+
     for epoch in range(num_epochs):
         # Training phase
         model.train()
