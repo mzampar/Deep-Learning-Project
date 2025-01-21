@@ -103,7 +103,7 @@ class ConvLSTM_Model(nn.Module):
 
         # Schedule sampling:
         # Here we manage the inputs: frames_tensor and mask_true
-        # if t < length//2, we use the true frames; 
+        # if t < length//2, we use the true frames; (REMOVED)
         # if t < length, we mix the true frames and the generated frames; 
         # if t >= length, we use the generated frames
 
@@ -119,7 +119,7 @@ class ConvLSTM_Model(nn.Module):
                 if t < length:
                     net = mask_true * frames_tensor[:, t] + (1 - mask_true) * x_gen
                 else:
-                net = x_gen
+                    net = x_gen
 
             # Keeping track of the hidden and cell states of each layer
             h_t = []

@@ -29,62 +29,50 @@ max_pool = False
 loss = 0
 
 parser = argparse.ArgumentParser()
+
+
+# Action store_true means that if the argument is present, the value is True, otherwise is False
+
 parser.add_argument('--job_id', type=str, required=True, help='SLURM job ID')
-parser.add_argument('--schedule', type=int, choices=[0, 1], required=False, help='scheduler')
+parser.add_argument('--schedule', action='store_true', help='Enable scheduler')
+parser.add_argument('--num_hidden', type=int, nargs='+', required=True, help='List of hidden layer sizes')
+parser.add_argument('--filter_size', type=int, nargs='+', required=True, help='List of filter sizes')
+parser.add_argument('--stride', type=int, required=True, help='Stride')
+parser.add_argument('--patch_size', type=int, required=False, default=1, help='Patch size')
+parser.add_argument('--bias', action='store_true', help='Use bias')
+parser.add_argument('--leaky_slope', type=float, required=True, help='Leaky ReLU slope')
+parser.add_argument('--max_pooling', action='store_true', help='Enable max pooling')
+parser.add_argument('--transpose', action='store_true', help='Enable transposition')
+parser.add_argument('--batch_size', type=int, required=True, help='Batch size')
+parser.add_argument('--num_epochs', type=int, required=True, help='Number of epochs')
+parser.add_argument('--loss', type=int, choices=[0, 1, 2], required=True, help='Loss: 0 = MSE, 1 = BCE, 2 = SSIM+MSE')
+parser.add_argument('--layer_norm', action='store_true', help='Enable layer normalization')
+parser.add_argument('--schedule_sampling', action='store_true', help='Enable schedule sampling')
+parser.add_argument('--initial_lr', type=float, required=False, default=0.01, help='Initial learning rate')
+parser.add_argument('--gamma', type=float, required=False, help='Gamma for scheduler')
 
-parser.add_argument('--num_hidden', type=int, nargs='+', required=False, help='num_hidden')
-parser.add_argument('--filter_size', type=int, nargs='+', required=False, help='filter_size')
-
-parser.add_argument('--stride', type=int, required=False, help='stride')
-parser.add_argument('--patch_size', type=int, required=False, help='patch_size')
-parser.add_argument('--bias', type=int, choices=[0, 1], required=False, help='bias')
-parser.add_argument('--leaky_slope', type=float, required=False, help='leaky_slope')
-parser.add_argument('--max_pooling', type=int, choices=[0, 1], required=False, help='max_pooling')
-parser.add_argument('--transpose', type=int, choices=[0, 1], required=False, help='bias')
-parser.add_argument('--batch_size', type=int, required=False, help='batch_size')
-parser.add_argument('--num_epochs', type=int, required=False, help='num_epochs')
-parser.add_argument('--loss', type=int, choices=[0,1,2], required=False, help='loss: 0 = MSE, 1 = BCE, 2 = SSIM+MSE')
-parser.add_argument('--layer_norm', type=int, choices=[0, 1], required=False, help='layer_norm')
-parser.add_argument('--schedule_sampling', type=int, choices=[0, 1], required=False, help='schedule_sampling')
-parser.add_argument('--initial_lr', type=float, required=False, help='initial_lr')
-parser.add_argument('--gamma', type=float, required=False, help='gamma')
 args = parser.parse_args()
 
-if args.job_id is not None:
-    job_id = args.job_id
-if args.schedule is not None:
-    schedule_yes = args.schedule
-    schedule_yes = bool(schedule_yes)
-if args.leaky_slope is not None:
-    leaky_slope = args.leaky_slope
-if args.max_pooling is not None:
-    max_pool = args.max_pooling
-    max_pool = bool(max_pool)
-if args.bias is not None:
-    bias = args.bias
-    bias = bool(bias)
-if args.transpose is not None:
-    transpose = args.transpose
-    transpose = bool(transpose)
-if args.stride is not None:
-    stride = args.stride
-if args.filter_size is not None:
-    filter_size = args.filter_size
-if args.patch_size is not None:
-    patch_size = args.patch_size
-if args.num_hidden is not None:
-    num_hidden = args.num_hidden
-num_layers = len(num_hidden)
-if args.batch_size is not None:
-    batch_size = args.batch_size
-if args.num_epochs is not None:
-    num_epochs = args.num_epochs
-if args.layer_norm is not None:
-    layer_norm = args.layer_norm
-    layer_norm = bool(layer_norm)
-if args.schedule_sampling is not None:
-    schedule_sampling = args.schedule_sampling
-    schedule_sampling = bool(schedule_sampling)
+# Assign values directly from args
+job_id = args.job_id
+schedule_yes = args.schedule
+leaky_slope = args.leaky_slope
+max_pool = args.max_pooling
+bias = args.bias
+transpose = args.transpose
+stride = args.stride
+filter_size = args.filter_size
+patch_size = args.patch_size
+num_hidden = args.num_hidden
+num_layers = len(num_hidden) if num_hidden else 0
+batch_size = args.batch_size
+num_epochs = args.num_epochs
+layer_norm = args.layer_norm
+schedule_sampling = args.schedule_sampling
+initial_lr = args.initial_lr
+gamma = args.gamma
+
+# Keep the conditional for loss
 if args.loss is not None:
     loss = args.loss
     if args.loss == 0:
@@ -93,10 +81,6 @@ if args.loss is not None:
         criterion = nn.BCELoss(reduction='sum')
     elif args.loss == 2:
         criterion = SSIM_MSE_Loss()
-if args.initial_lr is not None:
-    initial_lr = args.initial_lr
-if args.gamma is not None:
-    gamma = args.gamma
 
 print(f"Training with:\n    architecture = {num_hidden},\n    stride = {stride},\n    filter_size = {filter_size},\n    leaky_slope = {leaky_slope},\n    max_pool = {max_pool},\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    num_epochs = {num_epochs},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes},\n    bias = {bias},\n    transpose = {transpose},\n    initial_lr = {initial_lr},\n    gamma = {gamma}.")
 print("")
@@ -171,7 +155,7 @@ for seq_len in range(2, max_seq_len):
 
     # Number of elements to set to zero in the mask
     total_pixels = custom_model_config['in_shape'][1] * custom_model_config['in_shape'][2]
-    num_zeros = int(total_pixels * ( seq_len / max_seq_len ))
+    num_zeros = int(total_pixels * ( seq_len / (max_seq_len * 2) ))
 
     for epoch in range(num_epochs):
         # Training phase
