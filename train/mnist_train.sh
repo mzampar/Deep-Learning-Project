@@ -9,7 +9,7 @@
 #SBATCH --mem=100gb
 #SBATCH --job-name=train_conv_lstm
 #SBATCH -A dssc
-#SBATCH --output=mnist_%j.out
+#SBATCH --output=slurm_mnist_%j.out
 
 # Boolean options: --max_pooling, --bias, --transpose, --layer_norm, --schedule_sampling and --schedule
 
