@@ -41,6 +41,7 @@ parser.add_argument('--bias', action='store_true', help='Use bias')
 parser.add_argument('--leaky_slope', type=float, required=True, help='Leaky ReLU slope')
 parser.add_argument('--max_pooling', action='store_true', help='Enable max pooling')
 parser.add_argument('--transpose', action='store_true', help='Enable transposition')
+parser.add_argument('--use_lstm_output', action='store_true', help='Use LSTM output')
 parser.add_argument('--batch_size', type=int, required=True, help='Batch size')
 parser.add_argument('--num_epochs', type=int, required=True, help='Number of epochs')
 parser.add_argument('--loss', type=int, choices=[0, 1, 2], required=True, help='Loss: 0 = MSE, 1 = BCE, 2 = SSIM+MSE')
@@ -58,6 +59,7 @@ leaky_slope = args.leaky_slope
 max_pool = args.max_pooling
 bias = args.bias
 transpose = args.transpose
+use_lstm_output = args.use_lstm_output
 stride = args.stride
 filter_size = args.filter_size
 patch_size = args.patch_size
@@ -81,7 +83,7 @@ if args.loss is not None:
         criterion = SSIM_MSE_Loss()
 
 
-print(f"Training with:\n    architecture = {num_hidden},\n    stride = {stride},\n    filter_size = {filter_size},\n    leaky_slope = {leaky_slope},\n    max_pool = {max_pool},\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes},\n    bias = {bias},\n    transpose = {transpose},\n    initial_lr = {initial_lr},\n    gamma = {gamma}.")
+print(f"Training with:\n    architecture = {num_hidden},\n    stride = {stride},\n    filter_size = {filter_size},\n    leaky_slope = {leaky_slope},\n    max_pool = {max_pool},\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    num_epochs = {num_epochs},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes},\n    bias = {bias},\n    transpose = {transpose},\n    use_lstm_output = {use_lstm_output},\n    initial_lr = {initial_lr},\n    gamma = {gamma}.")
 print("")
 
 # Define the model configuration
@@ -94,7 +96,8 @@ custom_model_config = {
     'transpose': transpose, # wheter to use transposed convolution or not
     'bias': bias, # wheter to use bias or not
     'leaky_slope': leaky_slope, # slope of the LeakyReLU, if None, LeakyReLU is not used
-    'max_pool': max_pool # wheter to use max pooling or not: PAY ATTENTION, max pooling is used only in the encoder and when is set to true, the stride is set to 1
+    'max_pool': max_pool, # wheter to use max pooling or not: PAY ATTENTION, max pooling is used only in the encoder and when is set to true, the stride is set to 1
+    'use_lstm_output': use_lstm_output
 }
 
 # Define the dataset

@@ -106,5 +106,5 @@ class ConvLSTMCell(nn.Module):
         o_t = torch.sigmoid(o_x + o_h + self.context_output * c_new)
         h_new = o_t * torch.tanh(c_new)
 
-        return h_new, c_new
+        return h_new, c_new, o_t
     

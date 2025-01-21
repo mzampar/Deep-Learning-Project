@@ -124,13 +124,21 @@ class ConvLSTM_Model(nn.Module):
             # Keeping track of the hidden and cell states of each layer
             h_t = []
             c_t = []
-            a, b = self.cell_list[0](net, h_t_prev[0], c_t_prev[0])
-            h_t.append(a)
-            c_t.append(b)
+            hidden, context, output = self.cell_list[0](net, h_t_prev[0], c_t_prev[0])
+            h_t.append(hidden)
+            c_t.append(context)
+
             for i in range(1, self.num_layers):
-                a, b = self.cell_list[i](h_t[i - 1], h_t_prev[i], c_t_prev[i])
-                h_t.append(a)
-                c_t.append(b)
+                if self.configs['use_lstm_output']:
+                    hidden, context, output = self.cell_list[i](output, h_t_prev[i], c_t_prev[i])
+                    h_t.append(hidden)
+                    c_t.append(context)
+                else:
+                    hidden, context, output = self.cell_list[i](h_t[i-1], h_t_prev[i], c_t_prev[i])
+                    h_t.append(hidden)
+                    c_t.append(context)
+
+
             # Update the hidden and cell states of each layer
             h_t_prev = h_t
             c_t_prev = c_t

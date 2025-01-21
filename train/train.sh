@@ -11,6 +11,6 @@
 #SBATCH -A dssc
 #SBATCH --output=slurm_rain_%j.out
 
-# Boolean options: --max_pooling, --bias, --transpose, --layer_norm, --schedule_sampling and --schedule
+# Boolean options: --max_pooling, --bias, --transpose, --layer_norm, --schedule_sampling, --schedule, --use_lstm_output
 
 srun python -u train.py --job_id $SLURM_JOB_ID --num_hidden "64,32,32,16" --stride 2 --filter_size "3,3,3,3" --leaky_slope 0.2 --max_pool --batch_size 16 --bias --transpose --num_epochs 1 --layer_norm --loss 1 --initial_lr 0.01 --gamma 0.5
