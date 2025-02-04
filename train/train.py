@@ -49,6 +49,8 @@ parser.add_argument('--layer_norm', action='store_true', help='Enable layer norm
 parser.add_argument('--schedule_sampling', action='store_true', help='Enable schedule sampling')
 parser.add_argument('--initial_lr', type=float, required=False, default=0.01, help='Initial learning rate')
 parser.add_argument('--gamma', type=float, required=False, help='Gamma for scheduler')
+parser.add_argument('--out_folder', type=str, required=True, help='Output folder')
+
 
 args = parser.parse_args()
 
@@ -71,6 +73,7 @@ layer_norm = args.layer_norm
 schedule_sampling = args.schedule_sampling
 initial_lr = args.initial_lr
 gamma = args.gamma
+out_folder = args.out_folder
 
 # Keep the conditional for loss
 if args.loss is not None:
@@ -219,7 +222,7 @@ for seq_len in range(2, max_seq_len):
             scheduler.step()
 
         epoch_train_loss = running_loss / len(dataloader)
-        print(f"Epoch [{epoch+1}/{num_epochs*seq_len}] - Average Train Loss: {epoch_train_loss:.4f}")
+        print(f"Seq_Len: {seq_len}, Epoch [{epoch+1}/{num_epochs}] - Average Train Loss: {epoch_train_loss:.4f}")
 
         # Validation phase
         model.eval()
@@ -232,12 +235,12 @@ for seq_len in range(2, max_seq_len):
                 test_loss += loss.item()
 
         epoch_test_loss = test_loss / len(test_dataloader)
-        print(f"Epoch [{epoch+1}/{num_epochs}] - Average Test Loss: {epoch_test_loss:.4f}")
+        print(f"Seq_Len: {seq_len}, Epoch [{epoch+1}/{num_epochs}] - Average Test Loss: {epoch_test_loss:.4f}")
         print("Elapsed time: {:.2f} minutes.".format((time.time() - start_time)/60))
 
 print("")
 print("Training complete!")
 print("Total elapsed time: {:.2f} minutes.".format((time.time() - start_time)/60))
 
-model_name = f"../models/model_{num_hidden[0]}_{num_hidden[1]}_{num_hidden[2]}_{num_hidden[3]}_{job_id}.pth"
+model_name = f"{out_folder}/model_{num_hidden[0]}_{num_hidden[1]}_{num_hidden[2]}_{num_hidden[3]}_{job_id}.pth"
 th.save(model.state_dict(), model_name)
