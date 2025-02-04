@@ -22,3 +22,7 @@ mv slurm_rain_$SLURM_JOB_ID.out $out_folder
 # Generate plots of the loss
 src=/u/dssc/mzampar/DL_project/display
 python $src/plot_loss.py --file $out_folder/slurm_rain_$SLURM_JOB_ID.out --out_file $out_folder/loss-$SLURM_JOB_ID.png
+
+python $src/generate_gif.py --model $model_name --out_folder $out_folder --num_hidden $num_hidden --stride $stride --filter_size $filter_size --max_pool --leaky_slope $leaky_slope $transpose --num_epochs $num_epochs $layer_norm
+
+rm *.gif
