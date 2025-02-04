@@ -1,3 +1,0 @@
-# Lines to init the trainings of mnist
-
---num_hidden 64 32 32 16 --stride 2 --filter_size 5 3 3 3 --batch_size 64 --max_pool --leaky_slope 0.2 --transpose --num_epochs 1 --layer_norm --schedule_sampling --loss 1 --initial_lr 0.01 --gamma 0.5
