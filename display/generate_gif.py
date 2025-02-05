@@ -5,7 +5,7 @@ import sys
 import argparse
 
 # Add the relative path to the system path
-sys.path.append("u/dssc/mzampar/Deep-Learning-Project/train"))
+sys.path.append("u/dssc/mzampar/Deep-Learning-Project/train")
 
 from PIL import Image, ImageDraw, ImageFont, ImageSequence
 
