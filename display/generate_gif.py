@@ -5,7 +5,7 @@ import sys
 import argparse
 
 # Add the relative path to the system path
-sys.path.append(os.path.abspath("u/dssc/mzampar/Deep-Learning-Project/train"))
+sys.path.append("u/dssc/mzampar/Deep-Learning-Project/train"))
 
 from PIL import Image, ImageDraw, ImageFont, ImageSequence
 
@@ -195,7 +195,8 @@ custom_model_config = {
     'layer_norm' : layer_norm,
     'bias' : bias,
     'transpose' : transpose,
-    'patch_size': 1
+    'patch_size': 1,
+    'use_lstm_output': use_lstm_output
 }
 
 if th.cuda.is_available():
@@ -211,7 +212,7 @@ model = ConvLSTM_Model(num_layers, num_hidden, custom_model_config)
 
 # Load the model
 # Load the state dictionary
-state_dict = th.load(model_name, map_location=th.device('cpu'), weights_only=True)
+state_dict = th.load(out_folder + f"/{model_name}", map_location=th.device('cpu'), weights_only=True)
 
 # Remove `module.` prefix if it exists
 new_state_dict = {k.replace("module.", ""): v for k, v in state_dict.items()}
