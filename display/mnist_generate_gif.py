@@ -6,7 +6,7 @@ import sys
 import argparse
 
 # Add the relative path to the system path
-sys.path.append(os.path.abspath("../train"))
+sys.path.append(os.path.abspath("u/dssc/mzampar/Deep-Learning-Project/train"))
 
 from PIL import Image, ImageDraw, ImageFont, ImageSequence
 

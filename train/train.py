@@ -163,7 +163,7 @@ else:
 
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
 start_time = time.time()
-max_seq_len = 10
+max_seq_len = 2
 for seq_len in range(2, max_seq_len):
     print("")
     th.cuda.empty_cache()
@@ -180,8 +180,8 @@ for seq_len in range(2, max_seq_len):
         scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
 
     # Define a dataset of variable lenght
-    train_dataset = SequenceDataset(train_data, '../../scratch/grey_tensor/', seq_len, seq_len)
-    test_dataset = SequenceDataset(test_data, '../../scratch/grey_tensor/', seq_len, seq_len)
+    train_dataset = SequenceDataset(train_data, '/u/dssc/mzampar/scratch/grey_tensor/', seq_len, seq_len)
+    test_dataset = SequenceDataset(test_data, '/u/dssc/mzampar/scratch/grey_tensor/', seq_len, seq_len)
     dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 

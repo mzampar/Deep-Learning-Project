@@ -129,12 +129,12 @@ if schedule_sampling:
 else:
     mask_true = None
 
-data = np.load('../../scratch/mnist_test_seq.npy').astype(np.float32)/255
+data = np.load('/u/dssc/mzampar/scratch/mnist_test_seq.npy').astype(np.float32)/255
 train_idx = int(data.shape[1] * 0.8)
 
 start = time.time()
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
-max_seq_len = 10
+max_seq_len = 2
 for seq_len in range(2, max_seq_len):
     print("")
     th.cuda.empty_cache()
