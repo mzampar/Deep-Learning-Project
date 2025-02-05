@@ -38,6 +38,6 @@ mv slurm_rain_$SLURM_JOB_ID.out $out_folder
 src=/u/dssc/mzampar/Deep-Learning-Project/display
 python $src/plot_loss.py --file $out_folder/slurm_rain_$SLURM_JOB_ID.out --out_file $out_folder/loss-$SLURM_JOB_ID.png
 
-python $src/mnist_generate_gif.py --model $model_name --out_folder $out_folder --num_hidden $num_hidden --stride $stride --filter_size $filter_size --max_pool --leaky_slope $leaky_slope $transpose $layer_norm --job_id $slurm_id --fig_height 128
+python $src/mnist_generate_gif.py --model $model_name --out_folder $out_folder --num_hidden $num_hidden --stride $stride --filter_size $filter_size --max_pool --leaky_slope $leaky_slope $transpose $layer_norm --job_id $SLURM_JOB_ID --fig_height 128
 
 rm *.gif
