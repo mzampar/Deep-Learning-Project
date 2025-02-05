@@ -30,14 +30,14 @@ initial_lr="0.01"
 gamma="0.5"
 model_name="$out_folder/model_$SLURM_JOB_ID.pth"
 
-srun python -u mnist_train.py --job_id $SLURM_JOB_ID --num_hidden $num_hidden --stride $stride --filter_size $filter_size --batch_size $batch_size --max_pool --leaky_slope $leaky_slope $transpose --num_epochs $num_epochs $layer_norm $schedule_sampling --loss $loss --initial_lr $initial_lr --gamma $gamma --model_name $model_name
-
-mv slurm_rain_$SLURM_JOB_ID.out $out_folder
+srun python -u train.py --job_id $SLURM_JOB_ID --num_hidden $num_hidden --stride $stride --filter_size $filter_size --batch_size $batch_size --max_pool --leaky_slope $leaky_slope $transpose --num_epochs $num_epochs $layer_norm $schedule_sampling --loss $loss --initial_lr $initial_lr --gamma $gamma --model_name $out_folder/$model_name
 
 # Generate plots of the loss
 src="/u/dssc/mzampar/Deep-Learning-Project/display"
-python $src/plot_loss.py --file $out_folder/slurm_rain_$SLURM_JOB_ID.out --out_file $out_folder/loss-$SLURM_JOB_ID.png
+python $src/plot_loss.py --file slurm_rain_$SLURM_JOB_ID.out --out_file $out_folder/loss-$SLURM_JOB_ID.png
 
-python $src/mnist_generate_gif.py --model $model_name --out_folder $out_folder --num_hidden $num_hidden --stride $stride --filter_size $filter_size --max_pool --leaky_slope $leaky_slope $transpose $layer_norm --job_id $SLURM_JOB_ID --fig_height 128
+python $src/generate_gif.py --model $out_folder/$model_name --out_folder $out_folder --num_hidden $num_hidden --stride $stride --filter_size $filter_size --max_pool --leaky_slope $leaky_slope $transpose $layer_norm --job_id $SLURM_JOB_ID --fig_height 128
 
 rm *.gif
+
+mv slurm_rain_$SLURM_JOB_ID.out $out_folder
