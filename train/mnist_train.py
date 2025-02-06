@@ -130,7 +130,8 @@ else:
     mask_true = None
 
 data = np.load('/u/dssc/mzampar/scratch/mnist_test_seq.npy').astype(np.float32)/255
-train_percentage = 0.8
+print(f"Data shape: {data.shape}")
+train_percentage = 0.9
 train_idx = int(data.shape[1] * train_percentage)
 
 start = time.time()
@@ -171,14 +172,11 @@ for seq_len in range(2, max_seq_len):
     # Create train, validation and test datasets
     # Training data (everything before validation starts + everything after validation ends)
     train_dataset = MnistSequenceDataset(
-        np.concatenate([data[:validation_index_start], data[validation_index_end:]]), 
-        seq_len, seq_len
+        np.concatenate([data[:,:validation_index_start], data[:,validation_index_end:]]), seq_len, seq_len
     )
-
     # Validation data (data between validation start and end indices)
-    validation_dataset = MnistSequenceDataset(data[validation_index_start:validation_index_end], seq_len, seq_len)
-
-    test_dataset = MnistSequenceDataset(data[train_idx:], seq_len, seq_len)
+    validation_dataset = MnistSequenceDataset(data[:,validation_index_start:validation_index_end], seq_len, seq_len)
+    test_dataset = MnistSequenceDataset(data[:,train_idx:], seq_len, seq_len)
     dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     validation_dataloader = th.utils.data.DataLoader(validation_dataset, batch_size=batch_size, shuffle=False)
