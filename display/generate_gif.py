@@ -66,7 +66,6 @@ def generate_gif(input_frames, output_frames, model, filename, predict):
         predicted_frames = model(input_frames, mask_true, schedule_sampling=False)
         input_frames = input_frames.squeeze(0)
         predicted_frames = predicted_frames.squeeze(0)
-        print(predicted_frames.shape)
         predicted_pil_frames = [transforms.ToPILImage()(frame) for frame in predicted_frames]
 
         pred_gif_list = input_pil_frames + predicted_pil_frames
