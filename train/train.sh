@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #SBATCH --nodes=1
+#SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=24
 #SBATCH --time=02:00:00
 #SBATCH --partition=GPU
-#SBATCH --gpus=1
 #SBATCH --mem=100gb
 #SBATCH --job-name=train_conv_lstm
 #SBATCH -A dssc
@@ -28,7 +28,7 @@ schedule_sampling="--schedule_sampling"
 loss="1"
 initial_lr="0.01"
 gamma="0.5"
-model_name="$out_folder/model_$SLURM_JOB_ID.pth"
+model_name="model_$SLURM_JOB_ID.pth"
 
 srun python -u train.py --job_id $SLURM_JOB_ID --num_hidden $num_hidden --stride $stride --filter_size $filter_size --batch_size $batch_size --max_pool --leaky_slope $leaky_slope $transpose --num_epochs $num_epochs $layer_norm $schedule_sampling --loss $loss --initial_lr $initial_lr --gamma $gamma --model_name $out_folder/$model_name
 
