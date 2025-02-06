@@ -172,7 +172,7 @@ for seq_len in range(2, max_seq_len):
     # Create train, validation and test datasets
     # Training data (everything before validation starts + everything after validation ends)
     train_dataset = MnistSequenceDataset(
-        np.concatenate([data[:,:validation_index_start], data[:,validation_index_end:]]), seq_len, seq_len
+        np.concatenate([data[:,:validation_index_start,:,:], data[:,validation_index_end:,:,:]], axis=1), seq_len, seq_len
     )
     # Validation data (data between validation start and end indices)
     validation_dataset = MnistSequenceDataset(data[:,validation_index_start:validation_index_end], seq_len, seq_len)
