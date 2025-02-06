@@ -151,20 +151,33 @@ for seq_len in range(2, max_seq_len):
         optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
         scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
 
+    # To extract the validation set, we tried to select some random indices,
+    # But in this way numpy creates a copy and we run out of memory, 
+    # So we work with 2 indexes for the validation set
+    """
     # Compute index ranges
     num_samples = int(0.1 * data.shape[1])  # 10% for valiation
-
     # Generate random validation indices from the first 90% of data
     np.random.seed(seq_len) 
     random_indexes = np.random.choice(range(train_idx), size=num_samples, replace=False)
-
     # Get training indexes: all indexes < max_index but not in random_indexes
     train_indexes = np.setdiff1d(np.arange(train_idx), random_indexes)
-    #print(len(train_indexes), len(random_indexes), data.shape[1], train_idx)
+    """ 
+
+    num_samples = int(0.1 * data.shape[1])  # 10% for valiation
+    validation_index_end = np.ranint(num_samples, train_idx)
+    validation_index_start = validation_index_end - num_samples
 
     # Create train, validation and test datasets
-    train_dataset = MnistSequenceDataset(np.take(data, train_indexes, axis=0), seq_len, seq_len)
-    validation_dataset = MnistSequenceDataset(np.take(data, random_indexes, axis=0), seq_len, seq_len)
+    # Training data (everything before validation starts + everything after validation ends)
+    train_dataset = MnistSequenceDataset(
+        np.concatenate([data[:validation_index_start], data[validation_index_end:]]), 
+        seq_len, seq_len
+    )
+
+    # Validation data (data between validation start and end indices)
+    validation_dataset = MnistSequenceDataset(data[validation_index_start:validation_index_end], seq_len, seq_len)
+
     test_dataset = MnistSequenceDataset(data[train_idx:], seq_len, seq_len)
     dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
