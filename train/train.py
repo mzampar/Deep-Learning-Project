@@ -110,8 +110,8 @@ seq_len = seq_len.to_dict()
 seq_rain = id_data.groupby('sequence')['rain_category'].mean()
 seq_rain = seq_rain.to_dict()
 seq_df = pd.DataFrame({'seq_len': seq_len, 'seq_rain': seq_rain})
-# Split the sequences in train and test set (80/20)
-train_seq = seq_df.sample(frac=0.8, random_state=1)
+# Split the sequences in train and test set (90/10)
+train_seq = seq_df.sample(frac=0.9, random_state=1)
 test_seq = seq_df.drop(train_seq.index)
 print(f"Average train sequence lenght: {train_seq['seq_len'].mean()}.")
 print(f"Average test sequence lenght:, {test_seq['seq_len'].mean()}.")
@@ -180,9 +180,13 @@ for seq_len in range(2, max_seq_len):
         scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
 
     # Define a dataset of variable lenght
+    # Validation set is 10% of the training set and changes at each epoch
+    validation_data = train_data.sample(frac=0.1)
     train_dataset = SequenceDataset(train_data, '/u/dssc/mzampar/scratch/grey_tensor/', seq_len, seq_len)
+    validation_dataset = SequenceDataset(validation_data, '/u/dssc/mzampar/scratch/grey_tensor/', seq_len, seq_len)
     test_dataset = SequenceDataset(test_data, '/u/dssc/mzampar/scratch/grey_tensor/', seq_len, seq_len)
     dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    validation_dataloader = th.utils.data.DataLoader(validation_dataset, batch_size=batch_size, shuffle=False)
     test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
     # Number of elements to set to zero in the mask
@@ -226,6 +230,20 @@ for seq_len in range(2, max_seq_len):
 
         # Validation phase
         model.eval()
+        validation_loss = 0.0
+        with th.no_grad():
+            for batch_idx, (inputs, targets) in enumerate(validation_dataloader):
+                inputs, targets = inputs.to(device), targets.to(device)
+                outputs = model(inputs, th.ones_like(inputs), schedule_sampling=False)
+                loss = criterion(outputs, targets)
+                validation_loss += loss.item()
+
+        epoch_validation_loss = validation_loss / len(validation_dataloader)
+        print(f"Seq_Len: {seq_len}, Epoch [{epoch+1}/{num_epochs}] - Average Validation Loss: {epoch_validation_loss:.4f}")
+        print("Elapsed time: {:.2f} minutes.".format((time.time() - start_time)/60))
+
+        # Test phase
+        model.eval()
         test_loss = 0.0
         with th.no_grad():
             for batch_idx, (inputs, targets) in enumerate(test_dataloader):
@@ -237,6 +255,7 @@ for seq_len in range(2, max_seq_len):
         epoch_test_loss = test_loss / len(test_dataloader)
         print(f"Seq_Len: {seq_len}, Epoch [{epoch+1}/{num_epochs}] - Average Test Loss: {epoch_test_loss:.4f}")
         print("Elapsed time: {:.2f} minutes.".format((time.time() - start_time)/60))
+
 
 print("")
 print("Training complete!")

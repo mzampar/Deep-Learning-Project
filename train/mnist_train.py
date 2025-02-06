@@ -130,7 +130,8 @@ else:
     mask_true = None
 
 data = np.load('/u/dssc/mzampar/scratch/mnist_test_seq.npy').astype(np.float32)/255
-train_idx = int(data.shape[1] * 0.8)
+train_percentage = 0.9
+train_idx = int(data.shape[1] * train_percentage)
 
 start = time.time()
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
@@ -150,12 +151,24 @@ for seq_len in range(2, max_seq_len):
         optimizer = th.optim.Adam(model.parameters(), lr=initial_lr)
         scheduler = th.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
 
-    train_dataset = MnistSequenceDataset(data[:,:train_idx], seq_len, seq_len)
+    # Compute index ranges
+    num_samples = int(0.1 * data.shape[1])  # 10% for valiation
+    max_index = int(0.9 * data.shape[1])    # First 90% of data for selection
+
+    # Generate random validation indices from the first 90% of data
+    np.random.seed(seq_len) 
+    random_indexes = np.random.choice(range(max_index), size=num_samples, replace=False)
+
+    # Get training indexes: all indexes < max_index but not in random_indexes
+    train_indexes = np.setdiff1d(np.arange(max_index), random_indexes)
+
+    # Create train, validation and test datasets
+    train_dataset = MnistSequenceDataset(data[train_indexes], seq_len, seq_len)
+    validation_dataset = MnistSequenceDataset(data[random_indexes], seq_len, seq_len)
     test_dataset = MnistSequenceDataset(data[:,train_idx:], seq_len, seq_len)
     dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
-
-    # Number of elements to set to zero in the mask
+    validation_dataloader = th.utils.data.DataLoader(validation_dataset, batch_size=batch_size, shuffle=False)
 
     # Number of elements to set to zero in the mask
     total_pixels = custom_model_config['in_shape'][1] * custom_model_config['in_shape'][2]
@@ -196,7 +209,7 @@ for seq_len in range(2, max_seq_len):
         epoch_train_loss = running_loss / len(dataloader)
         print(f"Seq_Len: {seq_len}, Epoch [{epoch+1}/{num_epochs}] - Average Train Loss: {epoch_train_loss:.4f}")
 
-        # Validation phase
+        # Test phase
         model.eval()
         test_loss = 0.0
         with th.no_grad():
@@ -209,6 +222,22 @@ for seq_len in range(2, max_seq_len):
         epoch_test_loss = test_loss / len(test_dataloader)
         print(f"Seq_Len: {seq_len}, Epoch [{epoch+1}/{num_epochs}] - Average Test Loss: {epoch_test_loss:.4f}")
         print("Elapsed time: {:.2f} seconds".format(time.time() - start))
+
+        # Validation phase
+        model.eval() 
+        val_loss = 0.0
+
+        with th.no_grad():
+            for batch_idx, (inputs, targets) in enumerate(validation_dataloader):
+                inputs, targets = inputs.to(device), targets.to(device)
+                outputs = model(inputs, th.ones_like(inputs), schedule_sampling=False)
+                loss = criterion(outputs, targets)
+                val_loss += loss.item()
+
+        epoch_val_loss = val_loss / len(validation_dataloader)
+        print(f"Seq_Len: {seq_len}, Epoch [{epoch+1}/{num_epochs}] - Average Validation Loss: {epoch_val_loss:.4f}")
+        print("Elapsed time: {:.2f} seconds".format(time.time() - start))
+
 
 print("")
 print("Training complete!")
