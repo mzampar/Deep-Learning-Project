@@ -165,7 +165,7 @@ for seq_len in range(2, max_seq_len):
     """ 
 
     num_samples = int(0.1 * data.shape[1])  # 10% for valiation
-    validation_index_end = np.ranint(num_samples, train_idx)
+    validation_index_end = np.random.randint(num_samples, train_idx)
     validation_index_start = validation_index_end - num_samples
 
     # Create train, validation and test datasets
