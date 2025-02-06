@@ -153,14 +153,14 @@ for seq_len in range(2, max_seq_len):
 
     # Compute index ranges
     num_samples = int(0.1 * data.shape[1])  # 10% for valiation
-    max_index = int(0.9 * data.shape[1])    # First 90% of data for selection
 
     # Generate random validation indices from the first 90% of data
     np.random.seed(seq_len) 
-    random_indexes = np.random.choice(range(max_index), size=num_samples, replace=False)
+    random_indexes = np.random.choice(range(train_idx), size=num_samples, replace=False)
 
     # Get training indexes: all indexes < max_index but not in random_indexes
-    train_indexes = np.setdiff1d(np.arange(max_index), random_indexes)
+    train_indexes = np.setdiff1d(np.arange(train_idx), random_indexes)
+    print(len(train_indexes), len(random_indexes), data.shape[1], train_idx)
 
     # Create train, validation and test datasets
     train_dataset = MnistSequenceDataset(data[train_indexes], seq_len, seq_len)
