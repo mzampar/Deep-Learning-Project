@@ -159,7 +159,7 @@ fig_height = args.fig_height
 model_name = args.model
 out_folder = args.out_folder
 
-id_data = pd.read_csv('/u/dssc/mzampar/Deep_Learning_Project/data/id_df_final_10.csv')
+id_data = pd.read_csv('/u/dssc/mzampar/Deep-Learning-Project/data/id_df_final_10.csv')
 
 seq_len = id_data.groupby('sequence').size()
 seq_len = seq_len.to_dict()
