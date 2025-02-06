@@ -130,7 +130,7 @@ else:
     mask_true = None
 
 data = np.load('/u/dssc/mzampar/scratch/mnist_test_seq.npy').astype(np.float32)/255
-train_percentage = 0.9
+train_percentage = 0.8
 train_idx = int(data.shape[1] * train_percentage)
 
 start = time.time()
@@ -160,12 +160,12 @@ for seq_len in range(2, max_seq_len):
 
     # Get training indexes: all indexes < max_index but not in random_indexes
     train_indexes = np.setdiff1d(np.arange(train_idx), random_indexes)
-    print(len(train_indexes), len(random_indexes), data.shape[1], train_idx)
+    #print(len(train_indexes), len(random_indexes), data.shape[1], train_idx)
 
     # Create train, validation and test datasets
-    train_dataset = MnistSequenceDataset(data[train_indexes], seq_len, seq_len)
-    validation_dataset = MnistSequenceDataset(data[random_indexes], seq_len, seq_len)
-    test_dataset = MnistSequenceDataset(data[:,train_idx:], seq_len, seq_len)
+    train_dataset = MnistSequenceDataset(np.take(data, train_indexes, axis=0), seq_len, seq_len)
+    validation_dataset = MnistSequenceDataset(np.take(data, random_indexes, axis=0), seq_len, seq_len)
+    test_dataset = MnistSequenceDataset(data[train_idx:], seq_len, seq_len)
     dataloader = th.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = th.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     validation_dataloader = th.utils.data.DataLoader(validation_dataset, batch_size=batch_size, shuffle=False)
