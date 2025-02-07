@@ -18,7 +18,7 @@ mkdir -p $out_folder
 
 num_hidden="64 32 32 16"
 stride="2"
-filter_size="5 3 3 3"
+filter_size="3 3 3 3"
 batch_size="64"
 leaky_slope="0.2"
 transpose="--transpose"
@@ -28,9 +28,10 @@ schedule_sampling="--schedule_sampling"
 loss="1"
 initial_lr="0.01"
 gamma="0.5"
+max_pool="--max_pool"
 model_name="model_$SLURM_JOB_ID.pth"
 
-srun python -u train.py --job_id $SLURM_JOB_ID --num_hidden $num_hidden --stride $stride --filter_size $filter_size --batch_size $batch_size --max_pool --leaky_slope $leaky_slope $transpose --num_epochs $num_epochs $layer_norm $schedule_sampling --loss $loss --initial_lr $initial_lr --gamma $gamma --model_name $out_folder/$model_name
+srun python -u mnist_train.py --job_id $SLURM_JOB_ID --num_hidden $num_hidden --stride $stride --filter_size $filter_size --batch_size $batch_size $max_pool --leaky_slope $leaky_slope $transpose --num_epochs $num_epochs $layer_norm $schedule_sampling --loss $loss --initial_lr $initial_lr --gamma $gamma --model_name $out_folder/$model_name
 
 # Generate plots of the loss
 src="/u/dssc/mzampar/Deep-Learning-Project/display"

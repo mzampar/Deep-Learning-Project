@@ -136,7 +136,7 @@ train_idx = int(data.shape[1] * train_percentage)
 
 start = time.time()
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
-max_seq_len = 3
+max_seq_len = 9
 for seq_len in range(2, max_seq_len):
     print("")
     th.cuda.empty_cache()
