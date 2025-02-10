@@ -85,7 +85,7 @@ if args.loss is not None:
     elif args.loss == 2:
         criterion = SSIM_MSE_Loss()
 
-print(f"Training with:\n    architecture = {num_hidden},\n    stride = {stride},\n    filter_size = {filter_size},\n    leaky_slope = {leaky_slope},\n    max_pool = {max_pool},\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    num_epochs = {num_epochs},\n    scheduled_sampling = {schedule_sampling},\n    scheduler = {schedule_yes},\n    bias = {bias},\n    transpose = {transpose},\n    use_lstm_output = {use_lstm_output},\n    initial_lr = {initial_lr},\n    gamma = {gamma}.")
+print(f"Training with:\n    architecture = {num_hidden},\n    stride = {stride},\n    filter_size = {filter_size},\n    leaky_slope = {leaky_slope},\n    max_pool = {max_pool},\n    layer norm = {layer_norm},\n    loss = {criterion},\n    batch size = {batch_size},\n    num_epochs = {num_epochs},\n    scheduled_sampling = {schedule_sampling},\n    bias = {bias},\n    transpose = {transpose},\n    use_lstm_output = {use_lstm_output},\n    scheduler = {schedule_yes},\n    initial_lr = {initial_lr},\n    gamma = {gamma}.")
 print("")
 
 custom_model_config = {
