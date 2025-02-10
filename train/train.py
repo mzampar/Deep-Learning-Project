@@ -163,7 +163,7 @@ else:
 
 # Loop over the dataset multiple times, with different sequence lengths to avoid the vanishing gradient problem
 start_time = time.time()
-max_seq_len = 9
+max_seq_len = 10
 for seq_len in range(2, max_seq_len+1):
     print("")
     th.cuda.empty_cache()
