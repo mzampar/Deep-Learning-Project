@@ -1,0 +1,664 @@
+Starting job 1008753
+Training with:
+    architecture = [64, 32, 32, 16],
+    stride = 1,
+    filter_size = [3, 3, 3, 3],
+    leaky_slope = 0.2,
+    max_pool = False,
+    layer norm = True,
+    loss = BCELoss(),
+    batch size = 64,
+    num_epochs = 1,
+    scheduled_sampling = False,
+    bias = False,
+    transpose = False,
+    use_lstm_output = False,
+    scheduler = False,
+    initial_lr = 0.01,
+    gamma = 0.5.
+
+CUDA is available!
+Data shape: (20, 10000, 64, 64)
+
+Training with sequence length 2.
+Epoch [1/1], Batch [1], Loss: 374199.781250
+Epoch [1/1], Batch [11], Loss: 120107.742188
+Epoch [1/1], Batch [21], Loss: 91506.890625
+Epoch [1/1], Batch [31], Loss: 77739.265625
+Epoch [1/1], Batch [41], Loss: 71966.234375
+Epoch [1/1], Batch [51], Loss: 63932.035156
+Epoch [1/1], Batch [61], Loss: 61400.187500
+Epoch [1/1], Batch [71], Loss: 59648.679688
+Epoch [1/1], Batch [81], Loss: 54752.640625
+Epoch [1/1], Batch [91], Loss: 52652.460938
+Epoch [1/1], Batch [101], Loss: 53180.171875
+Epoch [1/1], Batch [111], Loss: 47504.507812
+Epoch [1/1], Batch [121], Loss: 49582.859375
+Epoch [1/1], Batch [131], Loss: 49137.078125
+Epoch [1/1], Batch [141], Loss: 49638.183594
+Epoch [1/1], Batch [151], Loss: 46254.746094
+Epoch [1/1], Batch [161], Loss: 47726.242188
+Epoch [1/1], Batch [171], Loss: 45193.203125
+Epoch [1/1], Batch [181], Loss: 44125.414062
+Epoch [1/1], Batch [191], Loss: 45340.750000
+Epoch [1/1], Batch [201], Loss: 46097.800781
+Epoch [1/1], Batch [211], Loss: 42628.605469
+Epoch [1/1], Batch [221], Loss: 45338.109375
+Epoch [1/1], Batch [231], Loss: 46517.148438
+Epoch [1/1], Batch [241], Loss: 44762.718750
+Epoch [1/1], Batch [251], Loss: 45356.613281
+Epoch [1/1], Batch [261], Loss: 43814.789062
+Epoch [1/1], Batch [271], Loss: 44424.082031
+Epoch [1/1], Batch [281], Loss: 41584.601562
+Epoch [1/1], Batch [291], Loss: 46921.484375
+Epoch [1/1], Batch [301], Loss: 44765.820312
+Epoch [1/1], Batch [311], Loss: 42773.625000
+Epoch [1/1], Batch [321], Loss: 44097.273438
+Epoch [1/1], Batch [331], Loss: 45982.960938
+Epoch [1/1], Batch [341], Loss: 43288.796875
+Epoch [1/1], Batch [351], Loss: 42989.914062
+Epoch [1/1], Batch [361], Loss: 44179.105469
+Epoch [1/1], Batch [371], Loss: 43166.613281
+Epoch [1/1], Batch [381], Loss: 43485.101562
+Epoch [1/1], Batch [391], Loss: 43410.695312
+Epoch [1/1], Batch [401], Loss: 41138.039062
+Epoch [1/1], Batch [411], Loss: 43180.281250
+Epoch [1/1], Batch [421], Loss: 42817.089844
+Epoch [1/1], Batch [431], Loss: 43089.898438
+Epoch [1/1], Batch [441], Loss: 43862.820312
+Epoch [1/1], Batch [451], Loss: 43136.203125
+Epoch [1/1], Batch [461], Loss: 43703.351562
+Epoch [1/1], Batch [471], Loss: 41517.937500
+Epoch [1/1], Batch [481], Loss: 44877.164062
+Epoch [1/1], Batch [491], Loss: 43943.511719
+Epoch [1/1], Batch [501], Loss: 44685.218750
+Epoch [1/1], Batch [511], Loss: 42503.515625
+Epoch [1/1], Batch [521], Loss: 44047.835938
+Epoch [1/1], Batch [531], Loss: 40562.937500
+Epoch [1/1], Batch [541], Loss: 43005.433594
+Epoch [1/1], Batch [551], Loss: 40976.644531
+Epoch [1/1], Batch [561], Loss: 41833.246094
+Epoch [1/1], Batch [571], Loss: 43510.351562
+Epoch [1/1], Batch [581], Loss: 39496.679688
+Epoch [1/1], Batch [591], Loss: 43201.000000
+Epoch [1/1], Batch [601], Loss: 39732.996094
+Epoch [1/1], Batch [611], Loss: 43295.335938
+Epoch [1/1], Batch [621], Loss: 43104.414062
+Epoch [1/1], Batch [631], Loss: 41423.039062
+Epoch [1/1], Batch [641], Loss: 40973.164062
+Epoch [1/1], Batch [651], Loss: 41086.750000
+Epoch [1/1], Batch [661], Loss: 42406.535156
+Epoch [1/1], Batch [671], Loss: 42170.511719
+Epoch [1/1], Batch [681], Loss: 43067.648438
+Epoch [1/1], Batch [691], Loss: 39687.453125
+Epoch [1/1], Batch [701], Loss: 39805.617188
+Epoch [1/1], Batch [711], Loss: 39767.625000
+Epoch [1/1], Batch [721], Loss: 40909.859375
+Epoch [1/1], Batch [731], Loss: 39737.312500
+Epoch [1/1], Batch [741], Loss: 40480.476562
+Epoch [1/1], Batch [751], Loss: 40784.683594
+Epoch [1/1], Batch [761], Loss: 41414.562500
+Epoch [1/1], Batch [771], Loss: 42704.714844
+Epoch [1/1], Batch [781], Loss: 40796.484375
+Epoch [1/1], Batch [791], Loss: 41185.265625
+Epoch [1/1], Batch [801], Loss: 42943.625000
+Epoch [1/1], Batch [811], Loss: 41409.328125
+Epoch [1/1], Batch [821], Loss: 41170.210938
+Epoch [1/1], Batch [831], Loss: 41133.425781
+Epoch [1/1], Batch [841], Loss: 39749.945312
+Epoch [1/1], Batch [851], Loss: 39753.605469
+Epoch [1/1], Batch [861], Loss: 40889.515625
+Epoch [1/1], Batch [871], Loss: 40460.308594
+Epoch [1/1], Batch [881], Loss: 41131.179688
+Epoch [1/1], Batch [891], Loss: 39946.808594
+Epoch [1/1], Batch [901], Loss: 40376.324219
+Epoch [1/1], Batch [911], Loss: 40629.472656
+Epoch [1/1], Batch [921], Loss: 39788.640625
+Epoch [1/1], Batch [931], Loss: 41565.363281
+Epoch [1/1], Batch [941], Loss: 37688.460938
+Epoch [1/1], Batch [951], Loss: 41307.351562
+Epoch [1/1], Batch [961], Loss: 41674.593750
+Epoch [1/1], Batch [971], Loss: 41370.070312
+Epoch [1/1], Batch [981], Loss: 41285.984375
+Epoch [1/1], Batch [991], Loss: 39552.968750
+Epoch [1/1], Batch [1001], Loss: 39582.640625
+Epoch [1/1], Batch [1011], Loss: 41519.781250
+Epoch [1/1], Batch [1021], Loss: 42033.429688
+Epoch [1/1], Batch [1031], Loss: 40257.957031
+Epoch [1/1], Batch [1041], Loss: 37336.960938
+Epoch [1/1], Batch [1051], Loss: 40341.148438
+Epoch [1/1], Batch [1061], Loss: 40169.687500
+Epoch [1/1], Batch [1071], Loss: 40203.027344
+Epoch [1/1], Batch [1081], Loss: 43034.253906
+Epoch [1/1], Batch [1091], Loss: 39757.289062
+Epoch [1/1], Batch [1101], Loss: 39938.664062
+Epoch [1/1], Batch [1111], Loss: 42124.148438
+Epoch [1/1], Batch [1121], Loss: 40073.695312
+Epoch [1/1], Batch [1131], Loss: 39114.398438
+Epoch [1/1], Batch [1141], Loss: 39792.367188
+Epoch [1/1], Batch [1151], Loss: 38615.500000
+Epoch [1/1], Batch [1161], Loss: 42395.703125
+Epoch [1/1], Batch [1171], Loss: 41076.421875
+Epoch [1/1], Batch [1181], Loss: 41166.734375
+Epoch [1/1], Batch [1191], Loss: 38263.179688
+Epoch [1/1], Batch [1201], Loss: 38116.972656
+Epoch [1/1], Batch [1211], Loss: 39371.000000
+Epoch [1/1], Batch [1221], Loss: 40311.210938
+Epoch [1/1], Batch [1231], Loss: 39740.128906
+Epoch [1/1], Batch [1241], Loss: 37999.968750
+Epoch [1/1], Batch [1251], Loss: 42871.707031
+Epoch [1/1], Batch [1261], Loss: 40037.238281
+Epoch [1/1], Batch [1271], Loss: 39333.742188
+Epoch [1/1], Batch [1281], Loss: 39697.984375
+Epoch [1/1], Batch [1291], Loss: 39882.507812
+Epoch [1/1], Batch [1301], Loss: 36932.265625
+Epoch [1/1], Batch [1311], Loss: 39052.476562
+Epoch [1/1], Batch [1321], Loss: 39988.414062
+Epoch [1/1], Batch [1331], Loss: 38853.601562
+Epoch [1/1], Batch [1341], Loss: 39038.664062
+Epoch [1/1], Batch [1351], Loss: 38675.867188
+Epoch [1/1], Batch [1361], Loss: 40291.953125
+Epoch [1/1], Batch [1371], Loss: 37760.324219
+Epoch [1/1], Batch [1381], Loss: 40342.906250
+Epoch [1/1], Batch [1391], Loss: 37380.625000
+Epoch [1/1], Batch [1401], Loss: 38983.984375
+Epoch [1/1], Batch [1411], Loss: 39377.265625
+Epoch [1/1], Batch [1421], Loss: 38342.289062
+Epoch [1/1], Batch [1431], Loss: 38519.679688
+Epoch [1/1], Batch [1441], Loss: 38355.398438
+Epoch [1/1], Batch [1451], Loss: 39767.140625
+Epoch [1/1], Batch [1461], Loss: 41489.914062
+Epoch [1/1], Batch [1471], Loss: 40815.164062
+Epoch [1/1], Batch [1481], Loss: 40739.019531
+Epoch [1/1], Batch [1491], Loss: 38958.679688
+Epoch [1/1], Batch [1501], Loss: 39213.941406
+Epoch [1/1], Batch [1511], Loss: 39714.671875
+Epoch [1/1], Batch [1521], Loss: 39421.742188
+Epoch [1/1], Batch [1531], Loss: 39812.746094
+Epoch [1/1], Batch [1541], Loss: 38902.949219
+Epoch [1/1], Batch [1551], Loss: 41162.050781
+Epoch [1/1], Batch [1561], Loss: 39166.621094
+Epoch [1/1], Batch [1571], Loss: 39193.007812
+Epoch [1/1], Batch [1581], Loss: 38944.867188
+Epoch [1/1], Batch [1591], Loss: 39986.960938
+Epoch [1/1], Batch [1601], Loss: 39521.757812
+Epoch [1/1], Batch [1611], Loss: 38383.589844
+Epoch [1/1], Batch [1621], Loss: 36999.984375
+Epoch [1/1], Batch [1631], Loss: 39666.320312
+Epoch [1/1], Batch [1641], Loss: 40210.128906
+Epoch [1/1], Batch [1651], Loss: 39204.445312
+Epoch [1/1], Batch [1661], Loss: 37184.882812
+Epoch [1/1], Batch [1671], Loss: 38749.890625
+Epoch [1/1], Batch [1681], Loss: 38969.539062
+Epoch [1/1], Batch [1691], Loss: 40562.500000
+Epoch [1/1], Batch [1701], Loss: 39227.699219
+Epoch [1/1], Batch [1711], Loss: 38504.117188
+Epoch [1/1], Batch [1721], Loss: 38364.617188
+Epoch [1/1], Batch [1731], Loss: 41063.269531
+Epoch [1/1], Batch [1741], Loss: 38753.210938
+Epoch [1/1], Batch [1751], Loss: 38323.070312
+Epoch [1/1], Batch [1761], Loss: 39087.250000
+Epoch [1/1], Batch [1771], Loss: 37987.710938
+Epoch [1/1], Batch [1781], Loss: 38515.367188
+Epoch [1/1], Batch [1791], Loss: 38626.828125
+Epoch [1/1], Batch [1801], Loss: 37366.039062
+Epoch [1/1], Batch [1811], Loss: 37756.265625
+Epoch [1/1], Batch [1821], Loss: 39934.820312
+Epoch [1/1], Batch [1831], Loss: 39442.726562
+Epoch [1/1], Batch [1841], Loss: 38182.757812
+Epoch [1/1], Batch [1851], Loss: 37820.218750
+Epoch [1/1], Batch [1861], Loss: 39827.851562
+Epoch [1/1], Batch [1871], Loss: 38387.921875
+Epoch [1/1], Batch [1881], Loss: 40642.585938
+Epoch [1/1], Batch [1891], Loss: 38730.121094
+Epoch [1/1], Batch [1901], Loss: 40044.726562
+Epoch [1/1], Batch [1911], Loss: 38011.992188
+Epoch [1/1], Batch [1921], Loss: 37504.117188
+Epoch [1/1], Batch [1931], Loss: 38910.214844
+Epoch [1/1], Batch [1941], Loss: 39751.851562
+Epoch [1/1], Batch [1951], Loss: 37426.765625
+Epoch [1/1], Batch [1961], Loss: 39136.085938
+Epoch [1/1], Batch [1971], Loss: 40022.187500
+Epoch [1/1], Batch [1981], Loss: 37661.015625
+Epoch [1/1], Batch [1991], Loss: 38046.054688
+Epoch [1/1], Batch [2001], Loss: 40398.218750
+Epoch [1/1], Batch [2011], Loss: 38689.062500
+Epoch [1/1], Batch [2021], Loss: 39331.300781
+Epoch [1/1], Batch [2031], Loss: 36826.820312
+Epoch [1/1], Batch [2041], Loss: 38644.031250
+Epoch [1/1], Batch [2051], Loss: 39535.289062
+Epoch [1/1], Batch [2061], Loss: 38770.843750
+Epoch [1/1], Batch [2071], Loss: 39189.375000
+Epoch [1/1], Batch [2081], Loss: 37020.816406
+Epoch [1/1], Batch [2091], Loss: 37699.238281
+Epoch [1/1], Batch [2101], Loss: 37507.421875
+Epoch [1/1], Batch [2111], Loss: 36866.648438
+Epoch [1/1], Batch [2121], Loss: 38319.656250
+Epoch [1/1], Batch [2131], Loss: 37058.156250
+Epoch [1/1], Batch [2141], Loss: 37055.140625
+Epoch [1/1], Batch [2151], Loss: 39574.703125
+Epoch [1/1], Batch [2161], Loss: 37548.035156
+Epoch [1/1], Batch [2171], Loss: 38703.500000
+Epoch [1/1], Batch [2181], Loss: 39797.078125
+Epoch [1/1], Batch [2191], Loss: 35551.738281
+Epoch [1/1], Batch [2201], Loss: 38845.875000
+Epoch [1/1], Batch [2211], Loss: 36436.523438
+Epoch [1/1], Batch [2221], Loss: 39985.164062
+Epoch [1/1], Batch [2231], Loss: 39600.265625
+Epoch [1/1], Batch [2241], Loss: 38626.906250
+Seq_Len: 2, Epoch [1/1] - Average Train Loss: 42541.1240
+Seq_Len: 2, Epoch [1/1] - Average Test Loss: 37899.0002
+Elapsed time: 1285.03 seconds
+Seq_Len: 2, Epoch [1/1] - Average Validation Loss: 38456.2622
+Elapsed time: 1337.98 seconds
+
+Training with sequence length 3.
+Epoch [1/1], Batch [1], Loss: 73721.046875
+Epoch [1/1], Batch [11], Loss: 89615.390625
+Epoch [1/1], Batch [21], Loss: 81759.578125
+Epoch [1/1], Batch [31], Loss: 73089.703125
+Epoch [1/1], Batch [41], Loss: 73505.476562
+Epoch [1/1], Batch [51], Loss: 73976.984375
+Epoch [1/1], Batch [61], Loss: 66713.296875
+Epoch [1/1], Batch [71], Loss: 71642.968750
+Epoch [1/1], Batch [81], Loss: 67586.781250
+Epoch [1/1], Batch [91], Loss: 70900.242188
+Epoch [1/1], Batch [101], Loss: 64064.664062
+Epoch [1/1], Batch [111], Loss: 66890.171875
+Epoch [1/1], Batch [121], Loss: 68152.640625
+Epoch [1/1], Batch [131], Loss: 64802.121094
+Epoch [1/1], Batch [141], Loss: 66169.468750
+Epoch [1/1], Batch [151], Loss: 63945.289062
+Epoch [1/1], Batch [161], Loss: 67007.250000
+Epoch [1/1], Batch [171], Loss: 62507.972656
+Epoch [1/1], Batch [181], Loss: 69468.523438
+Epoch [1/1], Batch [191], Loss: 62699.902344
+Epoch [1/1], Batch [201], Loss: 67466.265625
+Epoch [1/1], Batch [211], Loss: 68999.546875
+Epoch [1/1], Batch [221], Loss: 69757.460938
+Epoch [1/1], Batch [231], Loss: 61885.031250
+Epoch [1/1], Batch [241], Loss: 65911.242188
+Epoch [1/1], Batch [251], Loss: 66228.203125
+Epoch [1/1], Batch [261], Loss: 63591.976562
+Epoch [1/1], Batch [271], Loss: 66774.281250
+Epoch [1/1], Batch [281], Loss: 64692.507812
+Epoch [1/1], Batch [291], Loss: 64349.640625
+Epoch [1/1], Batch [301], Loss: 66434.500000
+Epoch [1/1], Batch [311], Loss: 66872.015625
+Epoch [1/1], Batch [321], Loss: 64074.792969
+Epoch [1/1], Batch [331], Loss: 65550.750000
+Epoch [1/1], Batch [341], Loss: 62756.675781
+Epoch [1/1], Batch [351], Loss: 67456.296875
+Epoch [1/1], Batch [361], Loss: 63064.687500
+Epoch [1/1], Batch [371], Loss: 63430.683594
+Epoch [1/1], Batch [381], Loss: 61349.429688
+Epoch [1/1], Batch [391], Loss: 63295.406250
+Epoch [1/1], Batch [401], Loss: 64809.835938
+Epoch [1/1], Batch [411], Loss: 61855.339844
+Epoch [1/1], Batch [421], Loss: 62635.972656
+Epoch [1/1], Batch [431], Loss: 60722.371094
+Epoch [1/1], Batch [441], Loss: 66056.187500
+Epoch [1/1], Batch [451], Loss: 62338.906250
+Epoch [1/1], Batch [461], Loss: 64767.050781
+Epoch [1/1], Batch [471], Loss: 63022.316406
+Epoch [1/1], Batch [481], Loss: 62071.578125
+Epoch [1/1], Batch [491], Loss: 60963.359375
+Epoch [1/1], Batch [501], Loss: 65612.187500
+Epoch [1/1], Batch [511], Loss: 65705.609375
+Epoch [1/1], Batch [521], Loss: 60529.664062
+Epoch [1/1], Batch [531], Loss: 62711.097656
+Epoch [1/1], Batch [541], Loss: 60539.210938
+Epoch [1/1], Batch [551], Loss: 62595.937500
+Epoch [1/1], Batch [561], Loss: 64468.527344
+Epoch [1/1], Batch [571], Loss: 61355.058594
+Epoch [1/1], Batch [581], Loss: 62037.851562
+Epoch [1/1], Batch [591], Loss: 62873.929688
+Epoch [1/1], Batch [601], Loss: 63535.406250
+Epoch [1/1], Batch [611], Loss: 62341.234375
+Epoch [1/1], Batch [621], Loss: 60098.101562
+Epoch [1/1], Batch [631], Loss: 63103.710938
+Epoch [1/1], Batch [641], Loss: 63953.234375
+Epoch [1/1], Batch [651], Loss: 64731.367188
+Epoch [1/1], Batch [661], Loss: 62674.535156
+Epoch [1/1], Batch [671], Loss: 63311.320312
+Epoch [1/1], Batch [681], Loss: 62980.367188
+Epoch [1/1], Batch [691], Loss: 59196.105469
+Epoch [1/1], Batch [701], Loss: 61698.601562
+Epoch [1/1], Batch [711], Loss: 64047.734375
+Epoch [1/1], Batch [721], Loss: 58903.210938
+Epoch [1/1], Batch [731], Loss: 59749.609375
+Epoch [1/1], Batch [741], Loss: 60166.722656
+Epoch [1/1], Batch [751], Loss: 63771.132812
+Epoch [1/1], Batch [761], Loss: 61047.046875
+Epoch [1/1], Batch [771], Loss: 62592.351562
+Epoch [1/1], Batch [781], Loss: 60009.871094
+Epoch [1/1], Batch [791], Loss: 62338.210938
+Epoch [1/1], Batch [801], Loss: 60385.335938
+Epoch [1/1], Batch [811], Loss: 58507.507812
+Epoch [1/1], Batch [821], Loss: 62774.902344
+Epoch [1/1], Batch [831], Loss: 65145.074219
+Epoch [1/1], Batch [841], Loss: 58073.765625
+Epoch [1/1], Batch [851], Loss: 60138.230469
+Epoch [1/1], Batch [861], Loss: 61864.652344
+Epoch [1/1], Batch [871], Loss: 63219.242188
+Epoch [1/1], Batch [881], Loss: 60201.054688
+Epoch [1/1], Batch [891], Loss: 62085.109375
+Epoch [1/1], Batch [901], Loss: 60660.437500
+Epoch [1/1], Batch [911], Loss: 61620.140625
+Epoch [1/1], Batch [921], Loss: 63823.093750
+Epoch [1/1], Batch [931], Loss: 63178.835938
+Epoch [1/1], Batch [941], Loss: 63293.304688
+Epoch [1/1], Batch [951], Loss: 61280.328125
+Epoch [1/1], Batch [961], Loss: 60767.132812
+Epoch [1/1], Batch [971], Loss: 64515.199219
+Epoch [1/1], Batch [981], Loss: 58232.468750
+Epoch [1/1], Batch [991], Loss: 57667.867188
+Epoch [1/1], Batch [1001], Loss: 61945.437500
+Epoch [1/1], Batch [1011], Loss: 61591.445312
+Epoch [1/1], Batch [1021], Loss: 60582.164062
+Epoch [1/1], Batch [1031], Loss: 58636.976562
+Epoch [1/1], Batch [1041], Loss: 61153.968750
+Epoch [1/1], Batch [1051], Loss: 61392.132812
+Epoch [1/1], Batch [1061], Loss: 63989.828125
+Epoch [1/1], Batch [1071], Loss: 64121.570312
+Epoch [1/1], Batch [1081], Loss: 60941.378906
+Epoch [1/1], Batch [1091], Loss: 59537.046875
+Epoch [1/1], Batch [1101], Loss: 61162.570312
+Epoch [1/1], Batch [1111], Loss: 58480.593750
+Epoch [1/1], Batch [1121], Loss: 59662.867188
+Epoch [1/1], Batch [1131], Loss: 59663.640625
+Epoch [1/1], Batch [1141], Loss: 62231.187500
+Epoch [1/1], Batch [1151], Loss: 59844.906250
+Epoch [1/1], Batch [1161], Loss: 62157.710938
+Epoch [1/1], Batch [1171], Loss: 63956.281250
+Epoch [1/1], Batch [1181], Loss: 62885.773438
+Epoch [1/1], Batch [1191], Loss: 60719.414062
+Epoch [1/1], Batch [1201], Loss: 62834.300781
+Epoch [1/1], Batch [1211], Loss: 61379.812500
+Epoch [1/1], Batch [1221], Loss: 61250.117188
+Epoch [1/1], Batch [1231], Loss: 60779.058594
+Epoch [1/1], Batch [1241], Loss: 57332.257812
+Epoch [1/1], Batch [1251], Loss: 59784.964844
+Epoch [1/1], Batch [1261], Loss: 60977.812500
+Epoch [1/1], Batch [1271], Loss: 63488.269531
+Epoch [1/1], Batch [1281], Loss: 61458.023438
+Epoch [1/1], Batch [1291], Loss: 56106.250000
+Epoch [1/1], Batch [1301], Loss: 60728.734375
+Epoch [1/1], Batch [1311], Loss: 62291.179688
+Epoch [1/1], Batch [1321], Loss: 60254.335938
+Epoch [1/1], Batch [1331], Loss: 64153.320312
+Epoch [1/1], Batch [1341], Loss: 56808.242188
+Epoch [1/1], Batch [1351], Loss: 59974.507812
+Epoch [1/1], Batch [1361], Loss: 61778.164062
+Epoch [1/1], Batch [1371], Loss: 64605.492188
+Epoch [1/1], Batch [1381], Loss: 60128.859375
+Epoch [1/1], Batch [1391], Loss: 58915.296875
+Epoch [1/1], Batch [1401], Loss: 61035.789062
+Epoch [1/1], Batch [1411], Loss: 62240.101562
+Epoch [1/1], Batch [1421], Loss: 60555.082031
+Epoch [1/1], Batch [1431], Loss: 59144.003906
+Epoch [1/1], Batch [1441], Loss: 60403.742188
+Epoch [1/1], Batch [1451], Loss: 59151.289062
+Epoch [1/1], Batch [1461], Loss: 59000.593750
+Epoch [1/1], Batch [1471], Loss: 62671.953125
+Epoch [1/1], Batch [1481], Loss: 61898.007812
+Epoch [1/1], Batch [1491], Loss: 59501.269531
+Epoch [1/1], Batch [1501], Loss: 61400.316406
+Epoch [1/1], Batch [1511], Loss: 55992.101562
+Epoch [1/1], Batch [1521], Loss: 61263.593750
+Epoch [1/1], Batch [1531], Loss: 61773.632812
+Epoch [1/1], Batch [1541], Loss: 59587.507812
+Epoch [1/1], Batch [1551], Loss: 61667.855469
+Epoch [1/1], Batch [1561], Loss: 62233.554688
+Epoch [1/1], Batch [1571], Loss: 60050.398438
+Epoch [1/1], Batch [1581], Loss: 61775.039062
+Epoch [1/1], Batch [1591], Loss: 64296.636719
+Epoch [1/1], Batch [1601], Loss: 59011.992188
+Epoch [1/1], Batch [1611], Loss: 57196.007812
+Epoch [1/1], Batch [1621], Loss: 62640.894531
+Epoch [1/1], Batch [1631], Loss: 56902.109375
+Epoch [1/1], Batch [1641], Loss: 62352.859375
+Epoch [1/1], Batch [1651], Loss: 58549.343750
+Epoch [1/1], Batch [1661], Loss: 64602.742188
+Epoch [1/1], Batch [1671], Loss: 60198.023438
+Epoch [1/1], Batch [1681], Loss: 58026.882812
+Epoch [1/1], Batch [1691], Loss: 60947.843750
+Epoch [1/1], Batch [1701], Loss: 62127.316406
+Epoch [1/1], Batch [1711], Loss: 60040.277344
+Epoch [1/1], Batch [1721], Loss: 59540.445312
+Epoch [1/1], Batch [1731], Loss: 58583.433594
+Epoch [1/1], Batch [1741], Loss: 60112.738281
+Epoch [1/1], Batch [1751], Loss: 57958.566406
+Epoch [1/1], Batch [1761], Loss: 60026.875000
+Epoch [1/1], Batch [1771], Loss: 60439.515625
+Epoch [1/1], Batch [1781], Loss: 58711.285156
+Epoch [1/1], Batch [1791], Loss: 59799.195312
+Epoch [1/1], Batch [1801], Loss: 57616.164062
+Epoch [1/1], Batch [1811], Loss: 58090.933594
+Epoch [1/1], Batch [1821], Loss: 58967.484375
+Epoch [1/1], Batch [1831], Loss: 59842.960938
+Epoch [1/1], Batch [1841], Loss: 62022.183594
+Epoch [1/1], Batch [1851], Loss: 61018.453125
+Epoch [1/1], Batch [1861], Loss: 56649.175781
+Epoch [1/1], Batch [1871], Loss: 59322.843750
+Epoch [1/1], Batch [1881], Loss: 59705.625000
+Epoch [1/1], Batch [1891], Loss: 58371.238281
+Epoch [1/1], Batch [1901], Loss: 63497.007812
+Epoch [1/1], Batch [1911], Loss: 60040.472656
+Epoch [1/1], Batch [1921], Loss: 58775.625000
+Epoch [1/1], Batch [1931], Loss: 59691.386719
+Epoch [1/1], Batch [1941], Loss: 60147.734375
+Epoch [1/1], Batch [1951], Loss: 57824.183594
+Epoch [1/1], Batch [1961], Loss: 63931.722656
+Seq_Len: 3, Epoch [1/1] - Average Train Loss: 62526.7143
+Seq_Len: 3, Epoch [1/1] - Average Test Loss: 58601.6864
+Elapsed time: 2915.87 seconds
+Seq_Len: 3, Epoch [1/1] - Average Validation Loss: 59730.1109
+Elapsed time: 2977.75 seconds
+
+Training with sequence length 4.
+Epoch [1/1], Batch [1], Loss: 96874.453125
+Epoch [1/1], Batch [11], Loss: 90736.390625
+Epoch [1/1], Batch [21], Loss: 91041.796875
+Epoch [1/1], Batch [31], Loss: 84511.515625
+Epoch [1/1], Batch [41], Loss: 87564.921875
+Epoch [1/1], Batch [51], Loss: 86534.015625
+Epoch [1/1], Batch [61], Loss: 86132.109375
+Epoch [1/1], Batch [71], Loss: 87781.468750
+Epoch [1/1], Batch [81], Loss: 87804.671875
+Epoch [1/1], Batch [91], Loss: 83662.937500
+Epoch [1/1], Batch [101], Loss: 91075.195312
+Epoch [1/1], Batch [111], Loss: 88396.195312
+Epoch [1/1], Batch [121], Loss: 89196.226562
+Epoch [1/1], Batch [131], Loss: 87029.234375
+Epoch [1/1], Batch [141], Loss: 84774.187500
+Epoch [1/1], Batch [151], Loss: 85108.718750
+Epoch [1/1], Batch [161], Loss: 88404.515625
+Epoch [1/1], Batch [171], Loss: 86056.179688
+Epoch [1/1], Batch [181], Loss: 84768.648438
+Epoch [1/1], Batch [191], Loss: 89793.421875
+Epoch [1/1], Batch [201], Loss: 84515.968750
+Epoch [1/1], Batch [211], Loss: 85603.914062
+Epoch [1/1], Batch [221], Loss: 88170.984375
+Epoch [1/1], Batch [231], Loss: 83480.156250
+Epoch [1/1], Batch [241], Loss: 87072.570312
+Epoch [1/1], Batch [251], Loss: 86844.992188
+Epoch [1/1], Batch [261], Loss: 86551.804688
+Epoch [1/1], Batch [271], Loss: 83354.406250
+Epoch [1/1], Batch [281], Loss: 81029.187500
+Epoch [1/1], Batch [291], Loss: 85859.859375
+Epoch [1/1], Batch [301], Loss: 86801.742188
+Epoch [1/1], Batch [311], Loss: 83811.187500
+Epoch [1/1], Batch [321], Loss: 89766.226562
+Epoch [1/1], Batch [331], Loss: 85928.734375
+Epoch [1/1], Batch [341], Loss: 83993.304688
+Epoch [1/1], Batch [351], Loss: 84668.882812
+Epoch [1/1], Batch [361], Loss: 84618.257812
+Epoch [1/1], Batch [371], Loss: 81553.398438
+Epoch [1/1], Batch [381], Loss: 82482.445312
+Epoch [1/1], Batch [391], Loss: 82567.968750
+Epoch [1/1], Batch [401], Loss: 82143.593750
+Epoch [1/1], Batch [411], Loss: 84814.625000
+Epoch [1/1], Batch [421], Loss: 80988.078125
+Epoch [1/1], Batch [431], Loss: 85229.648438
+Epoch [1/1], Batch [441], Loss: 84424.703125
+Epoch [1/1], Batch [451], Loss: 87363.437500
+Epoch [1/1], Batch [461], Loss: 84797.257812
+Epoch [1/1], Batch [471], Loss: 86540.765625
+Epoch [1/1], Batch [481], Loss: 82466.648438
+Epoch [1/1], Batch [491], Loss: 84515.945312
+Epoch [1/1], Batch [501], Loss: 82176.976562
+Epoch [1/1], Batch [511], Loss: 88099.132812
+Epoch [1/1], Batch [521], Loss: 83737.125000
+Epoch [1/1], Batch [531], Loss: 82659.960938
+Epoch [1/1], Batch [541], Loss: 79096.718750
+Epoch [1/1], Batch [551], Loss: 85330.453125
+Epoch [1/1], Batch [561], Loss: 84244.742188
+Epoch [1/1], Batch [571], Loss: 86054.953125
+Epoch [1/1], Batch [581], Loss: 83014.390625
+Epoch [1/1], Batch [591], Loss: 86802.203125
+Epoch [1/1], Batch [601], Loss: 81737.453125
+Epoch [1/1], Batch [611], Loss: 80180.718750
+Epoch [1/1], Batch [621], Loss: 84127.390625
+Epoch [1/1], Batch [631], Loss: 85438.031250
+Epoch [1/1], Batch [641], Loss: 82886.625000
+Epoch [1/1], Batch [651], Loss: 84163.953125
+Epoch [1/1], Batch [661], Loss: 85842.750000
+Epoch [1/1], Batch [671], Loss: 86528.289062
+Epoch [1/1], Batch [681], Loss: 86904.843750
+Epoch [1/1], Batch [691], Loss: 86187.914062
+Epoch [1/1], Batch [701], Loss: 85137.992188
+Epoch [1/1], Batch [711], Loss: 82449.906250
+Epoch [1/1], Batch [721], Loss: 80110.875000
+Epoch [1/1], Batch [731], Loss: 88051.750000
+Epoch [1/1], Batch [741], Loss: 81950.906250
+Epoch [1/1], Batch [751], Loss: 84314.000000
+Epoch [1/1], Batch [761], Loss: 85691.093750
+Epoch [1/1], Batch [771], Loss: 88257.718750
+Epoch [1/1], Batch [781], Loss: 86122.117188
+Epoch [1/1], Batch [791], Loss: 86197.218750
+Epoch [1/1], Batch [801], Loss: 82286.117188
+Epoch [1/1], Batch [811], Loss: 86673.859375
+Epoch [1/1], Batch [821], Loss: 87962.843750
+Epoch [1/1], Batch [831], Loss: 85012.218750
+Epoch [1/1], Batch [841], Loss: 81041.031250
+Epoch [1/1], Batch [851], Loss: 88122.593750
+Epoch [1/1], Batch [861], Loss: 84014.734375
+Epoch [1/1], Batch [871], Loss: 78933.250000
+Epoch [1/1], Batch [881], Loss: 83809.671875
+Epoch [1/1], Batch [891], Loss: 82286.984375
+Epoch [1/1], Batch [901], Loss: 83795.640625
+Epoch [1/1], Batch [911], Loss: 85069.468750
+Epoch [1/1], Batch [921], Loss: 81963.742188
+Epoch [1/1], Batch [931], Loss: 82194.835938
+Epoch [1/1], Batch [941], Loss: 79538.468750
+Epoch [1/1], Batch [951], Loss: 81559.421875
+Epoch [1/1], Batch [961], Loss: 86861.312500
+Epoch [1/1], Batch [971], Loss: 79497.382812
+Epoch [1/1], Batch [981], Loss: 83710.609375
+Epoch [1/1], Batch [991], Loss: 85137.687500
+Epoch [1/1], Batch [1001], Loss: 85495.046875
+Epoch [1/1], Batch [1011], Loss: 87351.703125
+Epoch [1/1], Batch [1021], Loss: 78238.281250
+Epoch [1/1], Batch [1031], Loss: 85703.367188
+Epoch [1/1], Batch [1041], Loss: 85938.578125
+Epoch [1/1], Batch [1051], Loss: 83371.031250
+Epoch [1/1], Batch [1061], Loss: 85821.828125
+Epoch [1/1], Batch [1071], Loss: 82625.437500
+Epoch [1/1], Batch [1081], Loss: 85350.390625
+Epoch [1/1], Batch [1091], Loss: 83005.039062
+Epoch [1/1], Batch [1101], Loss: 79496.726562
+Epoch [1/1], Batch [1111], Loss: 85967.210938
+Epoch [1/1], Batch [1121], Loss: 89493.640625
+Epoch [1/1], Batch [1131], Loss: 84882.468750
+Epoch [1/1], Batch [1141], Loss: 83187.812500
+Epoch [1/1], Batch [1151], Loss: 84459.250000
+Epoch [1/1], Batch [1161], Loss: 85088.898438
+Epoch [1/1], Batch [1171], Loss: 82766.953125
+Epoch [1/1], Batch [1181], Loss: 82796.414062
+Epoch [1/1], Batch [1191], Loss: 84520.625000
+Epoch [1/1], Batch [1201], Loss: 82604.203125
+Epoch [1/1], Batch [1211], Loss: 81774.437500
+Epoch [1/1], Batch [1221], Loss: 79698.156250
+Epoch [1/1], Batch [1231], Loss: 79835.546875
+Epoch [1/1], Batch [1241], Loss: 83804.468750
+Epoch [1/1], Batch [1251], Loss: 84217.453125
+Epoch [1/1], Batch [1261], Loss: 85191.328125
+Epoch [1/1], Batch [1271], Loss: 85601.289062
+Epoch [1/1], Batch [1281], Loss: 82962.781250
+Epoch [1/1], Batch [1291], Loss: 85889.148438
+Epoch [1/1], Batch [1301], Loss: 82270.875000
+Epoch [1/1], Batch [1311], Loss: 80866.117188
+Epoch [1/1], Batch [1321], Loss: 82278.101562
+Epoch [1/1], Batch [1331], Loss: 88336.375000
+Epoch [1/1], Batch [1341], Loss: 88395.062500
+Epoch [1/1], Batch [1351], Loss: 80860.898438
+Epoch [1/1], Batch [1361], Loss: 84502.421875
+Epoch [1/1], Batch [1371], Loss: 87148.078125
+Epoch [1/1], Batch [1381], Loss: 82021.570312
+Epoch [1/1], Batch [1391], Loss: 81728.054688
+Epoch [1/1], Batch [1401], Loss: 86412.218750
+Epoch [1/1], Batch [1411], Loss: 80739.070312
+Epoch [1/1], Batch [1421], Loss: 86784.171875
+Epoch [1/1], Batch [1431], Loss: 83459.945312
+Epoch [1/1], Batch [1441], Loss: 85376.625000
+Epoch [1/1], Batch [1451], Loss: 83491.617188
+Epoch [1/1], Batch [1461], Loss: 84819.421875
+Epoch [1/1], Batch [1471], Loss: 83630.015625
+Epoch [1/1], Batch [1481], Loss: 84833.890625
+Epoch [1/1], Batch [1491], Loss: 77620.375000
+Epoch [1/1], Batch [1501], Loss: 83327.296875
+Epoch [1/1], Batch [1511], Loss: 85129.281250
+Epoch [1/1], Batch [1521], Loss: 81147.937500
+Epoch [1/1], Batch [1531], Loss: 78169.359375
+Epoch [1/1], Batch [1541], Loss: 83796.328125
+Epoch [1/1], Batch [1551], Loss: 89107.812500
+Epoch [1/1], Batch [1561], Loss: 87541.085938
+Epoch [1/1], Batch [1571], Loss: 83598.093750
+Epoch [1/1], Batch [1581], Loss: 81957.750000
+Epoch [1/1], Batch [1591], Loss: 83164.203125
+Epoch [1/1], Batch [1601], Loss: 79576.437500
+Epoch [1/1], Batch [1611], Loss: 84513.187500
+Epoch [1/1], Batch [1621], Loss: 81856.445312
+Epoch [1/1], Batch [1631], Loss: 83655.218750
+Epoch [1/1], Batch [1641], Loss: 77571.234375
+Epoch [1/1], Batch [1651], Loss: 82062.109375
+Epoch [1/1], Batch [1661], Loss: 83840.664062
+Epoch [1/1], Batch [1671], Loss: 80701.210938
+Epoch [1/1], Batch [1681], Loss: 81770.546875
+Seq_Len: 4, Epoch [1/1] - Average Train Loss: 84540.3215
+Seq_Len: 4, Epoch [1/1] - Average Test Loss: 82368.5659
+Elapsed time: 4767.85 seconds
+Seq_Len: 4, Epoch [1/1] - Average Validation Loss: 85174.9133
+Elapsed time: 4834.29 seconds
+
+Training with sequence length 5.
+Traceback (most recent call last):
+  File "/orfeo/cephfs/home/dssc/mzampar/Deep-Learning-Project/train/mnist_train.py", line 203, in <module>
+    outputs = model(inputs, mask_true = mask_true, schedule_sampling=schedule_sampling)
+  File "/u/dssc/mzampar/.local/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/u/dssc/mzampar/.local/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/orfeo/cephfs/home/dssc/mzampar/Deep-Learning-Project/train/ConvLSTM_model.py", line 127, in forward
+    hidden, context, output = self.cell_list[0](net, h_t_prev[0], c_t_prev[0])
+  File "/u/dssc/mzampar/.local/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/u/dssc/mzampar/.local/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/orfeo/cephfs/home/dssc/mzampar/Deep-Learning-Project/train/ConvLSTM_module.py", line 103, in forward
+    f_t = torch.sigmoid(f_x + f_h + self.context_forget * c_t)
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 64.00 MiB. GPU 0 has a total capacity of 31.73 GiB of which 26.19 MiB is free. Including non-PyTorch memory, this process has 31.70 GiB memory in use. Of the allocated memory 31.23 GiB is allocated by PyTorch, and 118.54 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+srun: error: gpu001: task 0: Exited with exit code 1
+CUDA is available!
+Traceback (most recent call last):
+  File "/u/dssc/mzampar/Deep-Learning-Project/display/mnist_generate_gif.py", line 200, in <module>
+    state_dict = th.load(out_folder + f"/{model_name}", map_location=th.device('cpu'), weights_only=True)
+  File "/u/dssc/mzampar/.local/lib/python3.9/site-packages/torch/serialization.py", line 1319, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "/u/dssc/mzampar/.local/lib/python3.9/site-packages/torch/serialization.py", line 659, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/u/dssc/mzampar/.local/lib/python3.9/site-packages/torch/serialization.py", line 640, in __init__
+    super().__init__(open(name, mode))
+FileNotFoundError: [Errno 2] No such file or directory: '/u/dssc/mzampar/Deep-Learning-Project/mnist-models/1008753/model_1008753.pth'
+rm: cannot remove '*.gif': No such file or directory
