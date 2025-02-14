@@ -42,7 +42,7 @@ srun python -u train.py --job_id $SLURM_JOB_ID --num_hidden $num_hidden --stride
 src="/u/dssc/mzampar/Deep-Learning-Project/display"
 python $src/plot_loss.py --file slurm_rain_$SLURM_JOB_ID.out --out_file $out_folder/loss-$SLURM_JOB_ID.png
 
-python $src/generate_gif.py --fig_height 64 --model $model_name --out_folder $out_folder --job_id $SLURM_JOB_ID --num_hidden $num_hidden --stride $stride --filter_size $filter_size --leaky_slope $leaky_slope $transpose $layer_norm $max_pool $bias
+python $src/generate_gif.py --fig_height 128 --model $model_name --out_folder $out_folder --job_id $SLURM_JOB_ID --num_hidden $num_hidden --stride $stride --filter_size $filter_size --leaky_slope $leaky_slope $transpose $max_pool $bias $layer_norm
 
 rm *.gif
 
