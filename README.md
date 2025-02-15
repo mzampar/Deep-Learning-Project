@@ -180,11 +180,11 @@ A test and train sets were created by checking that the sequences in both sets h
 
 Train sequence GIF:
 
-![Train seq gif](https://github.com/mzampar/DL_project/blob/main/display/gifs/train_comparison_model_32_16_16_32_932271.pth.gif?raw=true)
+![Train seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1013885/train_model_1013885.pth.gif?raw=true)
 
 Test sequence GIF:
 
-![Test seq gif](https://github.com/mzampar/DL_project/blob/main/display/gifs/test_comparison_model_32_16_16_32_932271.pth.gif?raw=true)
+![Test seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1013885/test_model_1013885.pth.gif?raw=true)
 
 ------------
 
