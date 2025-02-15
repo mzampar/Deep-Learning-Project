@@ -4,11 +4,17 @@
 
 ### Author: Marco Zampar
 
-### Date: 21/12/24
+### Date: 21/02/25
 
 ### Repo: https://github.com/mzampar/Deep-Learning-Project/tree/main
 
 ----------------
+
+
+[//]: # (This is a comment)
+
+<!-- This is a comment -->
+
 
 ### Problem statement
 
@@ -55,7 +61,7 @@ I also added a different encoder-decoder architecture: setting a stride of 2 for
 
 We can call it Convolutional Encoder-Decoder LSTM Network.
 
-![architecture](./report/architecture.png)
+![architecture](./report/architecture1.png)
 
 A graphical representation of an Conv-ED-LSTM with [64,32,32,16] hidden layers, Max Pooling, Transposed Convolutions and a stride of 2.
 
