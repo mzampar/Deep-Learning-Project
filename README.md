@@ -6,12 +6,13 @@
 
 ### Date: 21/12/24
 
+### Repo: https://github.com/mzampar/Deep-Learning-Project/tree/main
+
 ----------------
 
 ### Problem statement
 
-The aim of this project is to perform precipitation nowcasting, i.e. the task of predicting the development of a storm, given a sequence of previous images. The lenght of the sequences I trained my network on varies from 2 to 10 for the input sequence and from 2 to 10 for the output sequence. 
-
+The aim of this project is to perform precipitation nowcasting, i.e. the task of predicting the development of a storm, given a sequence of previous images. The lenght of the sequences I trained my network on varies from 2 to 9 for the input sequence and from 2 to 9 for the output sequence. 
 
 --------------
 
@@ -28,7 +29,7 @@ The only difference from a classic LSTM cell is that the input, the hidden state
 
 ![](./report/model.png)
 
-In this figure we can see the structure of the model of the paper, which is not completely clear to me. 
+In this figure we can see the structure of the model of the paper. 
 
 Citing the paper: 
 
@@ -44,55 +45,64 @@ We are processing one frame at a time, passing it vertically trough the layers, 
 
 During prediction, this output frame is then used as input for the next frame.
 
-During training we could use scheduled sampling to make the model able to use its own predictions also and not only the inputs when analysing the given sequence, this was implemented in the code but not properly tested.
 When processing vertically a frame, we keep track of the hidden and cell states of each layer, that will be used when processing the next frame.
 
 I think this is more efficient because we only have to keep track of the hidden and cell states of the last frame processed.
 
+A sigmoid activation is used to turn the tensors to [0,1] (we are working with images with 1 grey channel).
+
 I also added a different encoder-decoder architecture: setting a stride of 2 for the convolutional cells, each of the first half of the layers halves the dimensions of the images and their representation, while the second half of the layers re-expands the hidden states to produce an image of the same size of the input.
 
-We can call it an encoder-decoder.
-
-Keeping a stride of 1 we mantain a structure closer to the one of the paper.
-
-A sigmoid activation is used to turn the tensors to [0,1].
-
-I also added the possibility to use max pooling and a leaky ReLu activation function. When max pooling is active, the stride is set to 1, because the image size are halved with max pooling and there is no need to use a stride greater than 1.
-
-When the stride is set to 2, we have to enable the Transposed Convolutions to double the size of the images that are halved by the first half of ConvLSTM Cells.
-
-The Code of the class ConvLSTMCell in ConvLSTM_module.py was re-adapted from: https://github.com/chengtan9907/OpenSTL/blob/OpenSTL-Lightning/openstl/models/convlstm_model.py all the other code was written by me (with a hand from Copilot).
-
-
+We can call it Convolutional Encoder-Decoder LSTM Network.
 
 ![architecture](./report/architecture.png)
 
 A graphical representation of an Conv-ED-LSTM with [64,32,32,16] hidden layers, Max Pooling, Transposed Convolutions and a stride of 2.
 
+A brief description of the hyperparameters:
+
+- architecture = [64, 32, 32, 16], # Number of hidden states in each Conv-LSTM cell
+- stride = 1 | 2, # Classical stride in ConvLayers, if set to 2 enables encoder-decoder architecture 
+- filter_size = [3,3,3,3], # Kernel size of the ConvLayer of each Conv-LSTM cell
+- leaky_slope = 0.2, # Slope LeakyReLu activation function, if not provided no activation is used
+- max_pool = True | False, # Instead of reducing image size with a stride of 2, reduce it with a MaxPooling layer
+- layer norm = True | False, # Wheter to add a Normalisation Layer
+- loss = BCELoss() | SSIM | MSE,
+- batch size = 64,
+- num_epochs = 1,
+- scheduled_sampling = True | False, # Wheter to enable scheduled sampling
+- scheduler = True | False, # Wheter to use a scheduler to update the lr after each epoch
+- bias = True | False, # Wheter to add a bias in Convolutions of each Conv-LSTM cell
+- transpose = True | False, # Re-expands the images, doubling its size with a Transposed Convolution
+- use_lstm_output = True | False, # Wheter to use the output of the previous Conv-LSTM as the input of the next, instead of the hidden states
+- initial_lr = 0.01, 
+- gamma = 0.95 # Factor to reduce lr after each epoch
+
+Some further informations:
+
+Scheduled sampling may be used during training to make the model able to use also its own predictions and not only the inputs when analysing the given sequence, this was implemented in the code but didn't give any successfull result.
+
+Keeping a stride of 1 we mantain a structure closer to the one of the paper, and we cannot set max pooling nor transpose to True.
+
+When max pooling is active, the stride is set to 1 in the encoder, because the image size are halved with max pooling and there is no need to use a stride greater than 1, then transpose must be set to True to enable the Transposed Convolutions to double the size of the images that are halved by the first half of ConvLSTM Cells.
+
+The Code of the class ConvLSTMCell in ConvLSTM_module.py was re-adapted from: https://github.com/chengtan9907/OpenSTL/blob/OpenSTL-Lightning/openstl/models/convlstm_model.py all the other code was written by me (with a hand from Copilot).
+
 --------------
 
 ### Learning
 
-The learning was conducted leveraging pytorch, with a fixed train-test division, checking that the seqeunces in both sets have similar lenghts and amounts of storm events.
+The learning was conducted leveraging pytorch, with a fixed train-test division and a validation set, using BCE loss. 
 
-A peculiar aspect of the training is that after the first iterations, no important decrease in the loss is noticed. 
+Curriculum learning was implemented in this way: each epoch has sequences of increasing length: the first epoch has sequences of lenght 2 (2 input frames and 2 frames to predict), the second epoch has sequences of lenght 3 and so on.
+
+A peculiar aspect of the training is that after the first iterations, no important decrease in the loss is noticed: this is probably due to the limits of the LSTM architecture, i.e. its too short memory.
 
 ------------
 
 ### Moving MNIST Dataset
 
 During training, one of the most difficult tasks was to find the correct parameteres of the architecture, expecially for the number of layers and the number of blocks to use. To test the architecture, a preliminary model was trained on a different task: predicting the movement of 2 white letters on a black background.
-
-
-Train sequence GIF:
-
-![Train seq gif](https://github.com/mzampar/DL_project/blob/main/display/gifs/mnist_train_comparison_model_64_32_32_16_940509.pth.gif?raw=true)
-
-Test sequence GIF:
-
-![Test seq gif](https://github.com/mzampar/DL_project/blob/main/display/gifs/mnist_test_comparison_model_64_32_32_16_940509.pth.gif?raw=true)
-
-It is interesting to note that the model can understand the movement and can reproduce the images.
 
 Hyper-parameters used: 
 
@@ -105,16 +115,32 @@ Hyper-parameters used:
 - loss = BCELoss(),
 - batch size = 64,
 - num_epochs = 1,
-- scheduled_sampling = False,
-- scheduler = False,
 - bias = True,
 - transpose = True,
+- use_lstm_output = True | False,
 - initial_lr = 0.01,
-- gamma = 0.5.
+- scheduled_sampling = False,
+- scheduler = False
 
-More can be done, for example using schedule sampling to make the model adapt to take as input its own predictions.
+By trying different configurations, I learned some interesting insights on the hyperparameters:
+
+- the encoder-decoder architecture is more efficient and more effective than keeping a stride of 1
+- a filter size of 5 produces slightly better results in terms of loss
+- an initial lr of 0.01 is ok, greater values hamper the learning, while a smaller, like 0.001 produces similar results as 0.01
+- Using only 2 Conv-LSTM cells produces, as one may expect, models with less memory that can predict just 1/2 frames, then the frames become very blurry
+- scheduled sampling hampers the learning
 
 
+Results obtained:
+
+Train sequence GIF:
+
+![Train seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1013557/mnist_train_model_1013557.pth.gif?raw=true)
+
+
+Test sequence GIF:
+
+![Test seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1013557/mnist_test_model_1013557.pth.gif?raw=true)
 
 --------------
 
@@ -148,6 +174,8 @@ The sequence ID was established by looking at the difference in time between 2 c
 
 Too short sequences or low-rainy-sequences were discarded.
 
+A test and train sets were created by checking that the sequences in both sets have similar lenghts and amounts of storm events.
+
 #### Results
 
 Train sequence GIF:
@@ -158,12 +186,15 @@ Test sequence GIF:
 
 ![Test seq gif](https://github.com/mzampar/DL_project/blob/main/display/gifs/test_comparison_model_32_16_16_32_932271.pth.gif?raw=true)
 
-
-
-
 ------------
 
 ### Conclusion and possible extensions
 
-It would be interesting to implement a convolutional transformer architecture.
+Working on this project was both instructive and challenging and helped me to learn very interesting stuff:
+
+- how to process images,
+- how to work with CNN, LSTM and how to compose different architectures together,
+- how to find the correct hyperparameters of an architecture (and how difficult it is :|).
+
+Given the well-known issues of the LSTM architecture, a possible extension of this project could be to implement and train a Convolutional Transformer: in any case, eventhough I didn't find a state-of-the-art model for precipitation now-casting, I'm very proud of having created my own architecture!
 
