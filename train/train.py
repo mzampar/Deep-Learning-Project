@@ -38,7 +38,7 @@ parser.add_argument('--filter_size', type=int, nargs='+', required=True, help='L
 parser.add_argument('--stride', type=int, required=True, help='Stride')
 parser.add_argument('--patch_size', type=int, required=False, default=1, help='Patch size')
 parser.add_argument('--bias', action='store_true', help='Use bias')
-parser.add_argument('--leaky_slope', type=float, required=True, help='Leaky ReLU slope')
+parser.add_argument('--leaky_slope', type=float, required=False, default=None, help='Leaky ReLU slope')
 parser.add_argument('--max_pooling', action='store_true', help='Enable max pooling')
 parser.add_argument('--transpose', action='store_true', help='Enable transposition')
 parser.add_argument('--use_lstm_output', action='store_true', help='Use LSTM output')

@@ -1,0 +1,593 @@
+Starting job 1014180
+Training with:
+    architecture = [64, 32, 32, 16],
+    stride = 2,
+    filter_size = [5, 5, 5, 5],
+    leaky_slope = 0.2,
+    max_pool = True,
+    layer norm = True,
+    loss = BCELoss(),
+    batch size = 16,
+    num_epochs = 2,
+    scheduled_sampling = False,
+    bias = False,
+    transpose = True,
+    use_lstm_output = False,
+    scheduler = False,
+    initial_lr = 0.01,
+    gamma = 0.5.
+
+Average train sequence lenght: 115.2406015037594.
+Average test sequence lenght:, 124.0.
+Average test rain:, 2.1325389489429316.
+Average train rain:, 2.2383985386372576.
+
+CUDA is available!
+
+Training with sequence length 2.
+Epoch [1/2], Batch [1], Loss: 0.693997
+Epoch [1/2], Batch [11], Loss: 0.692951
+Epoch [1/2], Batch [21], Loss: 0.693241
+Epoch [1/2], Batch [31], Loss: 0.693088
+Epoch [1/2], Batch [41], Loss: 0.693051
+Epoch [1/2], Batch [51], Loss: 0.693039
+Epoch [1/2], Batch [61], Loss: 0.693126
+Epoch [1/2], Batch [71], Loss: 0.692855
+Epoch [1/2], Batch [81], Loss: 0.692455
+Epoch [1/2], Batch [91], Loss: 0.692035
+Epoch [1/2], Batch [101], Loss: 0.692006
+Epoch [1/2], Batch [111], Loss: 0.691455
+Epoch [1/2], Batch [121], Loss: 0.691745
+Epoch [1/2], Batch [131], Loss: 0.691569
+Epoch [1/2], Batch [141], Loss: 0.691622
+Epoch [1/2], Batch [151], Loss: 0.691415
+Epoch [1/2], Batch [161], Loss: 0.691442
+Epoch [1/2], Batch [171], Loss: 0.691427
+Epoch [1/2], Batch [181], Loss: 0.691762
+Epoch [1/2], Batch [191], Loss: 0.690952
+Epoch [1/2], Batch [201], Loss: 0.690879
+Epoch [1/2], Batch [211], Loss: 0.691662
+Epoch [1/2], Batch [221], Loss: 0.691079
+Epoch [1/2], Batch [231], Loss: 0.690450
+Epoch [1/2], Batch [241], Loss: 0.690670
+Epoch [1/2], Batch [251], Loss: 0.690504
+Epoch [1/2], Batch [261], Loss: 0.690953
+Seq_Len: 2, Epoch [1/2] - Average Train Loss: 0.6919
+Seq_Len: 2, Epoch [1/2] - Average Validation Loss: 0.6940
+Elapsed time: 3.96 minutes.
+Seq_Len: 2, Epoch [1/2] - Average Test Loss: 0.6910
+Elapsed time: 4.22 minutes.
+Epoch [2/2], Batch [1], Loss: 0.690346
+Epoch [2/2], Batch [11], Loss: 0.690607
+Epoch [2/2], Batch [21], Loss: 0.690900
+Epoch [2/2], Batch [31], Loss: 0.690996
+Epoch [2/2], Batch [41], Loss: 0.690711
+Epoch [2/2], Batch [51], Loss: 0.690958
+Epoch [2/2], Batch [61], Loss: 0.690629
+Epoch [2/2], Batch [71], Loss: 0.690761
+Epoch [2/2], Batch [81], Loss: 0.690466
+Epoch [2/2], Batch [91], Loss: 0.690474
+Epoch [2/2], Batch [101], Loss: 0.691074
+Epoch [2/2], Batch [111], Loss: 0.690967
+Epoch [2/2], Batch [121], Loss: 0.689381
+Epoch [2/2], Batch [131], Loss: 0.690753
+Epoch [2/2], Batch [141], Loss: 0.691082
+Epoch [2/2], Batch [151], Loss: 0.690821
+Epoch [2/2], Batch [161], Loss: 0.690652
+Epoch [2/2], Batch [171], Loss: 0.689716
+Epoch [2/2], Batch [181], Loss: 0.690267
+Epoch [2/2], Batch [191], Loss: 0.690362
+Epoch [2/2], Batch [201], Loss: 0.690496
+Epoch [2/2], Batch [211], Loss: 0.690467
+Epoch [2/2], Batch [221], Loss: 0.690741
+Epoch [2/2], Batch [231], Loss: 0.690095
+Epoch [2/2], Batch [241], Loss: 0.689899
+Epoch [2/2], Batch [251], Loss: 0.690469
+Epoch [2/2], Batch [261], Loss: 0.690160
+Seq_Len: 2, Epoch [2/2] - Average Train Loss: 0.6906
+Seq_Len: 2, Epoch [2/2] - Average Validation Loss: 0.6941
+Elapsed time: 5.63 minutes.
+Seq_Len: 2, Epoch [2/2] - Average Test Loss: 0.6906
+Elapsed time: 5.71 minutes.
+
+Training with sequence length 3.
+Epoch [1/2], Batch [1], Loss: 0.690987
+Epoch [1/2], Batch [11], Loss: 0.690981
+Epoch [1/2], Batch [21], Loss: 0.691089
+Epoch [1/2], Batch [31], Loss: 0.690716
+Epoch [1/2], Batch [41], Loss: 0.690963
+Epoch [1/2], Batch [51], Loss: 0.691127
+Epoch [1/2], Batch [61], Loss: 0.691419
+Epoch [1/2], Batch [71], Loss: 0.690835
+Epoch [1/2], Batch [81], Loss: 0.690832
+Epoch [1/2], Batch [91], Loss: 0.690869
+Epoch [1/2], Batch [101], Loss: 0.690934
+Epoch [1/2], Batch [111], Loss: 0.690629
+Epoch [1/2], Batch [121], Loss: 0.689552
+Epoch [1/2], Batch [131], Loss: 0.690114
+Epoch [1/2], Batch [141], Loss: 0.691359
+Epoch [1/2], Batch [151], Loss: 0.690353
+Epoch [1/2], Batch [161], Loss: 0.691030
+Epoch [1/2], Batch [171], Loss: 0.691150
+Epoch [1/2], Batch [181], Loss: 0.691037
+Epoch [1/2], Batch [191], Loss: 0.690703
+Epoch [1/2], Batch [201], Loss: 0.690674
+Epoch [1/2], Batch [211], Loss: 0.691204
+Epoch [1/2], Batch [221], Loss: 0.690767
+Epoch [1/2], Batch [231], Loss: 0.690604
+Epoch [1/2], Batch [241], Loss: 0.691074
+Epoch [1/2], Batch [251], Loss: 0.690763
+Epoch [1/2], Batch [261], Loss: 0.690890
+Epoch [1/2], Batch [271], Loss: 0.690771
+Seq_Len: 3, Epoch [1/2] - Average Train Loss: 0.6908
+Seq_Len: 3, Epoch [1/2] - Average Validation Loss: 0.6942
+Elapsed time: 8.34 minutes.
+Seq_Len: 3, Epoch [1/2] - Average Test Loss: 0.6909
+Elapsed time: 8.48 minutes.
+Epoch [2/2], Batch [1], Loss: 0.691046
+Epoch [2/2], Batch [11], Loss: 0.690520
+Epoch [2/2], Batch [21], Loss: 0.690603
+Epoch [2/2], Batch [31], Loss: 0.690727
+Epoch [2/2], Batch [41], Loss: 0.690561
+Epoch [2/2], Batch [51], Loss: 0.690858
+Epoch [2/2], Batch [61], Loss: 0.690387
+Epoch [2/2], Batch [71], Loss: 0.690730
+Epoch [2/2], Batch [81], Loss: 0.690851
+Epoch [2/2], Batch [91], Loss: 0.690336
+Epoch [2/2], Batch [101], Loss: 0.690764
+Epoch [2/2], Batch [111], Loss: 0.689745
+Epoch [2/2], Batch [121], Loss: 0.690771
+Epoch [2/2], Batch [131], Loss: 0.690571
+Epoch [2/2], Batch [141], Loss: 0.690831
+Epoch [2/2], Batch [151], Loss: 0.691350
+Epoch [2/2], Batch [161], Loss: 0.690821
+Epoch [2/2], Batch [171], Loss: 0.691100
+Epoch [2/2], Batch [181], Loss: 0.691029
+Epoch [2/2], Batch [191], Loss: 0.690637
+Epoch [2/2], Batch [201], Loss: 0.691022
+Epoch [2/2], Batch [211], Loss: 0.690343
+Epoch [2/2], Batch [221], Loss: 0.690623
+Epoch [2/2], Batch [231], Loss: 0.690639
+Epoch [2/2], Batch [241], Loss: 0.690964
+Epoch [2/2], Batch [251], Loss: 0.690329
+Epoch [2/2], Batch [261], Loss: 0.689640
+Epoch [2/2], Batch [271], Loss: 0.689859
+Seq_Len: 3, Epoch [2/2] - Average Train Loss: 0.6906
+Seq_Len: 3, Epoch [2/2] - Average Validation Loss: 0.6936
+Elapsed time: 10.60 minutes.
+Seq_Len: 3, Epoch [2/2] - Average Test Loss: 0.6907
+Elapsed time: 10.72 minutes.
+
+Training with sequence length 4.
+Epoch [1/2], Batch [1], Loss: 0.691242
+Epoch [1/2], Batch [11], Loss: 0.690591
+Epoch [1/2], Batch [21], Loss: 0.691238
+Epoch [1/2], Batch [31], Loss: 0.691152
+Epoch [1/2], Batch [41], Loss: 0.690638
+Epoch [1/2], Batch [51], Loss: 0.690755
+Epoch [1/2], Batch [61], Loss: 0.690890
+Epoch [1/2], Batch [71], Loss: 0.690963
+Epoch [1/2], Batch [81], Loss: 0.690053
+Epoch [1/2], Batch [91], Loss: 0.690970
+Epoch [1/2], Batch [101], Loss: 0.690923
+Epoch [1/2], Batch [111], Loss: 0.690548
+Epoch [1/2], Batch [121], Loss: 0.690452
+Epoch [1/2], Batch [131], Loss: 0.690811
+Epoch [1/2], Batch [141], Loss: 0.690852
+Epoch [1/2], Batch [151], Loss: 0.690887
+Epoch [1/2], Batch [161], Loss: 0.690580
+Epoch [1/2], Batch [171], Loss: 0.690583
+Epoch [1/2], Batch [181], Loss: 0.690442
+Epoch [1/2], Batch [191], Loss: 0.690655
+Epoch [1/2], Batch [201], Loss: 0.691001
+Epoch [1/2], Batch [211], Loss: 0.690947
+Epoch [1/2], Batch [221], Loss: 0.690984
+Epoch [1/2], Batch [231], Loss: 0.690891
+Epoch [1/2], Batch [241], Loss: 0.690887
+Epoch [1/2], Batch [251], Loss: 0.690607
+Epoch [1/2], Batch [261], Loss: 0.690939
+Epoch [1/2], Batch [271], Loss: 0.690671
+Seq_Len: 4, Epoch [1/2] - Average Train Loss: 0.6908
+Seq_Len: 4, Epoch [1/2] - Average Validation Loss: 0.6941
+Elapsed time: 14.02 minutes.
+Seq_Len: 4, Epoch [1/2] - Average Test Loss: 0.6909
+Elapsed time: 14.19 minutes.
+Epoch [2/2], Batch [1], Loss: 0.690731
+Epoch [2/2], Batch [11], Loss: 0.690209
+Epoch [2/2], Batch [21], Loss: 0.691037
+Epoch [2/2], Batch [31], Loss: 0.690628
+Epoch [2/2], Batch [41], Loss: 0.690644
+Epoch [2/2], Batch [51], Loss: 0.691020
+Epoch [2/2], Batch [61], Loss: 0.690414
+Epoch [2/2], Batch [71], Loss: 0.691170
+Epoch [2/2], Batch [81], Loss: 0.690587
+Epoch [2/2], Batch [91], Loss: 0.690765
+Epoch [2/2], Batch [101], Loss: 0.690784
+Epoch [2/2], Batch [111], Loss: 0.690618
+Epoch [2/2], Batch [121], Loss: 0.690952
+Epoch [2/2], Batch [131], Loss: 0.690599
+Epoch [2/2], Batch [141], Loss: 0.690574
+Epoch [2/2], Batch [151], Loss: 0.691109
+Epoch [2/2], Batch [161], Loss: 0.691064
+Epoch [2/2], Batch [171], Loss: 0.690812
+Epoch [2/2], Batch [181], Loss: 0.691137
+Epoch [2/2], Batch [191], Loss: 0.690562
+Epoch [2/2], Batch [201], Loss: 0.690662
+Epoch [2/2], Batch [211], Loss: 0.690786
+Epoch [2/2], Batch [221], Loss: 0.690989
+Epoch [2/2], Batch [231], Loss: 0.690189
+Epoch [2/2], Batch [241], Loss: 0.690501
+Epoch [2/2], Batch [251], Loss: 0.690721
+Epoch [2/2], Batch [261], Loss: 0.690727
+Epoch [2/2], Batch [271], Loss: 0.689857
+Seq_Len: 4, Epoch [2/2] - Average Train Loss: 0.6907
+Seq_Len: 4, Epoch [2/2] - Average Validation Loss: 0.6947
+Elapsed time: 17.05 minutes.
+Seq_Len: 4, Epoch [2/2] - Average Test Loss: 0.6909
+Elapsed time: 17.21 minutes.
+
+Training with sequence length 5.
+Epoch [1/2], Batch [1], Loss: 0.691232
+Epoch [1/2], Batch [11], Loss: 0.690827
+Epoch [1/2], Batch [21], Loss: 0.690386
+Epoch [1/2], Batch [31], Loss: 0.690425
+Epoch [1/2], Batch [41], Loss: 0.691133
+Epoch [1/2], Batch [51], Loss: 0.690857
+Epoch [1/2], Batch [61], Loss: 0.690214
+Epoch [1/2], Batch [71], Loss: 0.691098
+Epoch [1/2], Batch [81], Loss: 0.690835
+Epoch [1/2], Batch [91], Loss: 0.690510
+Epoch [1/2], Batch [101], Loss: 0.690971
+Epoch [1/2], Batch [111], Loss: 0.691169
+Epoch [1/2], Batch [121], Loss: 0.690993
+Epoch [1/2], Batch [131], Loss: 0.690936
+Epoch [1/2], Batch [141], Loss: 0.690799
+Epoch [1/2], Batch [151], Loss: 0.690285
+Epoch [1/2], Batch [161], Loss: 0.690982
+Epoch [1/2], Batch [171], Loss: 0.690423
+Epoch [1/2], Batch [181], Loss: 0.690736
+Epoch [1/2], Batch [191], Loss: 0.691438
+Epoch [1/2], Batch [201], Loss: 0.690751
+Epoch [1/2], Batch [211], Loss: 0.690397
+Epoch [1/2], Batch [221], Loss: 0.691028
+Epoch [1/2], Batch [231], Loss: 0.690748
+Epoch [1/2], Batch [241], Loss: 0.690753
+Epoch [1/2], Batch [251], Loss: 0.690187
+Epoch [1/2], Batch [261], Loss: 0.691069
+Epoch [1/2], Batch [271], Loss: 0.690979
+Epoch [1/2], Batch [281], Loss: 0.690986
+Seq_Len: 5, Epoch [1/2] - Average Train Loss: 0.6908
+Seq_Len: 5, Epoch [1/2] - Average Validation Loss: 0.6957
+Elapsed time: 21.27 minutes.
+Seq_Len: 5, Epoch [1/2] - Average Test Loss: 0.6913
+Elapsed time: 21.48 minutes.
+Epoch [2/2], Batch [1], Loss: 0.691199
+Epoch [2/2], Batch [11], Loss: 0.690573
+Epoch [2/2], Batch [21], Loss: 0.691157
+Epoch [2/2], Batch [31], Loss: 0.690247
+Epoch [2/2], Batch [41], Loss: 0.690598
+Epoch [2/2], Batch [51], Loss: 0.691240
+Epoch [2/2], Batch [61], Loss: 0.690993
+Epoch [2/2], Batch [71], Loss: 0.690413
+Epoch [2/2], Batch [81], Loss: 0.690563
+Epoch [2/2], Batch [91], Loss: 0.691017
+Epoch [2/2], Batch [101], Loss: 0.690698
+Epoch [2/2], Batch [111], Loss: 0.691065
+Epoch [2/2], Batch [121], Loss: 0.691241
+Epoch [2/2], Batch [131], Loss: 0.691057
+Epoch [2/2], Batch [141], Loss: 0.690452
+Epoch [2/2], Batch [151], Loss: 0.690520
+Epoch [2/2], Batch [161], Loss: 0.690847
+Epoch [2/2], Batch [171], Loss: 0.691490
+Epoch [2/2], Batch [181], Loss: 0.689583
+Epoch [2/2], Batch [191], Loss: 0.690364
+Epoch [2/2], Batch [201], Loss: 0.690288
+Epoch [2/2], Batch [211], Loss: 0.690498
+Epoch [2/2], Batch [221], Loss: 0.690860
+Epoch [2/2], Batch [231], Loss: 0.690728
+Epoch [2/2], Batch [241], Loss: 0.690872
+Epoch [2/2], Batch [251], Loss: 0.690592
+Epoch [2/2], Batch [261], Loss: 0.690683
+Epoch [2/2], Batch [271], Loss: 0.690715
+Epoch [2/2], Batch [281], Loss: 0.690391
+Seq_Len: 5, Epoch [2/2] - Average Train Loss: 0.6907
+Seq_Len: 5, Epoch [2/2] - Average Validation Loss: 0.6940
+Elapsed time: 25.07 minutes.
+Seq_Len: 5, Epoch [2/2] - Average Test Loss: 0.6911
+Elapsed time: 25.27 minutes.
+
+Training with sequence length 6.
+Epoch [1/2], Batch [1], Loss: 0.691282
+Epoch [1/2], Batch [11], Loss: 0.690903
+Epoch [1/2], Batch [21], Loss: 0.690241
+Epoch [1/2], Batch [31], Loss: 0.689819
+Epoch [1/2], Batch [41], Loss: 0.691055
+Epoch [1/2], Batch [51], Loss: 0.690087
+Epoch [1/2], Batch [61], Loss: 0.690894
+Epoch [1/2], Batch [71], Loss: 0.690689
+Epoch [1/2], Batch [81], Loss: 0.690394
+Epoch [1/2], Batch [91], Loss: 0.691007
+Epoch [1/2], Batch [101], Loss: 0.690315
+Epoch [1/2], Batch [111], Loss: 0.690605
+Epoch [1/2], Batch [121], Loss: 0.690911
+Epoch [1/2], Batch [131], Loss: 0.690336
+Epoch [1/2], Batch [141], Loss: 0.691009
+Epoch [1/2], Batch [151], Loss: 0.690735
+Epoch [1/2], Batch [161], Loss: 0.690559
+Epoch [1/2], Batch [171], Loss: 0.690202
+Epoch [1/2], Batch [181], Loss: 0.690427
+Epoch [1/2], Batch [191], Loss: 0.690875
+Epoch [1/2], Batch [201], Loss: 0.690844
+Epoch [1/2], Batch [211], Loss: 0.690800
+Epoch [1/2], Batch [221], Loss: 0.691186
+Epoch [1/2], Batch [231], Loss: 0.690948
+Epoch [1/2], Batch [241], Loss: 0.690630
+Epoch [1/2], Batch [251], Loss: 0.691298
+Epoch [1/2], Batch [261], Loss: 0.690642
+Epoch [1/2], Batch [271], Loss: 0.691366
+Epoch [1/2], Batch [281], Loss: 0.690512
+Seq_Len: 6, Epoch [1/2] - Average Train Loss: 0.6907
+Seq_Len: 6, Epoch [1/2] - Average Validation Loss: 0.6942
+Elapsed time: 29.99 minutes.
+Seq_Len: 6, Epoch [1/2] - Average Test Loss: 0.6913
+Elapsed time: 30.24 minutes.
+Epoch [2/2], Batch [1], Loss: 0.689736
+Epoch [2/2], Batch [11], Loss: 0.691066
+Epoch [2/2], Batch [21], Loss: 0.690838
+Epoch [2/2], Batch [31], Loss: 0.690554
+Epoch [2/2], Batch [41], Loss: 0.691152
+Epoch [2/2], Batch [51], Loss: 0.691170
+Epoch [2/2], Batch [61], Loss: 0.690716
+Epoch [2/2], Batch [71], Loss: 0.690355
+Epoch [2/2], Batch [81], Loss: 0.690615
+Epoch [2/2], Batch [91], Loss: 0.690660
+Epoch [2/2], Batch [101], Loss: 0.689808
+Epoch [2/2], Batch [111], Loss: 0.690523
+Epoch [2/2], Batch [121], Loss: 0.690973
+Epoch [2/2], Batch [131], Loss: 0.690599
+Epoch [2/2], Batch [141], Loss: 0.690626
+Epoch [2/2], Batch [151], Loss: 0.690846
+Epoch [2/2], Batch [161], Loss: 0.690748
+Epoch [2/2], Batch [171], Loss: 0.689556
+Epoch [2/2], Batch [181], Loss: 0.689636
+Epoch [2/2], Batch [191], Loss: 0.691109
+Epoch [2/2], Batch [201], Loss: 0.690351
+Epoch [2/2], Batch [211], Loss: 0.691110
+Epoch [2/2], Batch [221], Loss: 0.690341
+Epoch [2/2], Batch [231], Loss: 0.690950
+Epoch [2/2], Batch [241], Loss: 0.691450
+Epoch [2/2], Batch [251], Loss: 0.690565
+Epoch [2/2], Batch [261], Loss: 0.690775
+Epoch [2/2], Batch [271], Loss: 0.690691
+Epoch [2/2], Batch [281], Loss: 0.690833
+Seq_Len: 6, Epoch [2/2] - Average Train Loss: 0.6906
+Seq_Len: 6, Epoch [2/2] - Average Validation Loss: 0.6946
+Elapsed time: 34.58 minutes.
+Seq_Len: 6, Epoch [2/2] - Average Test Loss: 0.6914
+Elapsed time: 34.81 minutes.
+
+Training with sequence length 7.
+Epoch [1/2], Batch [1], Loss: 0.690559
+Epoch [1/2], Batch [11], Loss: 0.691047
+Epoch [1/2], Batch [21], Loss: 0.690666
+Epoch [1/2], Batch [31], Loss: 0.690680
+Epoch [1/2], Batch [41], Loss: 0.689476
+Epoch [1/2], Batch [51], Loss: 0.690802
+Epoch [1/2], Batch [61], Loss: 0.690594
+Epoch [1/2], Batch [71], Loss: 0.690816
+Epoch [1/2], Batch [81], Loss: 0.690694
+Epoch [1/2], Batch [91], Loss: 0.690853
+Epoch [1/2], Batch [101], Loss: 0.690628
+Epoch [1/2], Batch [111], Loss: 0.691111
+Epoch [1/2], Batch [121], Loss: 0.691006
+Epoch [1/2], Batch [131], Loss: 0.689966
+Epoch [1/2], Batch [141], Loss: 0.690322
+Epoch [1/2], Batch [151], Loss: 0.689520
+Epoch [1/2], Batch [161], Loss: 0.690642
+Epoch [1/2], Batch [171], Loss: 0.690462
+Epoch [1/2], Batch [181], Loss: 0.690415
+Epoch [1/2], Batch [191], Loss: 0.690398
+Epoch [1/2], Batch [201], Loss: 0.690485
+Epoch [1/2], Batch [211], Loss: 0.690319
+Epoch [1/2], Batch [221], Loss: 0.690345
+Epoch [1/2], Batch [231], Loss: 0.691281
+Epoch [1/2], Batch [241], Loss: 0.690654
+Epoch [1/2], Batch [251], Loss: 0.690288
+Epoch [1/2], Batch [261], Loss: 0.690101
+Epoch [1/2], Batch [271], Loss: 0.690098
+Epoch [1/2], Batch [281], Loss: 0.690326
+Seq_Len: 7, Epoch [1/2] - Average Train Loss: 0.6906
+Seq_Len: 7, Epoch [1/2] - Average Validation Loss: 0.6934
+Elapsed time: 40.22 minutes.
+Seq_Len: 7, Epoch [1/2] - Average Test Loss: 0.6917
+Elapsed time: 40.51 minutes.
+Epoch [2/2], Batch [1], Loss: 0.689901
+Epoch [2/2], Batch [11], Loss: 0.690624
+Epoch [2/2], Batch [21], Loss: 0.689864
+Epoch [2/2], Batch [31], Loss: 0.690385
+Epoch [2/2], Batch [41], Loss: 0.690704
+Epoch [2/2], Batch [51], Loss: 0.690442
+Epoch [2/2], Batch [61], Loss: 0.690911
+Epoch [2/2], Batch [71], Loss: 0.689224
+Epoch [2/2], Batch [81], Loss: 0.689806
+Epoch [2/2], Batch [91], Loss: 0.689875
+Epoch [2/2], Batch [101], Loss: 0.690610
+Epoch [2/2], Batch [111], Loss: 0.690809
+Epoch [2/2], Batch [121], Loss: 0.690395
+Epoch [2/2], Batch [131], Loss: 0.690612
+Epoch [2/2], Batch [141], Loss: 0.690398
+Epoch [2/2], Batch [151], Loss: 0.690905
+Epoch [2/2], Batch [161], Loss: 0.690771
+Epoch [2/2], Batch [171], Loss: 0.691000
+Epoch [2/2], Batch [181], Loss: 0.690107
+Epoch [2/2], Batch [191], Loss: 0.690993
+Epoch [2/2], Batch [201], Loss: 0.689711
+Epoch [2/2], Batch [211], Loss: 0.690845
+Epoch [2/2], Batch [221], Loss: 0.690536
+Epoch [2/2], Batch [231], Loss: 0.690890
+Epoch [2/2], Batch [241], Loss: 0.690871
+Epoch [2/2], Batch [251], Loss: 0.690240
+Epoch [2/2], Batch [261], Loss: 0.690751
+Epoch [2/2], Batch [271], Loss: 0.690730
+Epoch [2/2], Batch [281], Loss: 0.691125
+Seq_Len: 7, Epoch [2/2] - Average Train Loss: 0.6904
+Seq_Len: 7, Epoch [2/2] - Average Validation Loss: 0.6939
+Elapsed time: 45.58 minutes.
+Seq_Len: 7, Epoch [2/2] - Average Test Loss: 0.6917
+Elapsed time: 45.85 minutes.
+
+Training with sequence length 8.
+Epoch [1/2], Batch [1], Loss: 0.689924
+Epoch [1/2], Batch [11], Loss: 0.690811
+Epoch [1/2], Batch [21], Loss: 0.690436
+Epoch [1/2], Batch [31], Loss: 0.690276
+Epoch [1/2], Batch [41], Loss: 0.690202
+Epoch [1/2], Batch [51], Loss: 0.689977
+Epoch [1/2], Batch [61], Loss: 0.690882
+Epoch [1/2], Batch [71], Loss: 0.690342
+Epoch [1/2], Batch [81], Loss: 0.690528
+Epoch [1/2], Batch [91], Loss: 0.690544
+Epoch [1/2], Batch [101], Loss: 0.690774
+Epoch [1/2], Batch [111], Loss: 0.690913
+Epoch [1/2], Batch [121], Loss: 0.690875
+Epoch [1/2], Batch [131], Loss: 0.690451
+Epoch [1/2], Batch [141], Loss: 0.690313
+Epoch [1/2], Batch [151], Loss: 0.690401
+Epoch [1/2], Batch [161], Loss: 0.690144
+Epoch [1/2], Batch [171], Loss: 0.689778
+Epoch [1/2], Batch [181], Loss: 0.690235
+Epoch [1/2], Batch [191], Loss: 0.690766
+Epoch [1/2], Batch [201], Loss: 0.690079
+Epoch [1/2], Batch [211], Loss: 0.690451
+Epoch [1/2], Batch [221], Loss: 0.690551
+Epoch [1/2], Batch [231], Loss: 0.689220
+Epoch [1/2], Batch [241], Loss: 0.689482
+Epoch [1/2], Batch [251], Loss: 0.690506
+Epoch [1/2], Batch [261], Loss: 0.689955
+Epoch [1/2], Batch [271], Loss: 0.690653
+Epoch [1/2], Batch [281], Loss: 0.689542
+Epoch [1/2], Batch [291], Loss: 0.689965
+Seq_Len: 8, Epoch [1/2] - Average Train Loss: 0.6903
+Seq_Len: 8, Epoch [1/2] - Average Validation Loss: 0.6945
+Elapsed time: 52.03 minutes.
+Seq_Len: 8, Epoch [1/2] - Average Test Loss: 0.6919
+Elapsed time: 52.35 minutes.
+Epoch [2/2], Batch [1], Loss: 0.690254
+Epoch [2/2], Batch [11], Loss: 0.690427
+Epoch [2/2], Batch [21], Loss: 0.690183
+Epoch [2/2], Batch [31], Loss: 0.691285
+Epoch [2/2], Batch [41], Loss: 0.690999
+Epoch [2/2], Batch [51], Loss: 0.689748
+Epoch [2/2], Batch [61], Loss: 0.690906
+Epoch [2/2], Batch [71], Loss: 0.690358
+Epoch [2/2], Batch [81], Loss: 0.689820
+Epoch [2/2], Batch [91], Loss: 0.689668
+Epoch [2/2], Batch [101], Loss: 0.690240
+Epoch [2/2], Batch [111], Loss: 0.690124
+Epoch [2/2], Batch [121], Loss: 0.690580
+Epoch [2/2], Batch [131], Loss: 0.690574
+Epoch [2/2], Batch [141], Loss: 0.690429
+Epoch [2/2], Batch [151], Loss: 0.690127
+Epoch [2/2], Batch [161], Loss: 0.690674
+Epoch [2/2], Batch [171], Loss: 0.690517
+Epoch [2/2], Batch [181], Loss: 0.689813
+Epoch [2/2], Batch [191], Loss: 0.690210
+Epoch [2/2], Batch [201], Loss: 0.689769
+Epoch [2/2], Batch [211], Loss: 0.690067
+Epoch [2/2], Batch [221], Loss: 0.689661
+Epoch [2/2], Batch [231], Loss: 0.690372
+Epoch [2/2], Batch [241], Loss: 0.690495
+Epoch [2/2], Batch [251], Loss: 0.689803
+Epoch [2/2], Batch [261], Loss: 0.690465
+Epoch [2/2], Batch [271], Loss: 0.690096
+Epoch [2/2], Batch [281], Loss: 0.689094
+Epoch [2/2], Batch [291], Loss: 0.689345
+Seq_Len: 8, Epoch [2/2] - Average Train Loss: 0.6901
+Seq_Len: 8, Epoch [2/2] - Average Validation Loss: 0.6937
+Elapsed time: 58.19 minutes.
+Seq_Len: 8, Epoch [2/2] - Average Test Loss: 0.6921
+Elapsed time: 58.50 minutes.
+
+Training with sequence length 9.
+Epoch [1/2], Batch [1], Loss: 0.689306
+Epoch [1/2], Batch [11], Loss: 0.689638
+Epoch [1/2], Batch [21], Loss: 0.689714
+Epoch [1/2], Batch [31], Loss: 0.688983
+Epoch [1/2], Batch [41], Loss: 0.690053
+Epoch [1/2], Batch [51], Loss: 0.690596
+Epoch [1/2], Batch [61], Loss: 0.689039
+Epoch [1/2], Batch [71], Loss: 0.690063
+Epoch [1/2], Batch [81], Loss: 0.690807
+Epoch [1/2], Batch [91], Loss: 0.690489
+Epoch [1/2], Batch [101], Loss: 0.690589
+Epoch [1/2], Batch [111], Loss: 0.690487
+Epoch [1/2], Batch [121], Loss: 0.690012
+Epoch [1/2], Batch [131], Loss: 0.689990
+Epoch [1/2], Batch [141], Loss: 0.689433
+Epoch [1/2], Batch [151], Loss: 0.689498
+Epoch [1/2], Batch [161], Loss: 0.690212
+Epoch [1/2], Batch [171], Loss: 0.691048
+Epoch [1/2], Batch [181], Loss: 0.689875
+Epoch [1/2], Batch [191], Loss: 0.689686
+Epoch [1/2], Batch [201], Loss: 0.689655
+Epoch [1/2], Batch [211], Loss: 0.688631
+Epoch [1/2], Batch [221], Loss: 0.689919
+Epoch [1/2], Batch [231], Loss: 0.690125
+Epoch [1/2], Batch [241], Loss: 0.690188
+Epoch [1/2], Batch [251], Loss: 0.690043
+Epoch [1/2], Batch [261], Loss: 0.689365
+Epoch [1/2], Batch [271], Loss: 0.689607
+Epoch [1/2], Batch [281], Loss: 0.689878
+Epoch [1/2], Batch [291], Loss: 0.690077
+Seq_Len: 9, Epoch [1/2] - Average Train Loss: 0.6901
+Seq_Len: 9, Epoch [1/2] - Average Validation Loss: 0.6943
+Elapsed time: 65.44 minutes.
+Seq_Len: 9, Epoch [1/2] - Average Test Loss: 0.6922
+Elapsed time: 65.81 minutes.
+Epoch [2/2], Batch [1], Loss: 0.689259
+Epoch [2/2], Batch [11], Loss: 0.690846
+Epoch [2/2], Batch [21], Loss: 0.689706
+Epoch [2/2], Batch [31], Loss: 0.688686
+Epoch [2/2], Batch [41], Loss: 0.690547
+Epoch [2/2], Batch [51], Loss: 0.689211
+Epoch [2/2], Batch [61], Loss: 0.689714
+Epoch [2/2], Batch [71], Loss: 0.690023
+Epoch [2/2], Batch [81], Loss: 0.690452
+Epoch [2/2], Batch [91], Loss: 0.690457
+Epoch [2/2], Batch [101], Loss: 0.689909
+Epoch [2/2], Batch [111], Loss: 0.690841
+Epoch [2/2], Batch [121], Loss: 0.689884
+Epoch [2/2], Batch [131], Loss: 0.689401
+Epoch [2/2], Batch [141], Loss: 0.689965
+Epoch [2/2], Batch [151], Loss: 0.689044
+Epoch [2/2], Batch [161], Loss: 0.690334
+Epoch [2/2], Batch [171], Loss: 0.688986
+Epoch [2/2], Batch [181], Loss: 0.688983
+Epoch [2/2], Batch [191], Loss: 0.690252
+Epoch [2/2], Batch [201], Loss: 0.689258
+Epoch [2/2], Batch [211], Loss: 0.689881
+Epoch [2/2], Batch [221], Loss: 0.690400
+Epoch [2/2], Batch [231], Loss: 0.690341
+Epoch [2/2], Batch [241], Loss: 0.690133
+Epoch [2/2], Batch [251], Loss: 0.690553
+Epoch [2/2], Batch [261], Loss: 0.690320
+Epoch [2/2], Batch [271], Loss: 0.690162
+Epoch [2/2], Batch [281], Loss: 0.689575
+Epoch [2/2], Batch [291], Loss: 0.690070
+Seq_Len: 9, Epoch [2/2] - Average Train Loss: 0.6898
+Seq_Len: 9, Epoch [2/2] - Average Validation Loss: 0.6950
+Elapsed time: 72.43 minutes.
+Seq_Len: 9, Epoch [2/2] - Average Test Loss: 0.6924
+Elapsed time: 72.78 minutes.
+
+Training complete!
+Total elapsed time: 72.78 minutes.
+Sequence Length 2: Median Loss = 0.690953
+Sequence Length 3: Median Loss = 0.690771
+Sequence Length 4: Median Loss = 0.690760
+Sequence Length 5: Median Loss = 0.690776
+Sequence Length 6: Median Loss = 0.690704
+Sequence Length 7: Median Loss = 0.690602
+Sequence Length 8: Median Loss = 0.690295
+Sequence Length 9: Median Loss = 0.689978
+CUDA is available!
