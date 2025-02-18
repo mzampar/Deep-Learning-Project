@@ -110,23 +110,7 @@ A peculiar aspect of the training is that after the first iterations, no importa
 
 During training, one of the most difficult tasks was to find the correct parameteres of the architecture, expecially for the number of layers and the number of blocks to use. To test the architecture, a preliminary model was trained on a different task: predicting the movement of 2 white letters on a black background.
 
-Hyper-parameters used: 
 
-- architecture = [64, 32, 32, 16],
-- stride = 2,
-- filter_size = 3,
-- leaky_slope = 0.2,
-- max_pool = True,
-- layer norm = True,
-- loss = BCELoss(),
-- batch size = 64,
-- num_epochs = 1,
-- bias = True,
-- transpose = True,
-- use_lstm_output = True | False,
-- initial_lr = 0.01,
-- scheduled_sampling = False,
-- scheduler = False
 
 By trying different configurations, I learned some interesting insights on the hyperparameters:
 
@@ -143,7 +127,25 @@ Results obtained:
 
 It is nice to notice that this model is able to understand the physics of the bouncing objects and capture their shape.
 
-![Loss](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1014457/loss-1014457-median.png?raw=true)
+Hyper-parameters used: 
+
+- architecture = [64, 32, 32, 16],
+- stride = 2,
+- filter_size = [5, 5, 5, 5],
+- leaky_slope = None,
+- max_pool = True,
+- layer norm = True,
+- loss = BCELoss(),
+- batch size = 64,
+- num_epochs = 1,
+- bias = False,
+- transpose = True,
+- use_lstm_output = False,
+- initial_lr = 0.01,
+- scheduled_sampling = False,
+- scheduler = False
+
+![Loss](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1014228/loss-1014228-median.png?raw=true)
 
 We can see here a peculiar behaviour of the loss: the test and validation loss are better than the train: we can explain this behaviour with the fact that the train loss is computed on the mean of the loss for each batch, and at the beginning of each epoch the task becomes harder, because we increase the sequence lenght, while the validation and test loss is computed at the end of each batch, with a model that has already seen a lot of sequences of the actual length.
 
@@ -152,35 +154,35 @@ In any case the difference between the 3 losses is not that remarkable and it co
 
 Train sequence GIF:
 
-![Train seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1014457/mnist_train_model_1014457.pth.gif?raw=true)
+![Train seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1014228/mnist_train_model_1014228.pth.gif?raw=true)
 
 
 Test sequence GIF:
 
-![Test seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1014457/mnist_test_model_1014457.pth.gif?raw=true)
-
-
+![Test seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1014228/mnist_test_model_1014228.pth.gif?raw=true)
 
 
 We can see here a peculiar behaviour of the loss: the test and validation loss are better than the train: we can explain this behaviour with the fact that the train loss is computed on the mean of the loss for each batch, and at the beginning of each epoch the task becomes harder, because we increase the sequence lenght, while the validation and test loss is computed at the end of each batch, with a model that has already seen a lot of sequences of the actual length.
 
 In any case the difference between the 3 losses is not that remarkable and it could also be due to an intrinsic difficulty of the train/test/validation sequences.
 
+We can see the results of a different training strategy, the hyperparameters are the same, but reducing the sequence lenght but doubling the number of epochs:
 
-![Loss](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1014460/loss-1014460-median.png?raw=true)
+![Loss](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1014459/loss-1014459-median.png?raw=true)
 
 Train sequence GIF:
 
-![Train seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1014460/mnist_train_model_1014460.pth.gif?raw=true)
+![Train seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1014459/mnist_train_model_1014459.pth.gif?raw=true)
 
 
 Test sequence GIF:
 
-![Test seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1014460/mnist_test_model_1014460.pth.gif?raw=true)
+![Test seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/mnist-models/1014459/mnist_test_model_1014459.pth.gif?raw=true)
 
 
 Probably because of its too short memory it cannot handle very long sequences.
 
+These are the 2 best models found, the main difference with the others is on the last frames of the train gif, number 7 is reproduced quite better than all other models I trained.
 
 --------------
 
@@ -218,7 +220,58 @@ A test and train sets were created by checking that the sequences in both sets h
 
 #### Results
 
-![Loss](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1013840/loss-1013840.png?raw=true)
+Hyper-parameters used: 
+
+- architecture = [64, 32, 32, 16],
+- stride = 2,
+- filter_size = [5, 5, 5, 5],
+- leaky_slope = 0.2,
+- max_pool = True,
+- layer norm = True,
+- loss = BCELoss(),
+- batch size = 16,
+- num_epochs = 2,
+- bias = False,
+- transpose = True,
+- use_lstm_output = False,
+- initial_lr = 0.01,
+- scheduled_sampling = False,
+- scheduler = False
+
+![Loss](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1014180/loss-1014180.png?raw=true)
+
+Again we can see a peculiar behaviour, but again the test loss can be explained with the fact that the first batches of the first epochs for the train set are difficult because the model has never seen sequences of that lenght.
+
+The validation loss has a very strange behaviour, but the difference is again not that remarkable.
+
+Train sequence GIF:
+
+![Train seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1014180/train_model_1014180.pth.gif?raw=true)
+
+Test sequence GIF:
+
+![Test seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1013840/test_model_1013840.pth.gif?raw=true)
+
+-------
+Hyper-parameters used: 
+
+- architecture = [64, 32, 32, 16],
+- stride = 2,
+- filter_size = [5, 5, 5, 5],
+- leaky_slope = None,
+- max_pool = True,
+- layer norm = True,
+- loss = BCELoss(),
+- batch size = 24,
+- num_epochs = 4,
+- bias = False,
+- transpose = True,
+- use_lstm_output = False,
+- initial_lr = 0.01,
+- scheduled_sampling = False,
+- scheduler = False
+
+![Loss](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1014457/loss-1014457.png?raw=true)
 
 Again we can see a peculiar behaviour, but again the test loss can be explained with the fact that the first batches of the first epochs for the train set are difficult because the model has never seen sequences of that lenght.
 
@@ -227,11 +280,122 @@ The validation loss has a very strange behaviour, but the difference is again no
 
 Train sequence GIF:
 
-![Train seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1013840/train_model_1013840.pth.gif?raw=true)
+![Train seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1014457/train_model_1014457.pth.gif?raw=true)
 
 Test sequence GIF:
 
-![Test seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1013840/test_model_1013840.pth.gif?raw=true)
+![Test seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1014457/test_model_1014457.pth.gif?raw=true)
+
+----
+
+Hyper-parameters used: 
+
+- architecture = [64, 32, 32, 16],
+- stride = 2,
+- filter_size = [5, 5, 5, 5],
+- leaky_slope = None,
+- max_pool = True,
+- layer norm = True,
+- loss = BCELoss(),
+- batch size = 24,
+- num_epochs = 4,
+- bias = False,
+- transpose = True,
+- use_lstm_output = False,
+- initial_lr = 0.02,
+- scheduled_sampling = False,
+- scheduler = True
+- gamma = 0.95.
+
+
+Training with initial lr = 0.02
+
+![Loss](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1014460/loss-1014460.png?raw=true)
+
+Again we can see a peculiar behaviour, but again the test loss can be explained with the fact that the first batches of the first epochs for the train set are difficult because the model has never seen sequences of that lenght.
+
+The validation loss has a very strange behaviour, but the difference is again not that remarkable.
+
+Train sequence GIF:
+
+![Train seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1014460/train_model_1014460.pth.gif?raw=true)
+
+Test sequence GIF:
+
+![Test seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1014460/test_model_1014460.pth.gif?raw=true)
+
+------------
+
+Hyper-parameters used: 
+
+- architecture = [64, 32, 32, 16],
+- stride = 2,
+- filter_size = [5, 5, 5, 5],
+- leaky_slope = None,
+- max_pool = True,
+- layer norm = True,
+- loss = BCELoss(),
+- batch size = 24,
+- num_epochs = 4,
+- bias = False,
+- transpose = True,
+- use_lstm_output = False,
+- initial_lr = 0.05,
+- scheduled_sampling = False,
+- scheduler = True
+- gamma = 0.95.
+
+
+
+![Loss](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1017900/loss-1017900.png?raw=true)
+
+Again we can see a peculiar behaviour, but again the test loss can be explained with the fact that the first batches of the first epochs for the train set are difficult because the model has never seen sequences of that lenght.
+
+The validation loss has a very strange behaviour, but the difference is again not that remarkable.
+
+Train sequence GIF:
+
+![Train seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1017900/train_model_1017900.pth.gif?raw=true)
+
+Test sequence GIF:
+
+![Test seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1017900/test_model_1017900.pth.gif?raw=true)
+
+------------
+
+Hyper-parameters used: 
+
+- architecture = [64, 32, 32, 16],
+- stride = 2,
+- filter_size = [5, 5, 5, 5],
+- leaky_slope = None,
+- max_pool = True,
+- layer norm = True,
+- loss = BCELoss(),
+- batch size = 24,
+- num_epochs = 4,
+- bias = False,
+- transpose = True,
+- use_lstm_output = False,
+- initial_lr = 0.1,
+- scheduled_sampling = False,
+- scheduler = True
+- gamma = 0.8.
+
+
+![Loss](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1017901/loss-1017901.png?raw=true)
+
+Again we can see a peculiar behaviour, but again the test loss can be explained with the fact that the first batches of the first epochs for the train set are difficult because the model has never seen sequences of that lenght.
+
+The validation loss has a very strange behaviour, but the difference is again not that remarkable.
+
+Train sequence GIF:
+
+![Train seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1017901/train_model_1017901.pth.gif?raw=true)
+
+Test sequence GIF:
+
+![Test seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1017901/test_model_1017901.pth.gif?raw=true)
 
 
 
