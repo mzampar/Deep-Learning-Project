@@ -1,4 +1,4 @@
-# Convolutional LSTM Network for Precipitation Nowcasting
+# Convolutional ED LSTM Network for Precipitation Nowcasting
 
 ### Deep Learning Project
 
@@ -11,9 +11,9 @@
 ----------------
 
 
-[//]: # (This is a comment)
 
-<!-- This is a comment -->
+
+<!-- Generate a pdf with:  pandoc README.md -o README.pdf-->
 
 
 ### Problem statement
@@ -25,13 +25,13 @@ The aim of this project is to perform precipitation nowcasting, i.e. the task of
 ### The Convolutional LSTM Network
 
 This model is inspired by the paper: "Convolutional LSTM Network: A Machine Learning
-Approach for Precipitation Nowcasting" https://arxiv.org/pdf/1506.04214.
+Approach for Precipitation Nowcasting" https://arxiv.org/pdf/1506.04214 (2015).
 
 The most important component of this architecture is without any doubt the Convolutional LSTM cell: 
 
 ![](./report/conv_lstm.jpeg)
 
-The only difference from a classic LSTM cell is that the input, the hidden states and the context are passed through a convolution. As in the paper, the size of the hidden states and the context are of the same size of the input, but many layers are stacked one on the other to compose the context and hidden states.
+The only difference from a classic LSTM cell is that the input and the hidden states are passed through a convolution. As in the paper, the size of the hidden states and the context are of the same size of the input, but many layers are stacked one on the other to compose the context and hidden states.
 
 ![](./report/model.png)
 
@@ -286,7 +286,7 @@ Test sequence GIF:
 
 ![Test seq gif](https://github.com/mzampar/Deep-Learning-Project/blob/main/rain-models/1014457/test_model_1014457.pth.gif?raw=true)
 
-----
+-------------
 
 Hyper-parameters used: 
 

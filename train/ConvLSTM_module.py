@@ -32,6 +32,7 @@ def create_conv_block(in_channels, out_channels, kernel_size, stride, padding, b
     layers.append(conv)
     
     if layer_norm and height and width:
+        # Normalizing over channels, height, width
         layers.append(nn.LayerNorm([out_channels, height, width]))
     
     if leaky_slope is not None:
